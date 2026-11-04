@@ -143,6 +143,9 @@ body.part-add-open{overflow:hidden}
 .stock-atlas-picture.atlas-2{background-size:200% 200%}
 /* Individually framed part icons: fully contained and centered in each existing square. */
 .stock-picture img.stock-part-center{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:100%;max-height:100%;left:0;top:0;transform:none;object-fit:contain;object-position:50% 50%;mix-blend-mode:normal;filter:none;pointer-events:none}
+/* Hide narrow neighboring-image seams at the left and right edges; keep the centered icon untouched. */
+.stock-picture:has(>img.stock-part-center){background:#f7f7f7}
+.stock-picture img.stock-part-center{clip-path:inset(0 16% 0 16%)}
 </style></head><body><div class="app"><section class="garage" id="garage" aria-label="오토바이 쇼룸. 좌우 스와이프로 다른 차량을 볼 수 있습니다">
 <div class="showroom-track" id="showroom-track">
   <div class="showroom-slide" data-index="0" role="group" aria-label="첫 번째 오토바이">
