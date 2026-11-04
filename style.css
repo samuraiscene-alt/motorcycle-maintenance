@@ -64,3 +64,20 @@ body.choosing .vehicle-strip{background:linear-gradient(#f9fbff,#e5ecf6)}
 body.choosing .garage{height: min(49vh,390px)}
 body.choosing .bike-stage{height:calc(100% - 56px);width:min(96%,470px);top:6px}
 @media(max-width:390px){body.choosing .garage{height: min(43vh,345px)}}
+
+.vehicle-strip{align-items:center;min-height:84px;padding:11px 15px;gap:8px}
+.vehicle-name{flex:1}.vehicle-name h1{font-size:23px;margin:1px 0 2px}
+.vehicle-name>span{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:235px}
+.km-inline{display:inline-flex;align-items:center;gap:4px;background:none;border:0;padding:4px 0 0;color:#44566e;font-size:11px;font-weight:650}
+.km-inline strong{font-weight:850;color:#1a3049;font-size:12px}
+.change-bike{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:112px;padding:10px 9px;border-radius:11px;background:linear-gradient(#fff,#d5dfed);border:1.5px solid #8d9db1;box-shadow:inset 0 1px white,0 2px 4px #536b8740;color:#1b2f4d;font-weight:850;font-size:13px;white-space:nowrap}
+.change-bike:first-letter{font-size:20px}
+body.choosing .change-bike{display:none}
+.garage{isolation:isolate}
+.bike-stage.leave-left img{animation:bike-thrust .3s ease-in both}
+.bike-stage.leave-right img{animation:bike-thrust-rev .3s ease-in both}
+.bike-stage.enter-right img,.bike-stage.enter-left img{animation:bike-settle .42s ease-out both}
+@keyframes bike-thrust{0%{transform:translateY(0) rotate(0)}45%{transform:translateY(2px) rotate(-1.2deg)}100%{transform:translateY(-2px) rotate(-2deg)}}
+@keyframes bike-thrust-rev{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(-2px) rotate(1deg)}}
+@keyframes bike-settle{0%{transform:translateY(-3px)}70%{transform:translateY(2px)}100%{transform:translateY(0)}}
+@media(max-width:390px){.vehicle-name h1{font-size:21px}.change-bike{min-width:100px;font-size:12px;padding:9px 6px}.vehicle-name>span{max-width:205px}}
