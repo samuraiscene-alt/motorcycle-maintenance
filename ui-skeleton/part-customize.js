@@ -55,25 +55,24 @@ const catalogIcons={
 'spark-plug':{file:'spark.webp'},'brake-fluid':{file:'brake-fluid.webp'},
 'gear-oil':{file:'gear-oil.webp'},'battery':{file:'battery.webp'},
 'slide-piece':{file:'slides.webp'},
-'oil-strainer':{atlas:'a',col:0,row:0},'valve-clearance':{atlas:'c',col:2,row:1},
-'engine-gasket':{atlas:'c',col:0,row:2},'intake':{atlas:'c',col:1,row:1},
-'clutch-shoe':{file:'clutch.webp'},'clutch-bell':{atlas:'a',col:2,row:1},
-'drive-pulley':{atlas:'a',col:1,row:2},'drive-bearing':{atlas:'a',col:2,row:2},
-'brake-disc':{file:'disc.webp'},'brake-caliper':{atlas:'d',col:0,row:0},
-'brake-hose':{atlas:'b',col:1,row:0},'wheel-bearing':{atlas:'b',col:2,row:1},
-'fork-oil':{atlas:'d',col:0,row:1},'rear-shock':{atlas:'c',col:2,row:2},
-'steering-bearing':{atlas:'b',col:2,row:1},
-'headlamp':{atlas:'b',col:0,row:2},'fuse':{atlas:'d',col:1,row:0},
-'starter':{atlas:'b',col:1,row:2},'coolant-hose':{atlas:'b',col:2,row:2},
-'thermostat':{atlas:'c',col:1,row:0},'water-pump':{atlas:'c',col:0,row:0},
-'fuel-pump':{atlas:'d',col:1,row:1}};
+'oil-strainer':{local:'oil-strainer'},'valve-clearance':{local:'valve-clearance'},
+'engine-gasket':{local:'engine-gasket'},'intake':{local:'intake'},
+'clutch-shoe':{file:'clutch.webp'},'clutch-bell':{local:'clutch-bell'},
+'drive-pulley':{local:'drive-pulley'},'drive-bearing':{local:'drive-bearing'},
+'brake-disc':{file:'disc.webp'},'brake-caliper':{local:'brake-caliper'},
+'brake-hose':{local:'brake-hose'},'wheel-bearing':{local:'wheel-bearing'},
+'fork-oil':{local:'fork-oil'},'rear-shock':{local:'rear-shock'},
+'steering-bearing':{local:'steering-bearing'},
+'headlamp':{local:'headlamp'},'fuse':{local:'fuse'},
+'starter':{local:'starter'},'coolant-hose':{local:'coolant-hose'},
+'thermostat':{local:'thermostat'},'water-pump':{local:'water-pump'},
+'fuel-pump':{local:'fuel-pump'}};
 function partPicture(part){
  const asset=catalogIcons[part.id];
  if(!asset)return '<span class="stock-fallback">🔧</span>';
  if(asset.file)return '<img class="stock-part-photo" src="../assets/'+asset.file+'" alt="" loading="lazy">';
- const size=asset.atlas==='d'?2:3;
- const xy=n=>size===2?(n?'100%':'0%'):(n===0?'0%':n===1?'50%':'100%');
- return '<span class="stock-atlas-picture atlas-'+size+'" style="background-image:url(\'./realistic-parts-atlas-'+asset.atlas+'.svg\');background-position:'+xy(asset.col)+' '+xy(asset.row)+'" aria-hidden="true"></span>';
+ if(asset.local)return '<img class="stock-part-center" src="./part-icons/'+asset.local+'.svg" alt="" loading="lazy">';
+ return '<span class="stock-fallback">🔧</span>';
 }
 function stockRow(part){const row=document.createElement('article');row.className='part stock-part';row.dataset.partId=part.id;row.dataset.interval='0';row.innerHTML='<div class="part-img stock-picture">'+partPicture(part)+'</div><div class="part-body"><div class="part-line"><strong></strong><span>기록 없음</span></div><div class="gauge"><div class="gauge-fill blue" style="width:0%"></div></div></div><div class="service blue">'+ico+'</div>';row.querySelector('strong').textContent=part.name;return row}
 const standardRoot=document.createElement('div');standardRoot.className='stock-part-container';list.appendChild(standardRoot);
