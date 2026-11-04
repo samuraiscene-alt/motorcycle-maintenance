@@ -12,4 +12,55 @@
 <g filter="url(#shadow)"><rect x="336" y="98" width="249" height="71" rx="5" fill="#090c10" stroke="#627080" stroke-width="5"/><text x="460" y="129" fill="#f2f5f8" font-family="Arial,sans-serif" font-weight="bold" text-anchor="middle" font-size="19" letter-spacing="2">MOTORCYCLE</text><text x="460" y="153" fill="#d9e2e9" font-family="Arial,sans-serif" font-weight="bold" text-anchor="middle" font-size="18" letter-spacing="4">SERVICE</text></g>
 <g><path d="M640 0V66" stroke="#a6b8ca" stroke-width="6"/><rect x="503" y="65" width="267" height="17" rx="5" fill="#d9f4ff" stroke="#567994" stroke-width="5"/><rect x="520" y="72" width="235" height="8" fill="#e8ffff"/><ellipse cx="640" cy="148" rx="266" ry="150" fill="url(#glow)"/></g>
 <g><rect x="175" y="89" width="113" height="72" fill="#0f1823" stroke="#233547" stroke-width="5"/><path d="M196 142l19-24 16 11 20-29 14 15" fill="none" stroke="#e84137" stroke-width="6"/><text x="232" y="154" fill="#f46860" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold">GARAGE</text></g>
-<g><path d="M364 348H635" stroke="#e0412d" stroke-width="4" opacity=".8"/><path d="M281 468H693" stroke="#a52028" stroke-width="4" opacity=".7"/></g></svg>
+<g><path d="M364 348H635" stroke="#e0412d" stroke-width="4" opacity=".8"/><path d="M281 468H693" stroke="#a52028" stroke-width="4" opacity=".7"/></g><defs>
+<linearGradient id="neonred" x2="0" y2="1"><stop stop-color="#ffb9a6"/><stop offset=".35" stop-color="#ff302c"/><stop offset="1" stop-color="#a9101b"/></linearGradient>
+<linearGradient id="lightblue"><stop stop-color="#bbf9ff"/><stop offset=".5" stop-color="#4fc0fa"/><stop offset="1" stop-color="#144c80"/></linearGradient>
+<radialGradient id="shine"><stop stop-color="#b7e9ff" stop-opacity=".25"/><stop offset="1" stop-color="#8abff2" stop-opacity="0"/></radialGradient>
+<filter id="neonglow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<pattern id="pegs" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="8" cy="8" r="1.2" fill="#d2d9df" fill-opacity=".20"/></pattern>
+</defs>
+<!-- Structural columns and brushed concrete wall -->
+<path d="M0 0H980V35H0Z" fill="#050b12" opacity=".72"/>
+<path d="M45 17V400M928 15V405" stroke="#121821" stroke-width="28"/><path d="M55 15V403M936 18V402" stroke="#73899a" stroke-opacity=".4" stroke-width="3"/>
+<path d="M584 32V398" stroke="#17222e" stroke-width="14"/><path d="M590 32V398" stroke="#8193a1" stroke-opacity=".27" stroke-width="2"/>
+<!-- Overhead industrial blue-white tube -->
+<path d="M590 14V69M854 14V69" stroke="#657a8c" stroke-width="6"/>
+<rect x="560" y="66" width="322" height="21" rx="5" fill="#162431" stroke="#869cab" stroke-width="4"/>
+<rect x="578" y="70" width="290" height="9" rx="4" fill="url(#lightblue)" filter="url(#neonglow)"/>
+<ellipse cx="725" cy="176" rx="265" ry="176" fill="url(#shine)"/>
+<!-- Left workbench and pegboard -->
+<rect x="65" y="128" width="292" height="235" rx="6" fill="#080e16" stroke="#3d5163" stroke-width="8"/>
+<rect x="76" y="145" width="270" height="206" fill="url(#pegs)"/>
+<path d="M84 209H335" stroke="#637786" stroke-width="7"/>
+<g stroke="#b7c4d0" stroke-width="6" fill="none" stroke-linejoin="round" stroke-linecap="round" filter="url(#shadow)">
+<path d="M105 214v65m-9 -5q9 19 18 0"/><path d="M138 214v74m-9 -5q9 19 18 0"/><path d="M171 214v83m-9 -5q9 19 18 0"/><path d="M204 214v65m-9 -5q9 19 18 0"/><path d="M237 214v74m-9 -5q9 19 18 0"/><path d="M270 214v83m-9 -5q9 19 18 0"/><path d="M303 214v65m-9 -5q9 19 18 0"/>
+</g>
+<!-- Neon wing emblem, not a photographic logo -->
+<g filter="url(#neonglow)" stroke="url(#neonred)" fill="none" stroke-linejoin="round" stroke-width="4">
+<path d="M143 114l91-29-36 22-64 21 62-10-63 24 74-12-69 27 53-8-35 19"/>
+</g>
+<text x="168" y="188" text-anchor="middle" fill="#ff5147" font-size="23" font-family="Arial,sans-serif" font-weight="900" filter="url(#neonglow)">HONDA</text>
+<!-- Red steel rolling tool chest -->
+<g filter="url(#shadow)"><rect x="16" y="347" width="175" height="126" rx="9" fill="url(#cab)" stroke="#58191c" stroke-width="8"/>
+<rect x="26" y="354" width="151" height="19" rx="3" fill="#ed5043"/>
+<rect x="32" y="389" width="135" height="17" rx="3" fill="#8a1821" stroke="#ff8d7b" stroke-width="2"/><path d="M80 397h36" stroke="#d9dfe4" stroke-width="3"/><rect x="32" y="413" width="135" height="17" rx="3" fill="#8a1821" stroke="#ff8d7b" stroke-width="2"/><path d="M80 421h36" stroke="#d9dfe4" stroke-width="3"/><rect x="32" y="437" width="135" height="17" rx="3" fill="#8a1821" stroke="#ff8d7b" stroke-width="2"/><path d="M80 445h36" stroke="#d9dfe4" stroke-width="3"/>
+<circle cx="44" cy="481" r="9" fill="#171920" stroke="#8c9ca6" stroke-width="3"/><circle cx="162" cy="481" r="9" fill="#171920" stroke="#8c9ca6" stroke-width="3"/></g>
+<!-- Blue barrels / workshop oil bottles -->
+<g><rect x="216" y="362" width="47" height="94" rx="8" fill="#173754" stroke="#72a3c9" stroke-width="3"/><path d="M216 383h47M216 433h47" stroke="#7fc1ed" stroke-width="3"/><rect x="235" y="340" width="13" height="25" fill="#d8aa2b"/></g>
+<g filter="url(#shadow)"><rect x="370" y="196" width="27" height="54" rx="5" fill="#c2872d" stroke="#e7b65d" stroke-width="2"/><rect x="377" y="185" width="13" height="13" rx="2" fill="#343b42"/><rect x="374" y="215" width="19" height="22" fill="#d5cfba" opacity=".72"/><rect x="410" y="188" width="27" height="62" rx="5" fill="#b26821" stroke="#e7b65d" stroke-width="2"/><rect x="417" y="177" width="13" height="13" rx="2" fill="#343b42"/><rect x="414" y="207" width="19" height="22" fill="#d5cfba" opacity=".72"/><rect x="450" y="196" width="27" height="54" rx="5" fill="#c2872d" stroke="#e7b65d" stroke-width="2"/><rect x="457" y="185" width="13" height="13" rx="2" fill="#343b42"/><rect x="454" y="215" width="19" height="22" fill="#d5cfba" opacity=".72"/><rect x="490" y="188" width="27" height="62" rx="5" fill="#b26821" stroke="#e7b65d" stroke-width="2"/><rect x="497" y="177" width="13" height="13" rx="2" fill="#343b42"/><rect x="494" y="207" width="19" height="22" fill="#d5cfba" opacity=".72"/><rect x="530" y="196" width="27" height="54" rx="5" fill="#c2872d" stroke="#e7b65d" stroke-width="2"/><rect x="537" y="185" width="13" height="13" rx="2" fill="#343b42"/><rect x="534" y="215" width="19" height="22" fill="#d5cfba" opacity=".72"/></g>
+<path d="M365 257H567" stroke="#263748" stroke-width="14"/>
+<!-- Right steel tool drawers and hazard column -->
+<path d="M744 132v298" stroke="#070d16" stroke-width="26"/>
+<path d="M732 197l24 -23v17l-24 23Z" fill="#d99c28" opacity=".85"/><path d="M732 228l24 -23v17l-24 23Z" fill="#d99c28" opacity=".85"/><path d="M732 259l24 -23v17l-24 23Z" fill="#d99c28" opacity=".85"/><path d="M732 290l24 -23v17l-24 23Z" fill="#d99c28" opacity=".85"/><path d="M732 321l24 -23v17l-24 23Z" fill="#d99c28" opacity=".85"/><path d="M732 352l24 -23v17l-24 23Z" fill="#d99c28" opacity=".85"/>
+<rect x="767" y="295" width="156" height="153" rx="7" fill="url(#cab)" stroke="#641f22" stroke-width="7"/>
+<path d="M780 322H910" stroke="#e56754" stroke-width="6"/><path d="M832 331h25" stroke="#e4e9ec" stroke-width="4"/><path d="M780 350H910" stroke="#e56754" stroke-width="6"/><path d="M832 359h25" stroke="#e4e9ec" stroke-width="4"/><path d="M780 378H910" stroke="#e56754" stroke-width="6"/><path d="M832 387h25" stroke="#e4e9ec" stroke-width="4"/><path d="M780 406H910" stroke="#e56754" stroke-width="6"/><path d="M832 415h25" stroke="#e4e9ec" stroke-width="4"/>
+<circle cx="795" cy="459" r="9" fill="#10151b"/><circle cx="892" cy="459" r="9" fill="#10151b"/>
+<!-- Shop window -->
+<rect x="805" y="85" width="145" height="141" fill="#172b42" stroke="#637b90" stroke-width="7"/>
+<rect x="814" y="94" width="127" height="121" fill="#345976"/><path d="M877 95v120M814 155h126" stroke="#c2d0da" stroke-width="6"/>
+<path d="M830 214L918 95" stroke="#c3e0fc" stroke-opacity=".15" stroke-width="28"/>
+<!-- Garage mat / floor reflections -->
+<path d="M233 455L729 455 803 509 184 509Z" fill="#11181d" opacity=".65" stroke="#b23f39" stroke-width="3"/>
+<path d="M50 499h880" stroke="#a3b9c9" stroke-opacity=".28" stroke-width="2"/>
+<path d="M26 512h927" stroke="#d6e5ed" stroke-opacity=".18" stroke-width="4"/>
+</svg>
