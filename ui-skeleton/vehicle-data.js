@@ -21,11 +21,11 @@ meta.textContent=r?(r.condition==='new'?'신차':'중고차')+' · 시작 '+fmt(
 brand.innerHTML=b.brand==='honda'?hondaLogo:unknownLogo;brand.setAttribute('aria-label',b.brand==='honda'?'혼다':'제조사 미정');
 counter.textContent=bikes.map((_,i)=>i===index?'●':'○').join(' ');document.body.dataset.activeBike=b.id;renderParts();document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:b.id}}))}
 function renderParts(){const reg=currentRegistration(),odo=getOdometer(),data=getVehicleData(currentBike().id);
-document.querySelectorAll('.part').forEach((row,i)=>{const item=items[i],records=data.records&&Array.isArray(data.records[item.id])?data.records[item.id]:[],last=records.length?records[records.length-1]:null;
+document.querySelectorAll('.part:not(.part-add-card)').forEach((row,i)=>{const id=row.dataset.partId||items[i]?.id;const item=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};if(!id)return;const records=data.records&&Array.isArray(data.records[item.id])?data.records[item.id]:[],last=records.length?records[records.length-1]:null;
 const text=row.querySelector('.part-line span'),bar=row.querySelector('.gauge-fill'),btn=row.querySelector('.service');
 bar.classList.remove('blue','amber');bar.classList.add('blue');btn.classList.remove('blue','amber');btn.classList.add('blue');
 if(!reg){text.textContent='차량 등록 후 확인';bar.style.width='0%';row.classList.add('part-unregistered');}
-else if(!last){text.textContent='기록 없음 / '+fmt(item.interval)+'km';bar.style.width='0%';row.classList.add('part-unregistered');}
+else if(!last){text.textContent=item.interval?'기록 없음 / '+fmt(item.interval)+'km':'기록 없음';bar.style.width='0%';row.classList.add('part-unregistered');}
 else{const used=Math.max(0,odo-last.at),interval=valid(last.interval)&&last.interval>0?last.interval:item.interval;const ratio=Math.min(100,Math.round(used/interval*100));text.textContent=fmt(used)+' / '+fmt(interval)+'km';bar.style.width=ratio+'%';row.classList.remove('part-unregistered');bar.classList.toggle('amber',ratio>=70);bar.classList.toggle('blue',ratio<70);btn.classList.toggle('amber',ratio>=70);btn.classList.toggle('blue',ratio<70)}
 btn.setAttribute('role','button');btn.tabIndex=0;btn.setAttribute('aria-label',row.querySelector('strong').textContent+' 정비기록 등록');});
 }
@@ -48,10 +48,10 @@ const nextReg={...registered,[currentBike().id]:{condition,km:at}},nextData={...
 try{write(regKey,nextReg);write(dataKey,nextData);registered=nextReg;database=nextData;renderInfo();closeReg();check.classList.add('visible');checkTimer=setTimeout(hideCheck,720)}catch{regError.textContent='저장할 수 없어. 브라우저 저장공간을 확인해.'}
 });
 regClose.addEventListener('click',closeReg);regMask.addEventListener('click',e=>{if(e.target===regMask)closeReg()});
-function openRecord(i){editingItem=items[i];returnFocus=document.activeElement;if(!currentRegistration()){openReg();return}const row=document.querySelectorAll('.part')[i];recordTitle.textContent=row.querySelector('strong').textContent+' 정비기록';recordAt.value=String(getOdometer());recordDate.value=[new Date().getFullYear(),String(new Date().getMonth()+1).padStart(2,'0'),String(new Date().getDate()).padStart(2,'0')].join('-');recordInterval.value=String(editingItem.interval);recordError.textContent='';renderHistory();recordMask.hidden=false;document.body.classList.add('registration-open');recordClose.focus()}
+function openRecord(row){const id=row.dataset.partId;editingItem=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};returnFocus=document.activeElement;if(!currentRegistration()){openReg();return}recordTitle.textContent=row.querySelector('strong').textContent+' 정비기록';recordAt.value=String(getOdometer());recordDate.value=[new Date().getFullYear(),String(new Date().getMonth()+1).padStart(2,'0'),String(new Date().getDate()).padStart(2,'0')].join('-');recordInterval.value=editingItem.interval?String(editingItem.interval):'';recordError.textContent='';renderHistory();recordMask.hidden=false;document.body.classList.add('registration-open');recordClose.focus()}
 function closeRecord(){recordMask.hidden=true;document.body.classList.remove('registration-open');if(returnFocus?.focus)returnFocus.focus()}
 function renderHistory(){const d=getVehicleData(currentBike().id),arr=Array.isArray(d.records?.[editingItem.id])?d.records[editingItem.id]:[];recordHistory.replaceChildren();if(!arr.length){recordHistory.textContent='저장된 정비기록이 없습니다.';return}const ul=document.createElement('ul');[...arr].reverse().slice(0,8).forEach(x=>{const li=document.createElement('li');li.textContent=x.date+' · '+fmt(x.at)+'km · 주기 '+fmt(x.interval)+'km';ul.appendChild(li)});recordHistory.appendChild(ul)}
-document.querySelectorAll('.part .service').forEach((btn,i)=>{btn.addEventListener('click',()=>openRecord(i));btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openRecord(i)}})});
+document.querySelector('.rows').addEventListener('click',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn)openRecord(btn.closest('.part'))});document.querySelector('.rows').addEventListener('keydown',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openRecord(btn.closest('.part'))}});
 recordForm.addEventListener('submit',e=>{e.preventDefault();if(!editingItem)return;const at=Number(recordAt.value),interval=Number(recordInterval.value),date=recordDate.value,reg=currentRegistration(),odo=getOdometer();
 if(recordAt.value.trim()===''||!valid(at)||at<reg.km||at>odo||!valid(interval)||interval<1||interval>1000000||!/^\d{4}-\d\d-\d\d$/.test(date)||!Number.isFinite(Date.parse(date))){recordError.textContent='주행거리·날짜·교체주기를 확인해. 정비 주행거리는 시작~현재 범위여야 해.';return}
 const d=getVehicleData(currentBike().id),records={...(d.records||{})},old=Array.isArray(records[editingItem.id])?records[editingItem.id]:[];
@@ -67,5 +67,5 @@ stage.addEventListener('pointerup',e=>finish(e,false));stage.addEventListener('p
 stage.addEventListener('keydown',e=>{if(!regMask.hidden||!recordMask.hidden)return;if(e.key==='ArrowRight'){e.preventDefault();change(index+1)}else if(e.key==='ArrowLeft'){e.preventDefault();change(index-1)}else if(e.key==='Enter'||e.key===' '){e.preventDefault();selectVisible()}});
 stage.tabIndex=0;stage.setAttribute('role','button');stage.setAttribute('aria-label','오토바이 카드: 좌우 스와이프로 이동, 탭으로 차량 등록');
 window.addEventListener('resize',()=>position(0,false));window.addEventListener('pageshow',()=>position(0,false));
-renderInfo();position(0,false);
+document.addEventListener('motorcycle:custom-parts-change',renderParts);renderInfo();position(0,false);
 })();
