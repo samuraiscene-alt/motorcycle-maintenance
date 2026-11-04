@@ -71,7 +71,7 @@ function partPicture(part){
  const asset=catalogIcons[part.id];
  if(!asset)return '<span class="stock-fallback">🔧</span>';
  if(asset.file)return '<img class="stock-part-photo" src="../assets/'+asset.file+'" alt="" loading="lazy">';
- if(asset.local)return '<img class="stock-part-center" src="./part-icons/'+asset.local+'.svg" alt="" loading="lazy">';
+ if(asset.local)return '<img class="stock-part-center" src="./part-icons/'+asset.local+'.svg?v=icon-fit2" alt="" loading="lazy">';
  return '<span class="stock-fallback">🔧</span>';
 }
 function stockRow(part){const row=document.createElement('article');row.className='part stock-part';row.dataset.partId=part.id;row.dataset.interval='0';row.innerHTML='<div class="part-img stock-picture">'+partPicture(part)+'</div><div class="part-body"><div class="part-line"><strong></strong><span>기록 없음</span></div><div class="gauge"><div class="gauge-fill blue" style="width:0%"></div></div></div><div class="service blue">'+ico+'</div>';row.querySelector('strong').textContent=part.name;return row}
