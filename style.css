@@ -49,3 +49,18 @@ body.choosing .tabs,body.choosing .bottom-nav{display:none}
 body.choosing .vehicle-strip .odo{display:none}
 .part-title{letter-spacing:-.4px}
 @media(max-width:390px){.garage{height:292px}.bike-stage{height:234px}.garage-bottom{bottom:5px}}
+
+/* v0.3: independent bike-only carousel, no thumbnail gallery */
+.bike-stage img{mix-blend-mode:normal;-webkit-mask-image:none;mask-image:none;border-radius:0;object-fit:contain}
+.bike-stage{filter:drop-shadow(0 10px 5px rgba(14,27,39,.35));will-change:transform,opacity}
+.garage{background-position:center center}
+.registration{max-width:100%;padding:20px 18px}
+.registration h2{display:block!important;margin:0 0 12px;text-align:center;font-size:20px;color:#1b3552}
+.registration .small-note{display:block!important;margin:12px 0 18px;text-align:center}
+.vehicle-preview-name{display:flex;align-items:baseline;justify-content:center;flex-wrap:wrap;gap:9px;color:#1d3552}
+.vehicle-preview-name strong{font-size:15px;font-weight:900}.vehicle-preview-name span{font-size:22px;font-weight:900}.vehicle-preview-name small{font-size:12px;color:#607993}
+body.choosing .tabs,body.choosing .bottom-nav{display:none}
+body.choosing .vehicle-strip{background:linear-gradient(#f9fbff,#e5ecf6)}
+body.choosing .garage{height: min(49vh,390px)}
+body.choosing .bike-stage{height:calc(100% - 56px);width:min(96%,470px);top:6px}
+@media(max-width:390px){body.choosing .garage{height: min(43vh,345px)}}
