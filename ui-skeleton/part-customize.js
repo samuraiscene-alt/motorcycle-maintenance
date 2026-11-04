@@ -49,8 +49,33 @@ battery:'<rect x="5" y="12" width="32" height="24" rx="4" fill="#272e38" stroke=
 filter:'<rect x="6" y="11" width="31" height="24" rx="5" fill="#333740" stroke="#7d8b9a" stroke-width="3"/><path d="M11 15v16m5-16v16m5-16v16m5-16v16m5-16v16" stroke="#c87739" stroke-width="2.8"/>',
 brake:'<path d="M8 30Q2 13 19 9Q36 7 35 24Q32 38 17 35Z" fill="#434a52" stroke="#8b99a6" stroke-width="3"/><path d="M15 18h16v9H15Z" fill="#b1a093"/>',
 tool:'<path d="M29 7a11 11 0 0 0-14 13L5 30l7 7 11-10A11 11 0 0 0 35 13l-7 7-8-7Z" fill="#637586" stroke="#26394d" stroke-width="2"/>'};
-function partIcon(type){return '<svg class="stock-part-icon" viewBox="0 0 42 42" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+(symbols[type]||symbols.tool)+'</svg>'}
-function stockRow(part){const row=document.createElement('article');row.className='part stock-part';row.dataset.partId=part.id;row.dataset.interval='0';row.innerHTML='<div class="part-img stock-picture">'+partIcon(part.symbol)+'</div><div class="part-body"><div class="part-line"><strong></strong><span>기록 없음</span></div><div class="gauge"><div class="gauge-fill blue" style="width:0%"></div></div></div><div class="service blue">'+ico+'</div>';row.querySelector('strong').textContent=part.name;return row}
+// Reuse approved premium WebP icons. Remaining items use high-detail studio 3D image sheets.
+const catalogIcons={
+'drive-belt':{file:'belt.webp'},'weights':{file:'rollers.webp'},
+'spark-plug':{file:'spark.webp'},'brake-fluid':{file:'brake-fluid.webp'},
+'gear-oil':{file:'gear-oil.webp'},'battery':{file:'battery.webp'},
+'slide-piece':{file:'slides.webp'},
+'oil-strainer':{atlas:'a',col:0,row:0},'valve-clearance':{atlas:'c',col:2,row:1},
+'engine-gasket':{atlas:'c',col:0,row:2},'intake':{atlas:'c',col:1,row:1},
+'clutch-shoe':{file:'clutch.webp'},'clutch-bell':{atlas:'a',col:2,row:1},
+'drive-pulley':{atlas:'a',col:1,row:2},'drive-bearing':{atlas:'a',col:2,row:2},
+'brake-disc':{file:'disc.webp'},'brake-caliper':{atlas:'d',col:0,row:0},
+'brake-hose':{atlas:'b',col:1,row:0},'wheel-bearing':{atlas:'b',col:2,row:1},
+'fork-oil':{atlas:'d',col:0,row:1},'rear-shock':{atlas:'c',col:2,row:2},
+'steering-bearing':{atlas:'b',col:2,row:1},
+'headlamp':{atlas:'b',col:0,row:2},'fuse':{atlas:'d',col:1,row:0},
+'starter':{atlas:'b',col:1,row:2},'coolant-hose':{atlas:'b',col:2,row:2},
+'thermostat':{atlas:'c',col:1,row:0},'water-pump':{atlas:'c',col:0,row:0},
+'fuel-pump':{atlas:'d',col:1,row:1}};
+function partPicture(part){
+ const asset=catalogIcons[part.id];
+ if(!asset)return '<span class="stock-fallback">🔧</span>';
+ if(asset.file)return '<img class="stock-part-photo" src="../assets/'+asset.file+'" alt="" loading="lazy">';
+ const size=asset.atlas==='d'?2:3;
+ const xy=n=>size===2?(n?'100%':'0%'):(n===0?'0%':n===1?'50%':'100%');
+ return '<span class="stock-atlas-picture atlas-'+size+'" style="background-image:url(\'./realistic-parts-atlas-'+asset.atlas+'.svg\');background-position:'+xy(asset.col)+' '+xy(asset.row)+'" aria-hidden="true"></span>';
+}
+function stockRow(part){const row=document.createElement('article');row.className='part stock-part';row.dataset.partId=part.id;row.dataset.interval='0';row.innerHTML='<div class="part-img stock-picture">'+partPicture(part)+'</div><div class="part-body"><div class="part-line"><strong></strong><span>기록 없음</span></div><div class="gauge"><div class="gauge-fill blue" style="width:0%"></div></div></div><div class="service blue">'+ico+'</div>';row.querySelector('strong').textContent=part.name;return row}
 const standardRoot=document.createElement('div');standardRoot.className='stock-part-container';list.appendChild(standardRoot);
 standardParts.forEach(part=>standardRoot.appendChild(stockRow(part)));
 const expand=document.createElement('button');expand.type='button';expand.className='extra-parts-toggle';expand.setAttribute('aria-expanded','false');expand.textContent='추가 정비 항목 펼치기 ('+extraParts.length+'개) ▾';list.appendChild(expand);
