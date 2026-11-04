@@ -145,7 +145,12 @@ body.part-add-open{overflow:hidden}
 .stock-picture img.stock-part-center{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:100%;max-height:100%;left:0;top:0;transform:none;object-fit:contain;object-position:50% 50%;mix-blend-mode:normal;filter:none;pointer-events:none}
 /* Hide narrow neighboring-image seams at the left and right edges; keep the centered icon untouched. */
 .stock-picture:has(>img.stock-part-center){background:#f7f7f7}
-.stock-picture img.stock-part-center{clip-path:inset(0 25% 0 25%)}
+/* No resizing: cover the black side bands embedded in the original atlas tiles. */
+.stock-picture:has(>img.stock-part-center)::before,
+.stock-picture:has(>img.stock-part-center)::after{content:"";position:absolute;top:0;bottom:0;width:25%;background:#f7f7f7;z-index:2;pointer-events:none}
+.stock-picture:has(>img.stock-part-center)::before{left:0}
+.stock-picture:has(>img.stock-part-center)::after{right:0}
+.stock-picture img.stock-part-center{clip-path:none}
 </style></head><body><div class="app"><section class="garage" id="garage" aria-label="오토바이 쇼룸. 좌우 스와이프로 다른 차량을 볼 수 있습니다">
 <div class="showroom-track" id="showroom-track">
   <div class="showroom-slide" data-index="0" role="group" aria-label="첫 번째 오토바이">
