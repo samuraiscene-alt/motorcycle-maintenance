@@ -19,7 +19,7 @@ function position(offset,animate){track.style.transition=animate?'transform 370m
 function renderInfo(){const b=currentBike(),r=currentRegistration(),odo=getOdometer();name.textContent=b.name;
 meta.textContent=r?(r.condition==='new'?'신차':'중고차')+' · 시작 '+fmt(r.km)+'km · 현재 '+fmt(odo)+'km':b.demo;
 brand.innerHTML=b.brand==='honda'?hondaLogo:unknownLogo;brand.setAttribute('aria-label',b.brand==='honda'?'혼다':'제조사 미정');
-counter.textContent=bikes.map((_,i)=>i===index?'●':'○').join(' ');renderParts()}
+counter.textContent=bikes.map((_,i)=>i===index?'●':'○').join(' ');document.body.dataset.activeBike=b.id;renderParts();document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:b.id}}))}
 function renderParts(){const reg=currentRegistration(),odo=getOdometer(),data=getVehicleData(currentBike().id);
 document.querySelectorAll('.part').forEach((row,i)=>{const item=items[i],records=data.records&&Array.isArray(data.records[item.id])?data.records[item.id]:[],last=records.length?records[records.length-1]:null;
 const text=row.querySelector('.part-line span'),bar=row.querySelector('.gauge-fill'),btn=row.querySelector('.service');
