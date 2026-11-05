@@ -1,6 +1,6 @@
 {
-  "version": "2.9.6",
-  "cache": "motorcycle-maintenance-v2.9.6",
+  "version": "2.9.7",
+  "cache": "motorcycle-maintenance-v2.9.7",
   "released": "2026-11-06",
-  "note": "공식 정비표 연식 확대: HONDA PCX125 2024, YAMAHA NMAX125 2022 추가. 미확인 연식은 자동설정 제외"
+  "note": "혼다 공식 공통 설명서 기반 PCX125 2021·2022·2023년형 정비주기 추가. 연식별 검증된 항목만 자동 적용"
 }
