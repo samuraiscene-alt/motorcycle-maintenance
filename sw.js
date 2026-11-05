@@ -1,10 +1,10 @@
-const CACHE='motorcycle-maintenance-v2.9.9';
+const CACHE='motorcycle-maintenance-v2.9.10';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
   SHELL,
   new URL('./ui-skeleton/vehicle-catalog.js?v=pcx-2021-2023-5',ROOT).href,
-  new URL('./ui-skeleton/vehicle-data.js?v=calendar-maintenance-31',ROOT).href,
+  new URL('./ui-skeleton/vehicle-data.js?v=calendar-maintenance-32-inspect',ROOT).href,
   new URL('./ui-skeleton/part-customize.js?v=accordion-order-3',ROOT).href,
   new URL('./ui-skeleton/priority-parts.js?v=priority-13-2',ROOT).href,
   new URL('./ui-skeleton/priority-images.js?v=studio-icons-4',ROOT).href,
