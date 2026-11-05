@@ -68,7 +68,9 @@ function visiblePreview(img){if(img){preview.src=img;preview.hidden=false;fallba
 function edit(row){closeSwipe();editing={id:row.dataset.partId,bike:bike(),row};draft=null;revokePreview();error.textContent='';nameInput.value=row.querySelector('.part-line strong')?.textContent||'';
  const cycle=active()[row.dataset.partId]?.interval;
  const builtIn={oil:3000,filter:12000,brake:12000,tire:10000,coolant:20000};
- cycleInput.value=Number.isSafeInteger(cycle)&&cycle>0?String(cycle):String(Number(row.dataset.interval)||builtIn[row.dataset.partId]||'');
+ let unverified=false;
+ try{const regs=JSON.parse(localStorage.getItem('motorcycle-skeleton-registrations-v1')||'{}');unverified=regs[bike()]?.maintenanceProfileStatus==='unverified'}catch{}
+ cycleInput.value=Number.isSafeInteger(cycle)&&cycle>0?String(cycle):unverified?'':String(Number(row.dataset.interval)||builtIn[row.dataset.partId]||'');
  const img=row.querySelector('.part-img img');visiblePreview(img?.src||'');mask.hidden=false;document.body.style.overflow='hidden';nameInput.focus({preventScroll:true})}
 mask.querySelector('.part-edit-close').addEventListener('click',closeModal);mask.addEventListener('click',e=>{if(e.target===mask)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!mask.hidden)closeModal();else closeSwipe()}});
