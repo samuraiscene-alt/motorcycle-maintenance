@@ -1,6 +1,6 @@
 {
-  "version": "2.9.14",
-  "cache": "motorcycle-maintenance-v2.9.14",
+  "version": "2.9.15",
+  "cache": "motorcycle-maintenance-v2.9.15",
   "released": "2026-11-06",
-  "note": "거리 기준 교체·점검·청소 정비 알림 구분, 정비 이력 미확인 항목 보호"
+  "note": "기간 기준 정비 알림(30일 이내·기한 초과) 추가, 마지막 교체일 미확인 항목 별도 표시"
 }
