@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v1.8';
+const CACHE='motorcycle-maintenance-v1.9';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
@@ -9,7 +9,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/priority-images.js?v=studio-icons-4',ROOT).href,
   new URL('./ui-skeleton/part-swipe-edit.js?v=restore-visible-8',ROOT).href,
   new URL('./ui-skeleton/backup-restore.js?v=full-backup-1',ROOT).href,
-  new URL('./ui-skeleton/vehicle-management.js?v=fleet-2',ROOT).href,
+  new URL('./ui-skeleton/vehicle-management.js?v=fleet-3',ROOT).href,
   new URL('./manifest.webmanifest',ROOT).href
 ];
 self.addEventListener('install',event=>{
