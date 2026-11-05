@@ -137,14 +137,14 @@ const fresh=load(regKey),nextReg={...fresh,[currentBike().id]:{...fresh[currentB
 try{write(regKey,nextReg);write(dataKey,nextData);localStorage.setItem(chosenKey,currentBike().id);registered=nextReg;database=nextData;renderInfo();closeReg();check.classList.add('visible');checkTimer=setTimeout(hideCheck,720)}catch{regError.textContent='저장할 수 없어. 브라우저 저장공간을 확인해.'}
 });
 regClose.addEventListener('click',closeReg);regMask.addEventListener('click',e=>{if(e.target===regMask)closeReg()});
-const odoButton=$('odometer-button'),odoMask=$('odometer-mask'),odoForm=$('odometer-form'),odoInput=$('odometer-input'),odoError=$('odometer-error'),odoClose=$('odometer-close'),odoDisplay=$('odometer-display'),odoKeypad=$('odometer-keypad');
+const odoButton=$('odometer-button'),odoMask=$('odometer-mask'),odoForm=$('odometer-form'),odoInput=$('odometer-input'),odoError=$('odometer-error'),odoClose=$('odometer-close'),odoDisplay=$('odometer-display'),odoKeypad=$('odometer-keypad'),odoCorrection=$('odometer-correction');
 let odoReplaceOnDigit=true;
 function showOdometerValue(){odoDisplay.replaceChildren(document.createTextNode(odoInput.value?fmt(Number(odoInput.value))+' ':'— '));const unit=document.createElement('small');unit.textContent='km';odoDisplay.appendChild(unit)}
 function closeOdometer(){odoMask.hidden=true;document.body.classList.remove('registration-open');odoError.textContent='';}
 function openOdometer(){
  if(!odoMask.hidden||!recordMask.hidden||!regMask.hidden)return;
  if(!currentRegistration()){openReg();return}
- odoInput.value=String(getOdometer());odoReplaceOnDigit=true;odoError.textContent='';showOdometerValue();
+ odoInput.value=String(getOdometer());odoReplaceOnDigit=true;odoCorrection.checked=false;odoError.textContent='';showOdometerValue();
  odoMask.hidden=false;document.body.classList.add('registration-open');
 }
 odoKeypad.addEventListener('click',event=>{
@@ -166,10 +166,13 @@ odoForm.addEventListener('submit',e=>{
  e.preventDefault();
  const r=currentRegistration(),before=getOdometer(),raw=odoInput.value.trim(),at=Number(raw);
  if(!r){odoError.textContent='먼저 오토바이 등록을 완료해.';return}
- if(!raw||!valid(at)||at<r.km||at<before){odoError.textContent='현재 주행거리는 이전 주행거리보다 작을 수 없어.';return}
+ if(!raw||!valid(at)||at<r.km){odoError.textContent='주행거리는 시작 주행거리보다 작을 수 없어.';return}
+ if(at<before&&!odoCorrection.checked){odoError.textContent='이전 주행거리보다 작은 값이야. 오입력 정정을 선택해.';return}
  const old=getVehicleData(currentBike().id),all=Object.values(old.records||{}).flat().filter(x=>valid(x.at)),latest=all.reduce((m,x)=>Math.max(m,x.at),0);
- if(at<latest){odoError.textContent='저장된 정비 주행거리보다 낮게 입력할 수 없어.';return}
- const updated={...database,[currentBike().id]:{...old,odometer:at,records:old.records||{},odometerHistory:[...(old.odometerHistory||[]),{at,date:new Date().toISOString()}]}};
+ if(at<latest){odoError.textContent='이미 저장된 정비 주행거리보다 작은 값으로 정정할 수 없어.';return}
+ const correcting=at<before;
+ if(correcting&&!confirm('현재 주행거리를 '+fmt(before)+'km에서 '+fmt(at)+'km로 정정할까?\n정비기록은 유지되고 소모품 상태를 다시 계산해.'))return;
+ const updated={...database,[currentBike().id]:{...old,odometer:at,records:old.records||{},odometerHistory:[...(old.odometerHistory||[]),{at,date:new Date().toISOString(),...(correcting?{type:'correction',previous:before}:{})}]}};
  try{write(dataKey,updated);database=updated;renderInfo();closeOdometer()}
  catch{odoError.textContent='주행거리를 저장하지 못했어. 저장공간을 확인해.'}
 });
