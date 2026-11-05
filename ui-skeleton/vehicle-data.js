@@ -72,6 +72,7 @@ else{
 }
 btn.setAttribute('role','button');btn.tabIndex=0;btn.setAttribute('aria-label',row.querySelector('strong').textContent+' 정비기록 등록');});
 }
+document.addEventListener('motorcycle:custom-parts-change',()=>renderParts());
 function hideCheck(){clearTimeout(checkTimer);check.classList.remove('visible');check.setAttribute('aria-hidden','true')}
 function openReg(){returnFocus=document.activeElement;const r=currentRegistration(),odo=getOdometer();regTitle.textContent=currentBike().name;document.getElementById('registration-title').textContent=r?'오토바이 정보 수정':'오토바이 등록';regForm.querySelector('.registration-save').textContent=r?'변경사항 저장':'이 오토바이 등록';
 regForm.querySelector('input[name="condition"][value="new"]').checked=!!r&&r.condition==='new';regForm.querySelector('input[name="condition"][value="used"]').checked=!r||r.condition!=='new';
