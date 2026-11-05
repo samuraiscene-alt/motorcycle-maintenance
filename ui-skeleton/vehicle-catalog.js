@@ -11,6 +11,47 @@ const brands=[
  {id:'VESPA',label:'VESPA',models:[['PRIMAVERA125',125],['GTS300',300]]}
 ];
 const officialProfiles=Object.freeze({
+ 'YAMAHA|NMAX125|2022':Object.freeze({
+  verified:true,coverage:'partial',region:'GPD125 / Yamaha Korea 2022',modelCode:'GPD125',year:2022,
+  source:'https://www.ysk.co.kr/support/manual.php?boardid=manual&idx=57&mNum=5&mode=view&sNum=7',
+  sourceText:'https://ownersmanuals2.com/yamaha/nmax-125-2022-owners-manual-95466',
+  sourceType:'Yamaha NMAX125 2022 user manual, manufacturer document linked by Yamaha Korea',
+  sourcePages:['9-2','9-3','9-4','9-5'],
+  intervals:Object.freeze({oil:6000,filter:18000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:6000,firstReplaceKm:1000,firstRegularOdometerKm:5000,indicator:true},
+   filter:{replaceKm:18000},'drive-belt':{replaceOnIndicator:true},
+   'brake-fluid':{replaceMonths:24},'brake-hose':{replaceMonths:48},
+   coolant:{replaceMonths:36},
+   brake:{inspectAsScheduled:true,replaceWhenWorn:true},
+   tire:{inspectAsScheduled:true,replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({})
+ }),
+ 'HONDA|PCX125|2024':Object.freeze({
+  verified:true,coverage:'partial',region:'KO/ED',modelCode:'WW125S/A',year:2024,
+  source:'https://www.manualslib.com/manual/3601308/Honda-Pcx125-2024.html',
+  sourceType:'Honda PCX125 (WW125S/A) 2024 manufacturer owner manual, reproduced by ManualsLib',
+  sourcePages:[133,134,135],
+  intervals:Object.freeze({
+   oil:6000,filter:18000,'spark-plug':12000,'drive-belt':24000,
+   'oil-strainer':12000,'valve-clearance':6000
+  }),
+  tasks:Object.freeze({
+   oil:{replaceKm:6000,firstReplaceKm:1000,firstRegularOdometerKm:6000},
+   filter:{replaceKm:18000},
+   'spark-plug':{inspectKm:6000,replaceKm:12000},
+   'drive-belt':{inspectKm:12000,replaceKm:24000},
+   'oil-strainer':{cleanKm:12000},
+   'valve-clearance':{inspectKm:6000},
+   'brake-fluid':{replaceMonths:24},
+   'gear-oil':{replaceMonths:24},
+   coolant:{replaceMonths:36},
+   brake:{replaceWhenWorn:true},
+   tire:{replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({'oil-strainer':'clean','valve-clearance':'inspect'})
+ }),
  'YAMAHA|NMAX125|2025':Object.freeze({
   verified:true,region:'2025 GPD125-A',modelCode:'GPD125-A',year:2025,
   source:'https://www.ysk.co.kr/support/manual.php?boardid=manual&idx=62&mode=view',
