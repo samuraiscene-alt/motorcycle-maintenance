@@ -1,6 +1,6 @@
 {
-  "version": "2.7.4",
-  "cache": "motorcycle-maintenance-v2.7.4",
+  "version": "2.7.5",
+  "cache": "motorcycle-maintenance-v2.7.5",
   "released": "2026-11-05",
-  "note": "정비기록 최신 순서·다음 교체 거리 표시, 동일 날짜/주행거리 중복 저장 방지, 미등록 차량 정비기록 화면 수정"
+  "note": "등록 차량이 없을 때 HONDA PCX125 시연 등록창 대신 제조사·기종 새 차량 등록 화면으로 이동"
 }
