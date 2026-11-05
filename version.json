@@ -1,6 +1,6 @@
 {
-  "version": "2.2.0",
-  "cache": "motorcycle-maintenance-v2.2",
+  "version": "2.3.0",
+  "cache": "motorcycle-maintenance-v2.3",
   "released": "2026-11-05",
-  "note": "정비기록 차량 선택, 다음 교체 예정 주행거리와 주행거리 변경 내역 조회"
+  "note": "차량 연식·외관 상태 저장 및 투명 차체 내부에만 안전한 노후 효과"
 }
