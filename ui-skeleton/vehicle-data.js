@@ -21,6 +21,7 @@ const selectedBike=localStorage.getItem(chosenKey);
 const selectedIndex=bikes.findIndex(b=>b.id===selectedBike&&registered[b.id]);
 const firstRegistered=bikes.findIndex(b=>!!registered[b.id]);
 if(selectedIndex>=0)index=selectedIndex;else if(firstRegistered>=0)index=firstRegistered;
+const hasRegisteredBikes=()=>Object.values(registered).some(r=>r&&typeof r==='object');
 const isLocked=()=>!!registered[bikes[index]?.id];
 const hondaLogo=brand.innerHTML,unknownLogo='<svg viewBox="0 0 64 42" aria-hidden="true" class="generic-bike-mark"><circle cx="15" cy="30" r="8"/><circle cx="49" cy="30" r="8"/><path d="M15 30 26 14h13l10 16M25 14l8 16H15m18 0 10-13h8"/></svg><strong>BRAND</strong>';
 const fmt=n=>Number(n).toLocaleString('ko-KR'),valid=n=>Number.isSafeInteger(n)&&n>=0&&n<=9999999;
@@ -45,7 +46,23 @@ document.addEventListener('motorcycle:select-vehicle',event=>{
 });
 function width(){return stage.getBoundingClientRect().width||1}
 function position(offset,animate){track.style.transition=animate?'transform 370ms cubic-bezier(.22,.75,.19,1)':'none';track.style.transform='translate3d('+(-index*width()+offset)+'px,0,0)'}
-function renderInfo(){const b=currentBike(),r=currentRegistration(),odo=getOdometer();name.textContent=b.name;
+function renderInfo(){
+ const empty=!hasRegisteredBikes();
+ document.body.classList.toggle('no-registered-vehicles',empty);
+ track.hidden=empty;counter.hidden=empty;check.hidden=empty;
+ brand.hidden=empty;
+ const odometerButton=$('odometer-button');
+ if(odometerButton){odometerButton.hidden=empty;odometerButton.disabled=empty}
+ if(empty){
+  name.textContent='등록된 차량 없음';meta.textContent='설정에서 새 차량을 등록해.';
+  document.body.classList.remove('vehicle-locked');
+  stage.setAttribute('aria-label','차량이 없는 정비소');
+  document.body.dataset.activeBike='';
+  renderParts();
+  document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:null}}));
+  return;
+ }
+ const b=currentBike(),r=currentRegistration(),odo=getOdometer();name.textContent=b.name;
 meta.textContent=r?'시작 '+fmt(r.km)+'km · 현재 '+fmt(odo)+'km':b.demo;const odometerReadout=$('odometer-readout');if(odometerReadout)odometerReadout.textContent=r?fmt(odo)+'km':'등록 전';
 brand.innerHTML=b.brand==='honda'?hondaLogo:unknownLogo;brand.setAttribute('aria-label',b.brand==='honda'?'혼다':'제조사 미정');
 counter.textContent=isLocked()?'':bikes.map((_,i)=>i===index?'●':'○').join(' ');document.body.classList.toggle('vehicle-locked',isLocked());stage.setAttribute('aria-label',isLocked()?'등록된 내 오토바이 이미지':'오토바이 이미지: 좌우 스와이프로 차량 선택');document.body.dataset.activeBike=b.id;renderParts();document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:b.id}}))}
@@ -79,8 +96,8 @@ function openReg(){returnFocus=document.activeElement;const r=currentRegistratio
 regKm.value=r?String(r.km):'0';currentKm.value=r?String(odo):String(Number(regKm.value)||0);regError.textContent='';syncReg();
 regMask.hidden=false;document.body.classList.add('registration-open');regClose.focus()}
 function closeReg(){regMask.hidden=true;document.body.classList.remove('registration-open');if(returnFocus?.focus)returnFocus.focus()}
-function selectVisible(){if(animating||!regMask.hidden||!recordMask.hidden)return;chosen=index;hideCheck();void check.offsetWidth;check.classList.add('visible');check.setAttribute('aria-hidden','false');clearTimeout(formTimer);formTimer=setTimeout(()=>{hideCheck();openReg()},640)}
-function change(next){if(isLocked()||next<0||next>=bikes.length||animating){position(0,true);return}animating=true;hideCheck();clearTimeout(formTimer);index=next;position(0,true);renderInfo();tint.classList.remove('flash');void tint.offsetWidth;tint.classList.add('flash');setTimeout(()=>animating=false,385)}
+function selectVisible(){if(!hasRegisteredBikes()||animating||!regMask.hidden||!recordMask.hidden)return;chosen=index;hideCheck();void check.offsetWidth;check.classList.add('visible');check.setAttribute('aria-hidden','false');clearTimeout(formTimer);formTimer=setTimeout(()=>{hideCheck();openReg()},640)}
+function change(next){if(!hasRegisteredBikes()||isLocked()||next<0||next>=bikes.length||animating){position(0,true);return}animating=true;hideCheck();clearTimeout(formTimer);index=next;position(0,true);renderInfo();tint.classList.remove('flash');void tint.offsetWidth;tint.classList.add('flash');setTimeout(()=>animating=false,385)}
 function syncReg(){regHint.textContent='앱에서 이 오토바이의 관리를 시작한 당시 주행거리'}
 regForm.addEventListener('submit',e=>{e.preventDefault();const at=Number(regKm.value),now=Number(currentKm.value),previous=currentRegistration();
 if(regKm.value.trim()===''||currentKm.value.trim()===''||!valid(at)||!valid(now)||now<at){regError.textContent='시작·현재 주행거리를 확인해. 현재 주행거리는 시작보다 작을 수 없어.';return}
