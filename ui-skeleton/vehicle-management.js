@@ -8,6 +8,7 @@ css.textContent='.fleet-list{display:flex;flex-direction:column;gap:7px;margin-t
 css.textContent+='.fleet-odometer-history{margin:-3px 0 4px;border:1px solid #456078;border-radius:8px;padding:8px 11px;background:#10273e;color:#d1eaff;font-size:12px}.fleet-odometer-history summary{cursor:pointer;font-weight:800}.fleet-odometer-history>div{max-height:180px;overflow-y:auto;padding:7px 0;line-height:1.8;color:#c2d6e8}';
 css.textContent+='.fleet-appearance{border:1px solid #577992;border-radius:11px;padding:12px;margin:14px 0;background:#142c42}.fleet-appearance-form{display:grid;gap:10px;margin-top:9px}.fleet-appearance-form label{color:#d6e8f7;font-size:12px;font-weight:800}.fleet-appearance-form input,.fleet-appearance-form select{display:block;width:100%;margin-top:5px;height:43px;border:1px solid #9bbed8;border-radius:8px;padding:6px 10px;font-size:16px;background:#f4f9ff;color:#12263a}.fleet-appearance-feedback{min-height:18px;color:#a9e6ff!important}';
 css.textContent+='.fleet-swipe-shell{position:relative;margin-top:7px;overflow:hidden;border-radius:9px;touch-action:pan-y}.fleet-swipe-shell .fleet-item{position:relative;z-index:1;margin-top:0;transform:translateX(0);transition:transform .2s ease;touch-action:pan-y;user-select:none;-webkit-user-select:none}.fleet-swipe-shell.open .fleet-item{transform:translateX(-84px)}.fleet-swipe-delete{position:absolute;right:0;top:0;bottom:0;width:84px;background:#bd3445;color:white;border:0;border-radius:0 9px 9px 0;font-size:13px;font-weight:900;z-index:0}.fleet-swipe-shell:focus-within .fleet-swipe-delete{outline-offset:-3px}';
+css.textContent+='.fleet-edit[hidden]{display:none!important}.fleet-edit{display:grid;gap:9px;margin:10px 0;padding:12px;border:1px solid #8bb0cd;border-radius:10px;background:#142e45}.fleet-edit label{font-size:12px;font-weight:800;color:#dceeff}.fleet-edit input{width:100%;height:43px;margin-top:5px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #8eaec9;background:#f6faff;color:#132a3b}.fleet-edit-buttons{display:flex;gap:8px}.fleet-edit-buttons button{flex:1;min-height:42px;border-radius:8px;border:1px solid #8eaec9;background:#31577a;color:white;font-weight:800}.fleet-edit-feedback{font-size:12px;color:#ace0ff}.fleet-item .fleet-actions{flex-shrink:0}.fleet-item .fleet-actions button{padding:8px}';
 document.head.appendChild(css);
 const section=document.createElement('section');
 section.innerHTML='<strong>차량별 기록 관리</strong><p>기존 차량 기록은 보관하고 새 오토바이를 등록할 수 있어. 차량을 선택하면 해당 차량의 정비기록과 소모품 상태를 확인할 수 있어.</p><div class="fleet-list"></div><div class="fleet-appearance"><strong>현재 차량 연식 설정</strong><p>제조 연식을 입력하면 노후 단계를 자동으로 계산해. 검증된 부품 영역이 없는 차종에는 임의의 녹·파손을 추가하지 않아.</p><form class="fleet-appearance-form"><label>제조 연식<input name="year" type="number" inputmode="numeric" min="1950" max="2100" placeholder="예: 2020"></label><p class="fleet-auto-aging" aria-live="polite">제조 연식을 입력하면 사용감 단계가 자동 계산돼.</p><button class="backup-btn secondary" type="submit">차량 외관 설정 저장</button><p class="fleet-appearance-feedback" aria-live="polite"></p></form></div><button class="backup-btn secondary fleet-add" type="button" style="margin-top:12px">새 차량으로 시작</button><form class="fleet-new-form" hidden><label>제조사<input name="brand" maxlength="40" required placeholder="예: YAMAHA"></label><label>기종<input name="model" maxlength="55" required placeholder="예: NMAX"></label><label>배기량 (cc)<input name="cc" type="number" min="1" max="3000" step="1" inputmode="numeric" required placeholder="예: 125"></label><label>제조 연식 (필수)<input name="year" type="number" inputmode="numeric" min="1950" max="2100" required placeholder="예: 2020"></label><label>앱 사용 시작 주행거리 (km)<input name="km" type="number" inputmode="numeric" min="0" max="9999999" step="1" required value="0"></label><p>기존 차량은 삭제되지 않으며, 새 차량의 정비기록은 별도로 시작돼.</p><div class="fleet-actions"><button type="button" class="fleet-cancel">취소</button><button type="submit">새 차량 저장</button></div></form><p class="fleet-message" aria-live="polite"></p>';
@@ -16,6 +17,33 @@ reset.innerHTML='<strong>전체 데이터 초기화</strong><p>등록 차량, �
 root.querySelector('.backup-panel-header')?.after(section);
 root.querySelector('.backup-status')?.before(reset);
 const list=section.querySelector('.fleet-list'),form=section.querySelector('.fleet-new-form'),message=section.querySelector('.fleet-message');
+let editingId=null;
+const edit=document.createElement('form');edit.className='fleet-edit';edit.hidden=true;
+edit.innerHTML='<strong>차량정보 수정</strong><label>제조사<input name="brand" required maxlength="40"></label><label>기종<input name="model" required maxlength="55"></label><label>배기량 (cc)<input name="cc" required type="number" min="1" max="3000" step="1" inputmode="numeric"></label><label>제조 연식<input name="year" required type="number" min="1950" max="2100" inputmode="numeric"></label><label>앱 사용 시작 주행거리 (km)<input name="km" required type="number" min="0" max="9999999" step="1" inputmode="numeric"></label><p>현재 주행거리는 계기판에서 수정할 수 있어. 기존 정비기록은 유지돼.</p><p class="fleet-edit-feedback" aria-live="polite"></p><div class="fleet-edit-buttons"><button type="button" class="fleet-edit-cancel">취소</button><button type="submit">변경사항 저장</button></div>';
+section.querySelector('.fleet-add').before(edit);
+function closeEdit(){editingId=null;edit.hidden=true;edit.reset();edit.querySelector('.fleet-edit-feedback').textContent=''}
+function openEdit(id){const r=parse(REG)[id];if(!r)return;closeSwipe();editingId=id;form.hidden=true;edit.hidden=false;
+ const words=String(r.name||'').trim().split(/\\s+/);
+ edit.elements.brand.value=r.brand&&String(r.brand).toLowerCase()!=='unknown'?r.brand:(words.length>1?words[0]:'');
+ edit.elements.model.value=r.model||(words.length>1?words.slice(1).join(' '):r.name||'');
+ edit.elements.cc.value=r.cc??'';edit.elements.year.value=r.year??'';edit.elements.km.value=r.km??0;
+ edit.querySelector('.fleet-edit-feedback').textContent='';edit.scrollIntoView({block:'nearest'});
+}
+edit.querySelector('.fleet-edit-cancel').addEventListener('click',closeEdit);
+edit.addEventListener('submit',e=>{
+ e.preventDefault();const id=editingId,status=edit.querySelector('.fleet-edit-feedback');
+ const brand=edit.elements.brand.value.trim(),model=edit.elements.model.value.trim(),rawCC=edit.elements.cc.value.trim(),rawYear=edit.elements.year.value.trim(),rawKM=edit.elements.km.value.trim(),cc=Number(rawCC),year=Number(rawYear),km=Number(rawKM);
+ if(!id||!brand||brand.length>40||!model||model.length>55||brand.length+model.length+1>100||!rawCC||!Number.isSafeInteger(cc)||cc<1||cc>3000||!rawYear||!Number.isSafeInteger(year)||year<1950||year>new Date().getFullYear()||!rawKM||!Number.isSafeInteger(km)||km<0||km>9999999){status.textContent='제조사·기종·배기량·연식·주행거리를 확인해.';return}
+ const r=parse(REG)[id];if(!r){status.textContent='차량을 찾지 못했어.';return}
+ const data=parse(DATA)[id]||{},odometer=Number.isSafeInteger(data.odometer)?data.odometer:Number(r.km)||0;
+ const maxService=Object.values(data.records||{}).flat().reduce((max,item)=>Number.isSafeInteger(item?.at)?Math.max(max,item.at):max,0);
+ if(km>odometer){status.textContent='시작 주행거리는 현재 주행거리보다 클 수 없어.';return}
+ if(maxService&&km>maxService){status.textContent='기록된 정비 주행거리보다 시작 주행거리를 높일 수 없어.';return}
+ const detail={id,name:(brand+' '+model).trim(),brand,model,cc,year,km};
+ document.dispatchEvent(new CustomEvent('motorcycle:update-vehicle',{detail}));
+ const saved=parse(REG)[id];if(!saved||saved.name!==detail.name||saved.brand!==brand||saved.model!==model||saved.cc!==cc||saved.year!==year||saved.km!==km){status.textContent='저장에 실패했어. 저장공간을 확인해.';return}
+ closeEdit();message.textContent='차량정보 수정 완료 · 기존 기록 유지';refresh();
+});
 let openedSwipe=null;
 function closeSwipe(){if(openedSwipe){openedSwipe.classList.remove('open');openedSwipe=null}}
 function enableSwipe(shell){
@@ -99,12 +127,14 @@ function refresh(){
  for(const [id,r] of Object.entries(regs)){
   if(!r||typeof r!=='object')continue;
   const name=r.name||(id==='pcx125'?'HONDA PCX125':id==='sample-b'?'스쿠터 B':id),row=document.createElement('div');row.className='fleet-item';
-  const title=document.createElement('span'),details=document.createElement('small'),action=document.createElement('button');
+  const title=document.createElement('span'),details=document.createElement('small'),action=document.createElement('button'),editButton=document.createElement('button');
   title.textContent=name;const odo=db[id]?.odometer??r.km??0;
   details.textContent='현재 '+Number(odo).toLocaleString('ko-KR')+'km · 정비 '+Object.values(db[id]?.records||{}).reduce((sum,a)=>sum+(Array.isArray(a)?a.length:0),0)+'건';
   title.appendChild(details);action.type='button';action.textContent=id===selected?'선택됨':'차량 보기';
   action.disabled=id===selected;action.addEventListener('click',()=>{document.dispatchEvent(new CustomEvent('motorcycle:select-vehicle',{detail:{id}}));root.closest('.backup-overlay').hidden=true;refresh()});
-  row.append(title,action);
+  editButton.type='button';editButton.textContent='수정';editButton.setAttribute('aria-label',name+' 정보 수정');editButton.addEventListener('click',()=>openEdit(id));
+  const actions=document.createElement('div');actions.className='fleet-actions';actions.append(editButton,action);
+  row.append(title,actions);
   const shell=document.createElement('div');shell.className='fleet-swipe-shell';shell.tabIndex=0;shell.setAttribute('aria-label',name+' 차량. 왼쪽으로 밀어 삭제');
   const del=document.createElement('button');del.type='button';del.className='fleet-swipe-delete';del.textContent='삭제';del.setAttribute('aria-label',name+' 차량 삭제');
   shell.append(del,row);list.appendChild(shell);enableSwipe(shell);
@@ -135,7 +165,7 @@ section.querySelector('.fleet-appearance-form').addEventListener('submit',e=>{
   document.dispatchEvent(new CustomEvent('motorcycle:appearance-changed',{detail:{bikeId:id}}));
  }catch{message.textContent='저장공간을 확인해.'}
 });
-section.querySelector('.fleet-add').addEventListener('click',()=>{form.hidden=false;message.textContent='';form.elements.name.focus({preventScroll:true})});
+section.querySelector('.fleet-add').addEventListener('click',()=>{closeEdit();form.hidden=false;message.textContent='';form.elements.brand.focus({preventScroll:true})});
 section.querySelector('.fleet-cancel').addEventListener('click',()=>{form.hidden=true;form.reset()});
 form.addEventListener('submit',e=>{
  e.preventDefault();
