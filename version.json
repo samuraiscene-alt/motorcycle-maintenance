@@ -1,6 +1,6 @@
 {
-  "version": "2.4.1",
-  "cache": "motorcycle-maintenance-v2.4.1",
+  "version": "2.4.2",
+  "cache": "motorcycle-maintenance-v2.4.2",
   "released": "2026-11-05",
-  "note": "메인 차량카드에서 신차/중고차 표기 제거 및 계기판 글자 겹침 방지"
+  "note": "6개 언어 선택 기반: 기기 언어 감지, 설정 선택 및 저장, 메뉴 1차 번역"
 }
