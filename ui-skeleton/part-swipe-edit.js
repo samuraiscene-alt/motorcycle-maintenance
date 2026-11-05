@@ -15,6 +15,7 @@ let openWrap=null,gesture=null,editing=null,draft=null,previewUrl=null,updateNum
 function persist(){localStorage.setItem(key,JSON.stringify(data))}
 function setPart(id,changes){const b=bike();data[b]={...(data[b]||{}),[id]:{...(data[b]?.[id]||{}),...changes}};persist()}
 const style=document.createElement('style');style.textContent=
+'.rows .part-swipe-wrap,.rows .part-swipe-wrap *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}' +
 '.part-swipe-wrap{position:relative;overflow:hidden;border-radius:15px;flex:0 0 auto;touch-action:pan-y}' +
 '.part-swipe-wrap>.part{position:relative;z-index:2;width:100%;margin:0;transition:transform .18s ease;touch-action:pan-y}' +
 '.part-swipe-wrap.swiped>.part{transform:translate3d(-136px,0,0)}' +
@@ -75,15 +76,39 @@ function wrap(row){if(!row.dataset.partId||row.closest('.part-swipe-wrap'))retur
 /* A 380ms stationary hold starts a card reorder; a quick left swipe still reveals actions. */
 function groupKey(parent){if(parent===rows)return 'base';if(parent.classList.contains('extra-stock-container'))return 'extra';if(parent.classList.contains('custom-part-container'))return 'custom';if(parent.classList.contains('stock-part-container'))return 'standard';return null}
 function cardChildren(parent){return [...parent.children].filter(el=>el.classList.contains('part-swipe-wrap'))}
-function saveOrder(parent){const group=groupKey(parent);if(!group)return;orders[bike()]={...(orders[bike()]||{}),[group]:cardChildren(parent).map(el=>el.dataset.partId)};localStorage.setItem(orderKey,JSON.stringify(orders))}
-function restoreOrder(){for(const group of [rows,...rows.querySelectorAll('.stock-part-container,.custom-part-container')]){const key=groupKey(group),saved=orders[bike()]?.[key];if(!key||!Array.isArray(saved))continue;const cards=cardChildren(group);if(cards.length<2)continue;const indexes=new Map(saved.map((id,i)=>[id,i]));const ranked=cards.map((el,i)=>({el,rank:indexes.has(el.dataset.partId)?indexes.get(el.dataset.partId):10000+i})).sort((a,b)=>a.rank-b.rank).map(x=>x.el);for(let i=0;i<ranked.length;i++){const current=cardChildren(group);if(current[i]!==ranked[i])group.insertBefore(ranked[i],current[i]||null)}}}
+function saveOrder(){const parents=[rows,...rows.querySelectorAll('.stock-part-container,.custom-part-container')];const next={...(orders[bike()]||{})};for(const p of parents){const g=groupKey(p);if(g)next[g]=cardChildren(p).map(el=>el.dataset.partId)}orders[bike()]=next;localStorage.setItem(orderKey,JSON.stringify(orders))}
+function restoreOrder(){const parents=[rows,...rows.querySelectorAll('.stock-part-container,.custom-part-container')];const groups=new Map(parents.map(p=>[groupKey(p),p]).filter(x=>x[0]));const saved=orders[bike()]||{};const all=[...rows.querySelectorAll('.part-swipe-wrap')];const indexed=new Map(all.map(el=>[el.dataset.partId,el]));
+ // Rebuild each group's sequence using saved IDs, leaving new and unlisted parts in their natural groups.
+ for(const [key,ids] of Object.entries(saved)){const parent=groups.get(key);if(!parent||!Array.isArray(ids))continue;
+  for(const id of ids){const shell=indexed.get(id);if(shell&&shell.parentElement!==parent)parent.appendChild(shell)}
+  let at=parent.firstElementChild;
+  for(const id of ids){const shell=indexed.get(id);if(!shell||shell.parentElement!==parent)continue;
+   if(shell!==at)parent.insertBefore(shell,at);
+   at=shell.nextElementSibling;
+  }
+ }
+}
+function canTarget(shell,target){if(!target||target===shell||target.hidden)return false;
+ const srcId=shell.dataset.partId,tid=target.dataset.partId,baseIds=['oil','brake','tire','coolant','filter'];
+ // The five initial consumables stay permanently visible above the expand/collapse section.
+ if(baseIds.includes(srcId))return baseIds.includes(tid);
+ if(baseIds.includes(tid))return false;
+ return true;
+}
+function findTarget(x,y){if(!drag)return null;
+ const shells=[...rows.querySelectorAll('.part-swipe-wrap')].filter(el=>canTarget(drag.shell,el)&&el.getClientRects().length);
+ let nearest=null,distance=Infinity;
+ for(const el of shells){const r=el.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)continue;const gap=y<r.top?r.top-y:y>r.bottom?y-r.bottom:0;
+ if(gap<distance){distance=gap;nearest=el}}
+ return distance<110?nearest:null;
+}
 function start(e){if(e.touches.length!==1||!mask.hidden)return;const t=e.touches[0],shell=e.currentTarget;
  gesture={wrap:shell,x:t.clientX,y:t.clientY,currentX:t.clientX,currentY:t.clientY,dragging:false,timer:null};
  // Do not initiate a drag on an action button or the service wrench.
  if(e.target.closest('.part-swipe-actions,.service'))return;
  const g=gesture;g.timer=setTimeout(()=>{if(gesture===g)beginDrag(g)},380);
 }
-function beginDrag(g){const shell=g.wrap;if(!shell?.isConnected)return;closeSwipe();const row=shell.querySelector(':scope > .part');if(!row)return;const rect=row.getBoundingClientRect();const ghost=row.cloneNode(true);ghost.classList.add('part-drag-ghost');Object.assign(ghost.style,{left:rect.left+'px',top:rect.top+'px',width:rect.width+'px',height:rect.height+'px',transition:'none',transform:'none'});document.body.appendChild(ghost);shell.classList.add('drag-source');g.dragging=true;
+function beginDrag(g){const shell=g.wrap;if(!shell?.isConnected)return;closeSwipe();window.getSelection()?.removeAllRanges();const row=shell.querySelector(':scope > .part');if(!row)return;const rect=row.getBoundingClientRect();const ghost=row.cloneNode(true);ghost.classList.add('part-drag-ghost');Object.assign(ghost.style,{left:rect.left+'px',top:rect.top+'px',width:rect.width+'px',height:rect.height+'px',transition:'none',transform:'none'});document.body.appendChild(ghost);shell.classList.add('drag-source');g.dragging=true;
  drag={g,shell,ghost,from:shell.parentElement,y:g.currentY,target:null,after:false};
  if(navigator.vibrate)try{navigator.vibrate(18)}catch{}
 }
@@ -101,12 +126,21 @@ function move(e){const g=gesture;if(!g||g.wrap!==e.currentTarget||e.touches.leng
  // Scroll the page near the viewport edges while the finger holds the card.
  if(t.clientY>innerHeight-105)window.scrollBy(0,11);else if(t.clientY<100)window.scrollBy(0,-11);
 }
-function cleanupDrag(commit){if(!drag)return;const d=drag;if(d.target)d.target.classList.remove('part-drop-before','part-drop-after');d.shell.classList.remove('drag-source');d.ghost.remove();drag=null;
- if(commit&&d.target&&d.target.parentElement===d.from){d.from.insertBefore(d.shell,d.after?d.target.nextSibling:d.target);try{saveOrder(d.from)}catch(err){console.warn('Part order could not be saved:',err)}}suppressUntil=Date.now()+550}
+function cleanupDrag(commit){if(!drag)return;const d=drag;
+ // Recheck at release, including the gap between cards (the old hit-test lost the drop target there).
+ const t=d.g;
+ const target=commit?(findTarget(t.currentX,t.currentY)||d.target):null;
+ const after=target?t.currentY>target.getBoundingClientRect().top+target.getBoundingClientRect().height/2:false;
+ if(d.target)d.target.classList.remove('part-drop-before','part-drop-after');
+ d.shell.classList.remove('drag-source');d.ghost.remove();drag=null;
+ if(commit&&target&&canTarget(d.shell,target)){const parent=target.parentElement;parent.insertBefore(d.shell,after?target.nextSibling:target);try{saveOrder()}catch(err){console.warn('Part order could not be saved:',err)}}
+ suppressUntil=Date.now()+600}
 function finish(e){if(!gesture||gesture.wrap!==e.currentTarget)return;const g=gesture;clearTimeout(g.timer);gesture=null;if(g.dragging){cleanupDrag(true);return}
  const touch=e.changedTouches[0],dx=touch.clientX-g.x,dy=touch.clientY-g.y;if(Math.abs(dx)<37||Math.abs(dx)<Math.abs(dy)*1.3)return;const shell=e.currentTarget;if(dx<0){closeSwipe();shell.classList.add('swiped');openWrap=shell}else if(shell===openWrap)closeSwipe()}
 function cancelGesture(){if(gesture)clearTimeout(gesture.timer);gesture=null;cleanupDrag(false)}
 rows.addEventListener('click',e=>{if(Date.now()<suppressUntil){e.preventDefault();e.stopImmediatePropagation()}},true);
+rows.addEventListener('contextmenu',e=>{if(e.target.closest('.part-swipe-wrap'))e.preventDefault()});
+document.addEventListener('selectionchange',()=>{if(gesture||drag)window.getSelection()?.removeAllRanges()});
 document.addEventListener('click',e=>{if(openWrap&&!openWrap.contains(e.target))closeSwipe()});
 function remove(row){const id=row.dataset.partId,label=row.querySelector('.part-line strong')?.textContent||'항목';closeSwipe();if(!confirm('“'+label+'” 항목을 목록에서 삭제할까?\n기존 정비 기록은 삭제되지 않고, 아래 복원 버튼으로 되돌릴 수 있어.'))return;try{setPart(id,{hidden:true});refresh()}catch{alert('삭제 상태를 저장하지 못했어.')}}
 const restore=document.createElement('button');restore.type='button';restore.className='part-restore-button';restore.hidden=true;restore.textContent='삭제한 정비 항목 복원';rows.appendChild(restore);
