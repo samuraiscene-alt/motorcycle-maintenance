@@ -1,6 +1,6 @@
 {
-  "version": "2.6.0",
-  "cache": "motorcycle-maintenance-v2.6",
+  "version": "2.6.1",
+  "cache": "motorcycle-maintenance-v2.6.1",
   "released": "2026-11-05",
-  "note": "차량 목록 왼쪽 스와이프 개별 삭제, 확인 팝업, 차량별 정비기록·추가 부품·사진 정리"
+  "note": "등록 차량 0대일 때 시연 오토바이와 브랜드 표시를 숨기고 빈 정비소 상태 표시"
 }
