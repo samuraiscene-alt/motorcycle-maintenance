@@ -186,6 +186,51 @@ document.addEventListener('motorcycle:select-vehicle',event=>{
 });
 function width(){return stage.getBoundingClientRect().width||1}
 function position(offset,animate){track.style.transition=animate?'transform 370ms cubic-bezier(.22,.75,.19,1)':'none';track.style.transform='translate3d('+(-index*width()+offset)+'px,0,0)'}
+/* Distance-based, in-app notices. Existing maintenance records are never altered. */
+const noticePanel=document.createElement('details');
+noticePanel.className='maintenance-notices';
+noticePanel.innerHTML='<summary><strong>정비 알림</strong><span class="maintenance-notice-count">확인 중</span></summary><div class="maintenance-notice-items" aria-live="polite"></div>';
+document.querySelector('.tabs')?.after(noticePanel);
+function updateMaintenanceNotices(){
+ const count=noticePanel.querySelector('.maintenance-notice-count'),box=noticePanel.querySelector('.maintenance-notice-items');
+ box.replaceChildren();const reg=currentRegistration(),odo=getOdometer();
+ if(!reg||!valid(odo)){noticePanel.hidden=true;return}
+ noticePanel.hidden=false;
+ const vehicle=getVehicleData(currentBike().id),notices=[];let unknown=0;
+ const rows=[...document.querySelectorAll('.rows .part[data-part-id]')];
+ for(const row of rows){
+  if(row.closest('.part-swipe-wrap')?.hidden||row.hidden)continue;
+  const id=row.dataset.partId,title=row.querySelector('.part-line strong')?.textContent||id;
+  const task=officialTask(reg,id),profile=officialProfile(reg);
+  const records=Array.isArray(vehicle.records?.[id])?vehicle.records[id]:[];
+  const kmReplace=effectiveInterval(currentBike().id,id,profile?.intervals?.[id]||0);
+  for(const [action,km] of [['replace',kmReplace],['inspect',task?.inspectKm||0],['clean',task?.cleanKm||0]]){
+   if(!Number.isSafeInteger(km)||km<=0)continue;
+   const last=records.filter(x=>x&&valid(x.at)&&x.at<=odo&&(x.action||'replace')===action).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
+   if(!last&&reg.km!==0){unknown++;continue}
+   const due=last?last.at+km:action==='replace'&&id==='oil'&&task?.firstReplaceKm?task.firstReplaceKm:km;
+   const remaining=due-odo;if(remaining>500)continue;
+   notices.push({title,action,due,remaining});
+  }
+ }
+ notices.sort((a,b)=>a.remaining-b.remaining||a.title.localeCompare(b.title));
+ const dueCount=notices.filter(x=>x.remaining<=0).length,soon=notices.length-dueCount;
+ count.textContent=dueCount?'도래 '+dueCount+'건 · 임박 '+soon+'건':soon?'임박 '+soon+'건':'도래·임박 없음';
+ for(const n of notices){
+  const item=document.createElement('div');item.className='maintenance-notice-item';item.dataset.level=n.remaining<=0?'due':'soon';
+  const title=document.createElement('strong');title.textContent=n.title+' · '+actionText(n.action);
+  const detail=document.createElement('span');detail.textContent=n.remaining<=0?'정비 예정 거리 '+fmt(-n.remaining)+'km 경과 · '+fmt(n.due)+'km 기준':'정비까지 '+fmt(n.remaining)+'km · '+fmt(n.due)+'km 예정';
+  item.append(title,detail);box.appendChild(item);
+ }
+ if(!notices.length){const p=document.createElement('p');p.textContent='현재 주행거리에서 500km 이내의 거리 기준 정비 알림이 없어.';box.appendChild(p)}
+ if(unknown){const p=document.createElement('p');p.className='maintenance-notice-disclaimer';p.textContent='정비 이력을 확인할 수 없는 '+unknown+'개 항목은 예측에서 제외했어.';box.appendChild(p)}
+ const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
+ p.textContent='앱 내부 참고 알림이야. 기간 기준 정비와 운행 조건은 별도 확인이 필요해.';box.appendChild(p);
+}
+document.addEventListener('motorcycle:change',updateMaintenanceNotices);
+document.addEventListener('motorcycle:vehicle-saved',updateMaintenanceNotices);
+document.addEventListener('motorcycle:appearance-changed',updateMaintenanceNotices);
+
 function renderInfo(){
  const empty=!hasRegisteredBikes();
  document.body.classList.toggle('no-registered-vehicles',empty);
@@ -260,6 +305,7 @@ if(reg){
  if(note.length)text.textContent+=' · '+note.filter(Boolean).join(' · ');
 }
 btn.setAttribute('role','button');btn.tabIndex=0;btn.setAttribute('aria-label',row.querySelector('strong').textContent+' 정비기록 등록');});
+ updateMaintenanceNotices();
 }
 document.addEventListener('motorcycle:custom-parts-change',()=>renderParts());
 function hideCheck(){clearTimeout(checkTimer);check.classList.remove('visible');check.setAttribute('aria-hidden','true')}
