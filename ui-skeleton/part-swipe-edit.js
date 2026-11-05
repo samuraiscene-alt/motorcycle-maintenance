@@ -205,7 +205,7 @@ rows.addEventListener('contextmenu',e=>{if(e.target.closest('.part-swipe-wrap'))
 document.addEventListener('selectionchange',()=>{if(gesture||drag)window.getSelection()?.removeAllRanges()});
 document.addEventListener('click',e=>{if(openWrap&&!openWrap.contains(e.target))closeSwipe()});
 function remove(row){const id=row.dataset.partId,label=row.querySelector('.part-line strong')?.textContent||'항목';closeSwipe();if(!confirm('“'+label+'” 항목을 목록에서 삭제할까?\n기존 정비 기록은 삭제되지 않고, 아래 복원 버튼으로 되돌릴 수 있어.'))return;try{setPart(id,{hidden:true});refresh()}catch{alert('삭제 상태를 저장하지 못했어.')}}
-const restore=document.createElement('button');restore.type='button';restore.className='part-restore-button';restore.hidden=true;restore.textContent='삭제한 정비 항목 복원';if(toggle)toggle.insertAdjacentElement('afterend',restore);else rows.insertBefore(restore,rows.firstChild);
+const restore=document.createElement('button');restore.type='button';restore.className='part-restore-button';restore.hidden=true;restore.textContent='삭제한 정비 항목 복원';rows.insertBefore(restore,rows.firstChild);
 restore.addEventListener('click',()=>{const b=bike(),hidden=Object.entries(active()).filter(([id,x])=>x.hidden).map(([id])=>id);if(!hidden.length)return;if(!confirm('숨긴 정비 항목 '+hidden.length+'개를 다시 표시할까?'))return;hidden.forEach(id=>setPart(id,{hidden:false}));refresh()});
 function ensureName(row){if(!originals.has(row)){const strong=row.querySelector('.part-line strong');const pic=row.querySelector('.part-img');originals.set(row,{name:strong?.textContent||'',html:pic?.innerHTML||'',cls:pic?.className||''})}}
 async function decorate(){const serial=++updateNumber,b=bike();const all=[...rows.querySelectorAll('.part:not(.part-add-card)')];all.forEach(wrap);restoreOrder();
