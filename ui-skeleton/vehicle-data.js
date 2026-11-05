@@ -40,6 +40,28 @@ document.addEventListener('motorcycle:register-new-vehicle',event=>{
  index=bikes.findIndex(x=>x.id===id);position(0,false);renderInfo();
  document.dispatchEvent(new CustomEvent('motorcycle:vehicle-saved',{detail:{id}}));
 });
+document.addEventListener('motorcycle:update-vehicle',event=>{
+ const d=event.detail||{},id=d.id,prior=registered[id];
+ if(!prior||typeof id!=='string'||typeof d.brand!=='string'||typeof d.model!=='string')return;
+ const brandName=d.brand.trim(),modelName=d.model.trim(),display=(brandName+' '+modelName).trim();
+ if(!brandName||brandName.length>40||!modelName||modelName.length>55||display.length>100
+  ||!Number.isSafeInteger(d.cc)||d.cc<1||d.cc>3000
+  ||!Number.isSafeInteger(d.year)||d.year<1950||d.year>new Date().getFullYear()
+  ||!valid(d.km))return;
+ const entries=Object.values(getVehicleData(id).records||{}).flat();
+ const lastService=entries.reduce((max,v)=>valid(v?.at)?Math.max(max,v.at):max,0);
+ const current=Number.isSafeInteger(database[id]?.odometer)?database[id].odometer:prior.km;
+ if(d.km>current||(lastService&&d.km>lastService))return;
+ const next={...registered,[id]:{...prior,name:display,brand:brandName,model:modelName,cc:d.cc,year:d.year,km:d.km,wear:'auto'}};
+ try{write(regKey,next)}catch{return}
+ registered=next;
+ const bike=bikes.find(b=>b.id===id);
+ if(bike){bike.name=display;bike.brand=brandName.toLowerCase()==='honda'?'honda':brandName}
+ const slide=bikes.indexOf(bike)>=0?track.children[bikes.indexOf(bike)]:null;
+ if(slide)slide.setAttribute('aria-label',display);
+ renderInfo();
+ document.dispatchEvent(new CustomEvent('motorcycle:appearance-changed',{detail:{bikeId:id}}));
+});
 document.addEventListener('motorcycle:select-vehicle',event=>{
  const id=event.detail?.id,at=bikes.findIndex(x=>x.id===id&&registered[id]);if(at<0)return;
  index=at;localStorage.setItem(chosenKey,id);position(0,false);renderInfo();
