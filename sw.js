@@ -1,9 +1,9 @@
-const CACHE='motorcycle-maintenance-v1.0';
+const CACHE='motorcycle-maintenance-v1.1';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
   SHELL,
-  new URL('./ui-skeleton/vehicle-data.js?v=history-accordion-5',ROOT).href,
+  new URL('./ui-skeleton/vehicle-data.js?v=record-edit-6',ROOT).href,
   new URL('./ui-skeleton/part-customize.js?v=accordion-order-3',ROOT).href,
   new URL('./ui-skeleton/part-swipe-edit.js?v=restore-visible-8',ROOT).href,
   new URL('./manifest.webmanifest',ROOT).href
