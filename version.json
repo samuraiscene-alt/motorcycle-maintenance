@@ -1,6 +1,6 @@
 {
-  "version": "2.4.2",
-  "cache": "motorcycle-maintenance-v2.4.2",
+  "version": "2.5.0",
+  "cache": "motorcycle-maintenance-v2.5",
   "released": "2026-11-05",
-  "note": "6개 언어 선택 기반: 기기 언어 감지, 설정 선택 및 저장, 메뉴 1차 번역"
+  "note": "차량 등록 제조사·기종·배기량·연식 분리, 신차·중고차 UI 제거, 기록 기준 정비 계산"
 }
