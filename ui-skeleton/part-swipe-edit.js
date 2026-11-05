@@ -82,7 +82,7 @@ form.addEventListener('submit',async e=>{e.preventDefault();if(!editing)return;c
  if(!Number.isSafeInteger(cycle)||cycle<0||cycle>1000000){error.textContent='교체주기는 1~1,000,000km로 입력하거나 비워 둬.';return}const target=editing;const button=form.querySelector('.part-edit-save');button.disabled=true;try{
  if(draft){await imageWrite('appearance:'+target.bike+':'+target.id,draft);const cacheKey=target.bike+':'+target.id;if(cache.has(cacheKey)){URL.revokeObjectURL(cache.get(cacheKey));cache.delete(cacheKey)}}
  if(target.bike!==bike())throw Error('차량이 변경되었어. 다시 시도해.');
- setPart(target.id,{name:n,interval:cycle,hasImage:!!draft||!!active()[target.id]?.hasImage});
+ setPart(target.id,{name:n,interval:cycle,intervalSource:'user',hasImage:!!draft||!!active()[target.id]?.hasImage});
   document.dispatchEvent(new CustomEvent('motorcycle:custom-parts-change'));
  if(target.id.startsWith('custom-')){try{const all=JSON.parse(localStorage.getItem(addedKey)||'{}');if(Array.isArray(all[target.bike])){const entry=all[target.bike].find(x=>x.id===target.id);if(entry){entry.name=n;localStorage.setItem(addedKey,JSON.stringify(all))}}}catch(err){console.warn('Custom label sync:',err)}}
  closeModal();refresh();
