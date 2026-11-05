@@ -29,12 +29,12 @@ const tireSource=byId('tire')?.querySelector('.part-img img')?.getAttribute('src
 add('oil-filter','오일필터',artworks.oilFilter,0);
 add('rear-tire','뒷타이어',tireSource,10000);
 add('front-tire','앞타이어',tireSource,10000);
-add('drive-system-service','구동계교체(밸브,무브볼)',artworks.drive,0);
-add('chain-sprockets','체인 및 대소기어 점검',artworks.chain,0);
-add('fuel-filter','연료필터 교체',artworks.fuelFilter,0);
+add('drive-system-service','구동계(벨트,무브볼)',artworks.drive,0);
+add('chain-sprockets','체인 및 대소기어',artworks.chain,0);
+add('fuel-filter','연료필터',artworks.fuelFilter,0);
 label('gear-oil','구동계오일(미션오일)');
-label('spark-plug','스파크 플러그 교체');
-label('brake-fluid','브레이크 오일 교체');
+label('spark-plug','스파크 플러그');
+label('brake-fluid','브레이크 오일');
 label('tire','타이어 (기존 통합 기록)');
 const priority=['oil','oil-filter','filter','brake','gear-oil','rear-tire','front-tire','drive-system-service','coolant','chain-sprockets','spark-plug','fuel-filter','brake-fluid'];
 const prioritySet=new Set(priority),customRoot=extra.querySelector('.custom-part-container');
