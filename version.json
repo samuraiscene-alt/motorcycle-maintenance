@@ -1,6 +1,6 @@
 {
-  "version": "2.9.3",
-  "cache": "motorcycle-maintenance-v2.9.3",
+  "version": "2.9.4",
+  "cache": "motorcycle-maintenance-v2.9.4",
   "released": "2026-11-06",
-  "note": "YAMAHA NMAX125 2025년형 공식 정비주기: 엔진오일 최초 1000km·이후 6000km, 에어필터·구동벨트 18000km, 기간별 점검정보"
+  "note": "공식 기간별 정비 경고: 교체일 기준 2·3·4년 다음 교체일 계산, 30일 이내 경고, 날짜만 기록·수정·삭제 지원"
 }
