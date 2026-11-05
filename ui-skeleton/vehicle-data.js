@@ -159,7 +159,7 @@ maintenanceEditForm.addEventListener('submit',e=>{
  const date=maintenanceEditForm.elements.date.value,at=Number(maintenanceEditForm.elements.at.value),interval=Number(maintenanceEditForm.elements.interval.value);
  const reg=registered[ref.bikeId],vehicle=database[ref.bikeId],maximum=vehicle?.odometer;
  const err=maintenanceEditMask.querySelector('.maintenance-edit-error');
- if(!reg||!/^\d{4}-\d{2}-\d{2}$/.test(date)||new Date(date+'T00:00:00').toISOString().slice(0,10)!==date||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at<reg.km||at>maximum||maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||interval<1||interval>1000000){
+ if(!reg||!/^\d{4}-\d{2}-\d{2}$/.test(date)||(!Number.isFinite(Date.parse(date+'T00:00:00'))||new Date(date+'T00:00:00').getDate()!==Number(date.slice(8,10)))||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at<reg.km||at>maximum||maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||interval<1||interval>1000000){
   err.textContent='날짜·정비 주행거리·교체 주기를 확인해. 정비 주행거리는 시작~현재 범위여야 해.';return;
  }
  const source=getVehicleData(ref.bikeId),arr=source.records?.[ref.id]||[];
