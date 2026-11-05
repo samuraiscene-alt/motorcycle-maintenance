@@ -20,6 +20,7 @@ const style=document.createElement('style');style.textContent=
 '.part-swipe-actions button{border:0;color:white;font-weight:900;font-size:14px;flex:1;min-width:0}' +
 '.part-swipe-edit{background:linear-gradient(#2498e7,#0959a3)}.part-swipe-delete{background:linear-gradient(#e56867,#a52f39)}' +
 '.part-restore-button{width:100%;margin:4px 0 0;padding:13px;border-radius:12px;border:1px solid #7898b3;background:#14273b;color:#ecf8ff;font-weight:800;font-size:13px}' +
+'.part-img.part-user-picture img.part-user-replacement{position:absolute;inset:0;left:0;top:0;transform:none;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:normal;filter:none;z-index:5}' +
 '.part-swipe-wrap[hidden]{display:none!important}' +
 '.part-edit-mask[hidden]{display:none!important}.part-edit-mask{position:fixed;inset:0;background:#02060bd0;z-index:110;display:flex;align-items:flex-end;justify-content:center;padding:12px 12px max(22px,env(safe-area-inset-bottom))}' +
 '.part-edit-panel{width:100%;max-width:520px;max-height:92dvh;overflow:auto;border-radius:18px;padding:18px;background:linear-gradient(150deg,#30455c,#0b1725);border:1px solid #90adc8;color:#f5f9ff;box-shadow:0 12px 35px #000b}' +
@@ -88,7 +89,7 @@ async function decorate(){const serial=++updateNumber,b=bike();const all=[...row
 function refresh(){decorate()}
 document.addEventListener('motorcycle:change',refresh);
 document.addEventListener('motorcycle:custom-parts-change',()=>queueMicrotask(refresh));
-const observer=new MutationObserver(records=>{if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.part')||n.querySelector?.('.part')))))refresh()});
+const observer=new MutationObserver(records=>{if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.part')||n.querySelector?.('.part')||(n.matches?.('img')&&n.closest?.('.custom-part'))))))refresh()});
 observer.observe(rows,{subtree:true,childList:true});
 refresh();
 })();
