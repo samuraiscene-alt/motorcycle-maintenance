@@ -1,6 +1,6 @@
 {
-  "version": "2.9.0",
-  "cache": "motorcycle-maintenance-v2.9.0",
-  "released": "2026-11-05",
-  "note": "제조사·기종·연식 선택 기반 차량 등록, 공식 정비주기 검증용 데이터 구조, 검증되지 않은 차종 임의 주기 미적용"
+  "version": "2.9.1",
+  "cache": "motorcycle-maintenance-v2.9.1",
+  "released": "2026-11-06",
+  "note": "2025 HONDA PCX125 공식 정비표 연동: 최초 엔진오일 1000km, 부품별 교체·청소·점검주기, 사용자 설정 우선"
 }
