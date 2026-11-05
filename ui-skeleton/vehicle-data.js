@@ -85,7 +85,8 @@ const historyCSS=document.createElement('style');historyCSS.textContent=
 '.maintenance-list-panel{max-height:85dvh;overflow:auto}.maintenance-list-vehicle{color:#b6d5ed;font-size:13px;font-weight:750;margin:8px 0 12px}' +
 '.maintenance-list-items{display:flex;flex-direction:column;gap:9px}.maintenance-entry{border:1px solid #58728e;border-radius:11px;background:#122338;padding:12px;color:#eff8ff}' +
 '.maintenance-entry strong{display:block;font-size:15px;margin-bottom:5px}.maintenance-entry small{display:block;color:#bdd2e6;font-size:12px;line-height:1.6}' +
-'.maintenance-empty{color:#b7cce0;font-size:14px;padding:22px 3px;text-align:center}';
+'.maintenance-empty{color:#b7cce0;font-size:14px;padding:22px 3px;text-align:center}' +
+'.maintenance-older{margin-top:12px}.maintenance-older[hidden]{display:none!important}.maintenance-expand{width:100%;min-height:45px;margin-top:12px;border:1px solid #799cb9;border-radius:11px;background:linear-gradient(#324c66,#162a40);color:#f3faff;font-size:14px;font-weight:850}.maintenance-expand:focus-visible{outline:3px solid #89d3ff;outline-offset:2px}';
 document.head.appendChild(historyCSS);
 function currentPartName(id){
  const row=[...document.querySelectorAll('.rows .part[data-part-id]')].find(el=>el.dataset.partId===id);
@@ -98,7 +99,21 @@ function showHistory(){
  const box=historyMask.querySelector('.maintenance-list-items');box.replaceChildren();
  historyMask.querySelector('.maintenance-list-vehicle').textContent=currentBike().name+' · 총 '+events.length+'건';
  if(!events.length){const empty=document.createElement('p');empty.className='maintenance-empty';empty.textContent='저장된 정비기록이 없습니다.';box.appendChild(empty)}
- else for(const e of events){const card=document.createElement('article');card.className='maintenance-entry';const title=document.createElement('strong');title.textContent=currentPartName(e.id);const detail=document.createElement('small');detail.textContent=e.date+' · 정비 당시 '+fmt(e.at)+'km · 교체주기 '+fmt(e.interval)+'km';card.append(title,detail);box.appendChild(card)}
+ else {
+  const older=document.createElement('div');older.className='maintenance-older maintenance-list-items';older.hidden=true;
+  for(const [i,e] of events.entries()){
+   const card=document.createElement('article');card.className='maintenance-entry';
+   const title=document.createElement('strong');title.textContent=currentPartName(e.id);
+   const detail=document.createElement('small');detail.textContent=e.date+' · 정비 당시 '+fmt(e.at)+'km · 교체주기 '+fmt(e.interval)+'km';
+   card.append(title,detail);(i<5?box:older).appendChild(card);
+  }
+  if(events.length>5){
+   const toggle=document.createElement('button');toggle.type='button';toggle.className='maintenance-expand';
+   toggle.setAttribute('aria-expanded','false');toggle.textContent='이전 기록 펼치기 ('+(events.length-5)+'건) ▾';
+   toggle.addEventListener('click',()=>{older.hidden=!older.hidden;toggle.setAttribute('aria-expanded',String(!older.hidden));toggle.textContent=older.hidden?'이전 기록 펼치기 ('+(events.length-5)+'건) ▾':'이전 기록 접기 ▴'});
+   box.append(toggle,older);
+  }
+ }
  historyMask.hidden=false;document.body.classList.add('registration-open');
 }
 function closeHistory(){historyMask.hidden=true;document.body.classList.remove('registration-open')}
