@@ -76,6 +76,10 @@
 .brand-slot .generic-bike-mark+strong{font-size:9px;letter-spacing:.2px;color:#586a7f}
 @media(max-width:390px){.bike-model,.bike-meta{max-width:calc(100% - 104px)}.generic-bike-mark{width:42px;height:27px}}
 .vehicle{cursor:pointer}.vehicle:focus-visible{outline:3px solid #80cfff;outline-offset:3px}
+.odometer-button{position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:3;width:94px;height:69px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0;padding:4px 3px;border:1px solid #7d91a5;border-radius:12px;background:linear-gradient(160deg,#182c40,#070e19 64%,#27384b);box-shadow:inset 0 2px 2px #a5bacd99,0 2px 5px #0008;cursor:pointer;color:#d2edff;-webkit-tap-highlight-color:transparent}
+.odometer-button svg{width:69px;height:42px;display:block;overflow:visible;filter:drop-shadow(0 1px 1px #0009)}.odometer-readout{font-size:11px;font-weight:900;letter-spacing:-.3px;line-height:15px;color:#d7eeff;font-variant-numeric:tabular-nums;white-space:nowrap}.odometer-button:focus-visible{outline:3px solid #149afa;outline-offset:3px}.odometer-button:active{filter:brightness(1.25)}
+@media(max-width:390px){.odometer-button{right:6px;width:76px;height:60px}.odometer-button svg{height:36px;width:60px}.odometer-readout{font-size:10px}.bike-model,.bike-meta{max-width:calc(100% - 122px)}}
+.odometer-mask[hidden]{display:none!important}.odometer-mask{position:fixed;inset:0;z-index:120;display:flex;align-items:flex-end;justify-content:center;padding:12px 12px max(24px,env(safe-area-inset-bottom));background:#02070bd9}.odometer-panel{width:100%;max-width:520px;border:1px solid #94acc5;border-radius:18px;background:linear-gradient(155deg,#34495f,#0c1d31 45%,#081522);box-shadow:0 14px 42px #000a;color:#f4faff;padding:18px}.odometer-head{display:flex;align-items:center;justify-content:space-between}.odometer-head strong{font-size:18px}.odometer-close{width:36px;height:36px;border:1px solid #7294b2;border-radius:9px;background:#162b42;color:white;font-size:26px}.odometer-description{margin:9px 0 15px;font-size:12px;line-height:1.6;color:#c4d7e8}.odometer-panel label{display:block;font-size:13px;font-weight:850}.odometer-panel input{display:block;margin-top:8px;width:100%;height:50px;padding:0 12px;border:2px solid #a5c2de;border-radius:10px;background:#f5fbff;color:#142437;font-size:21px;font-weight:900}.odometer-error{min-height:18px;margin:9px 0 8px;font-size:12px;color:#ffcfb7}.odometer-save{height:50px;width:100%;border:1px solid #91d7ff;border-radius:11px;background:linear-gradient(#55b8fa,#0968be);color:white;font-size:16px;font-weight:900}
 /* Vehicle registration step: separate demo storage, no production data changes */
 .registration-mask[hidden]{display:none!important}
 .registration-mask{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;justify-content:center;padding:14px 12px max(24px,env(safe-area-inset-bottom));background:#01060bc9}
@@ -168,8 +172,24 @@ body.part-add-open{overflow:hidden}
 </section><section class="vehicle" aria-label="차량 정보 카드 시안">
 <div class="brand-slot" id="brand-slot" aria-label="혼다"><svg viewBox="0 0 90 50" aria-hidden="true" class="honda-wing"><path d="M3 31 84 4 49 25 11 39 72 18 43 34 19 44 57 35 33 45" fill="#d71929"/><path d="M10 37 60 21 40 30 17 40" fill="#f35e5f"/></svg><strong>HONDA</strong></div>
 <div class="vehicle-lines"><strong class="bike-model">HONDA PCX125</strong><span class="bike-meta">중고차 · 시작 <b>12,300km</b></span></div>
+<button id="odometer-button" class="odometer-button" type="button" aria-label="현재 주행거리 입력" title="현재 주행거리 입력">
+<svg viewBox="0 0 92 57" aria-hidden="true"><defs><linearGradient id="odo-metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5c7d8"/><stop offset=".35" stop-color="#566f83"/><stop offset=".72" stop-color="#25384b"/><stop offset="1" stop-color="#99aebf"/></linearGradient></defs>
+<path d="M8 48A39 39 0 0 1 84 48" fill="none" stroke="url(#odo-metal)" stroke-width="8" stroke-linecap="round"/>
+<path d="M15 46A31 31 0 0 1 77 46" fill="none" stroke="#142c44" stroke-width="3" stroke-linecap="round"/>
+<path d="M19 42 13 39M28 24 24 18M46 16V8M65 24 70 18M75 42 81 39" fill="none" stroke="#cceaff" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M46 45 66 24" stroke="#55c7ff" stroke-width="4" stroke-linecap="round"/><circle cx="46" cy="45" r="5" fill="#d9f5ff" stroke="#426783" stroke-width="1.2"/>
+</svg><span class="odometer-readout" id="odometer-readout">0km</span></button>
 
-</section><nav class="tabs" aria-label="상단 메뉴 디자인 시안">
+</section>
+<div id="odometer-mask" class="odometer-mask" hidden role="dialog" aria-modal="true" aria-labelledby="odometer-title">
+<form id="odometer-form" class="odometer-panel" autocomplete="off">
+<div class="odometer-head"><strong id="odometer-title">현재 주행거리</strong><button type="button" class="odometer-close" aria-label="닫기" id="odometer-close">×</button></div>
+<p class="odometer-description">계기판에 표시된 현재 주행거리를 입력해. 저장하면 소모품의 교체 상태가 자동 갱신돼.</p>
+<label for="odometer-input">현재 주행거리 (km)<input id="odometer-input" type="number" inputmode="numeric" min="0" max="9999999" step="1" required></label>
+<p id="odometer-error" class="odometer-error" aria-live="polite"></p>
+<button type="submit" class="odometer-save">주행거리 저장</button>
+</form></div>
+<nav class="tabs" aria-label="상단 메뉴 디자인 시안">
 <div class="tab active"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 7.6a5.2 5.2 0 0 1-6.8 6.8L6.7 21.7l-4.4-4.4 7.3-7.3a5.2 5.2 0 0 1 6.8-6.8l-3.2 3.2 4.4 4.4z"/><path d="M4.3 5.3l3.4-2 4 4-3.3 3.3z"/></svg><span>소모품</span></div>
 <div class="tab"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 4V2h6v2M8 10h8M8 14h8M8 18h6"/></svg><span>정비기록</span></div>
 <div class="tab"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="3"/><circle cx="19" cy="18" r="3"/><path d="M4 14h6l3 4h3l2-7-5-2-3 2H7L5 8H2M12 6h4l3 3"/></svg><span>차량정보</span></div>
