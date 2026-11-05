@@ -30,7 +30,7 @@ function getOdometer(){const r=currentRegistration(),v=getVehicleData(currentBik
 function write(key,obj){localStorage.setItem(key,JSON.stringify(obj))}
 document.addEventListener('motorcycle:register-new-vehicle',event=>{
  const info=event.detail||{},id=info.id,name=String(info.name||'').trim(),at=Number(info.km);
- if(!/^bike-[a-z0-9-]+$/.test(id)||!name||name.length>100||registered[id]||!valid(at)||!Number.isSafeInteger(info.cc)||info.cc<1||info.cc>3000||!String(info.brand||'').trim()||!String(info.model||'').trim())return;
+ if(!/^bike-[a-z0-9-]+$/.test(id)||!name||name.length>100||registered[id]||!valid(at)||!Number.isSafeInteger(info.cc)||info.cc<1||info.cc>3000||!String(info.brand||'').trim()||!String(info.model||'').trim()||!Number.isSafeInteger(info.year)||info.year<1950||info.year>new Date().getFullYear())return;
  const nextReg={...registered,[id]:{name,brand:String(info.brand).trim(),model:String(info.model).trim(),cc:info.cc,km:at,year:Number.isSafeInteger(info.year)?info.year:null,wear:'auto'}};
  const nextData={...database,[id]:{odometer:at,records:{},odometerHistory:[{at,date:new Date().toISOString()}]}};
  try{write(regKey,nextReg);write(dataKey,nextData);localStorage.setItem(chosenKey,id)}
