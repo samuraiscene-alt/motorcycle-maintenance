@@ -1,6 +1,6 @@
 {
-  "version": "2.9.11",
-  "cache": "motorcycle-maintenance-v2.9.11",
+  "version": "2.9.12",
+  "cache": "motorcycle-maintenance-v2.9.12",
   "released": "2026-11-06",
-  "note": "점검·청소·교체 선택 및 개별 기록, 공식 주기별 다음 예정 거리 표시"
+  "note": "기존 차량의 연식 변경 뒤 공식 정비주기 자동 재연결 및 기존 사용자 주기 보호"
 }
