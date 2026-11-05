@@ -1,0 +1,54 @@
+(()=>{'use strict';
+const root=document.querySelector('.backup-panel');if(!root)return;
+const REG='motorcycle-skeleton-registrations-v1',DATA='motorcycle-skeleton-maintenance-v1',SEL='motorcycle-skeleton-selected-vehicle-v1';
+const KEY_PREFIX='motorcycle-skeleton-';
+function parse(key){try{const v=JSON.parse(localStorage.getItem(key)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch{return {}}}
+const css=document.createElement('style');
+css.textContent='.fleet-list{display:flex;flex-direction:column;gap:7px;margin-top:12px}.fleet-item{display:flex;gap:9px;align-items:center;justify-content:space-between;background:#1a334b;border:1px solid #607d98;border-radius:9px;padding:10px}.fleet-item span{font-size:13px;color:#e3f4ff;min-width:0;overflow-wrap:anywhere}.fleet-item small{font-size:11px;color:#b5ccdf;display:block;margin-top:3px}.fleet-item button,.fleet-actions button{border-radius:8px;border:1px solid #8cb0cd;background:#31577a;color:white;padding:9px;font-size:12px;font-weight:800;white-space:nowrap}.fleet-new-form[hidden]{display:none!important}.fleet-new-form{margin-top:12px;display:grid;gap:11px}.fleet-new-form label{font-size:12px;font-weight:850;color:#dceeff}.fleet-new-form input,.fleet-new-form select{display:block;width:100%;margin-top:5px;min-height:43px;padding:8px 10px;border-radius:8px;border:1px solid #98b8d0;background:#f7fbff;color:#1a2d41;font-size:16px}.fleet-actions{display:flex;gap:8px}.fleet-actions button{flex:1}.fleet-message{color:#ffd6ac;font-size:12px;line-height:1.6;min-height:17px}.fleet-reset{border-color:#c77777!important;background:linear-gradient(#9a414d,#63242d)!important}';
+document.head.appendChild(css);
+const section=document.createElement('section');
+section.innerHTML='<strong>차량별 기록 관리</strong><p>기존 차량 기록은 보관하고 새 오토바이를 등록할 수 있어. 차량을 선택하면 해당 차량의 정비기록과 소모품 상태를 확인할 수 있어.</p><div class="fleet-list"></div><button class="backup-btn secondary fleet-add" type="button" style="margin-top:12px">새 차량으로 시작</button><form class="fleet-new-form" hidden><label>새 차량 이름<input name="name" maxlength="55" required placeholder="예: YAMAHA NMAX125"></label><label>차량 상태<select name="condition"><option value="new">신차</option><option value="used">중고차</option></select></label><label>최초·현재 주행거리 (km)<input name="km" type="number" inputmode="numeric" min="0" max="9999999" step="1" required value="0"></label><p>기존 차량은 삭제되지 않으며, 새 차량의 정비기록은 별도로 시작돼.</p><div class="fleet-actions"><button type="button" class="fleet-cancel">취소</button><button type="submit">새 차량 저장</button></div></form><p class="fleet-message" aria-live="polite"></p>';
+const reset=document.createElement('section');
+reset.innerHTML='<strong>전체 데이터 초기화</strong><p>등록 차량, 주행거리, 정비기록, 소모품 설정 및 사진을 모두 삭제하고 처음부터 시작해. 되돌릴 수 없으니 먼저 전체 백업을 저장해.</p><button type="button" class="backup-btn fleet-reset">전체 데이터 초기화</button>';
+root.querySelector('.backup-panel-header')?.after(section);
+root.querySelector('.backup-status')?.before(reset);
+const list=section.querySelector('.fleet-list'),form=section.querySelector('form'),message=section.querySelector('.fleet-message');
+function refresh(){
+ const regs=parse(REG),db=parse(DATA),selected=localStorage.getItem(SEL);
+ list.replaceChildren();
+ for(const [id,r] of Object.entries(regs)){
+  if(!r||typeof r!=='object')continue;
+  const name=r.name||(id==='pcx125'?'HONDA PCX125':id==='sample-b'?'스쿠터 B':id),row=document.createElement('div');row.className='fleet-item';
+  const title=document.createElement('span'),details=document.createElement('small'),action=document.createElement('button');
+  title.textContent=name;const odo=db[id]?.odometer??r.km??0;
+  details.textContent=(r.condition==='new'?'신차':'중고차')+' · 현재 '+Number(odo).toLocaleString('ko-KR')+'km · 정비 '+Object.values(db[id]?.records||{}).reduce((sum,a)=>sum+(Array.isArray(a)?a.length:0),0)+'건';
+  title.appendChild(details);action.type='button';action.textContent=id===selected?'선택됨':'차량 보기';
+  action.disabled=id===selected;action.addEventListener('click',()=>{document.dispatchEvent(new CustomEvent('motorcycle:select-vehicle',{detail:{id}}));root.closest('.backup-overlay').hidden=true;refresh()});
+  row.append(title,action);list.appendChild(row);
+ }
+ if(!list.childElementCount){const p=document.createElement('p');p.textContent='아직 등록된 차량이 없어.';list.appendChild(p)}
+}
+section.querySelector('.fleet-add').addEventListener('click',()=>{form.hidden=false;message.textContent='';form.elements.name.focus({preventScroll:true})});
+section.querySelector('.fleet-cancel').addEventListener('click',()=>{form.hidden=true;form.reset()});
+form.addEventListener('submit',e=>{
+ e.preventDefault();
+ const name=form.elements.name.value.trim(),km=Number(form.elements.km.value),condition=form.elements.condition.value;
+ if(!name||name.length>55||!Number.isSafeInteger(km)||km<0||km>9999999){message.textContent='차량 이름과 시작 주행거리를 확인해.';return}
+ const id='bike-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
+ document.dispatchEvent(new CustomEvent('motorcycle:register-new-vehicle',{detail:{id,name,km,condition}}));
+ if(localStorage.getItem(SEL)!==id){message.textContent='새 차량을 저장하지 못했어. 저장공간을 확인해.';return}
+ form.hidden=true;form.reset();message.textContent='새 차량으로 시작했어. 이전 차량의 기록은 그대로 보관했어.';refresh();
+});
+document.addEventListener('motorcycle:vehicle-saved',refresh);
+for(const t of document.querySelectorAll('.tabs .tab'))if(t.textContent.trim()==='설정')t.addEventListener('click',refresh);
+reset.querySelector('.fleet-reset').addEventListener('click',async()=>{
+ if(!confirm('전체 차량과 모든 정비기록을 삭제할까?\n전체 백업을 먼저 저장하는 것을 권장해.'))return;
+ if(prompt('정말 모두 삭제하려면 아래 입력창에 초기화를 입력해.')!=='초기화')return;
+ try{
+  for(const key of Object.keys(localStorage))if(key.startsWith(KEY_PREFIX))localStorage.removeItem(key);
+  if('indexedDB' in window){try{indexedDB.deleteDatabase('motorcycle-skeleton-added-images-v1')}catch{}}
+  location.reload();
+ }catch(err){message.textContent='초기화 중 오류가 발생했어: '+err.message}
+});
+refresh();
+})();
