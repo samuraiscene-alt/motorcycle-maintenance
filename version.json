@@ -1,6 +1,6 @@
 {
-  "version": "2.7.6",
-  "cache": "motorcycle-maintenance-v2.7.6",
+  "version": "2.8.0",
+  "cache": "motorcycle-maintenance-v2.8.0",
   "released": "2026-11-05",
-  "note": "정비 주행거리 초과 시 확인 후 계기판 동시 갱신, 미래 정비 날짜 제한, 새 차량 등록 독립 팝업"
+  "note": "소모품 교체 완료 자동 저장 및 주행거리 이력 관리"
 }
