@@ -204,9 +204,10 @@ else{
  }else{
   const used=Math.max(0,odo-knownBase),percent=Math.floor(used/span*100),ratio=Math.min(100,percent);
   const distanceLabel=odo>due?fmt(percent)+'% · '+fmt(odo-due)+'km 초과':fmt(used)+' / '+fmt(span)+'km · '+fmt(percent)+'%';
+  const inspectLabel=Number.isSafeInteger(task?.inspectKm)&&task.inspectKm>0?' · 점검 '+fmt(task.inspectKm)+'km 주기':'';
   text.textContent=calendar&&!calendar.missing
    ?distanceLabel+' · '+(calendar.days<0?'날짜 '+Math.abs(calendar.days)+'일 초과':calendar.days<=30?'날짜 '+calendar.days+'일 남음':'날짜 '+calendar.due)
-   :distanceLabel;
+   :distanceLabel+inspectLabel;
   bar.style.width=ratio+'%';row.classList.remove('part-unregistered');
   const color=calendar&&!calendar.missing&&calendar.days<0?'red':calendar&&!calendar.missing&&calendar.days<=30?'amber':percent<=50?'blue':percent<=80?'amber':'red';
   bar.classList.remove('blue','amber','red');bar.classList.add(color);
