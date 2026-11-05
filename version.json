@@ -1,6 +1,6 @@
 {
-  "version": "2.9.1",
-  "cache": "motorcycle-maintenance-v2.9.1",
+  "version": "2.9.2",
+  "cache": "motorcycle-maintenance-v2.9.2",
   "released": "2026-11-06",
-  "note": "2025 HONDA PCX125 공식 정비표 연동: 최초 엔진오일 1000km, 부품별 교체·청소·점검주기, 사용자 설정 우선"
+  "note": "2025년형 HONDA PCX125 공식 정비주기 자동 적용 및 사용자 수정값 보존 안정화"
 }
