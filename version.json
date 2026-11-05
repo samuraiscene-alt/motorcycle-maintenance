@@ -1,6 +1,6 @@
 {
-  "version": "2.9.12",
-  "cache": "motorcycle-maintenance-v2.9.12",
+  "version": "2.9.13",
+  "cache": "motorcycle-maintenance-v2.9.13",
   "released": "2026-11-06",
-  "note": "기존 차량의 연식 변경 뒤 공식 정비주기 자동 재연결 및 기존 사용자 주기 보호"
+  "note": "소모품 카드 부품명·정비주기 안내 문구의 줄바꿈 및 버튼 영역 침범 수정"
 }
