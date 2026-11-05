@@ -13,7 +13,7 @@ const active=()=>data[bike()]||{};
 const cache=new Map(),originals=new WeakMap();
 let openWrap=null,gesture=null,editing=null,draft=null,previewUrl=null,updateNumber=0,drag=null,suppressUntil=0;
 function persist(){localStorage.setItem(key,JSON.stringify(data))}
-function setPart(id,changes){const b=bike();data[b]={...(data[b]||{}),[id]:{...(data[b]?.[id]||{}),...changes}};persist()}
+function setPart(id,changes){const b=bike();try{const latest=JSON.parse(localStorage.getItem(key)||'{}');if(latest&&typeof latest==='object')data=latest}catch{}data[b]={...(data[b]||{}),[id]:{...(data[b]?.[id]||{}),...changes}};persist()}
 const style=document.createElement('style');style.textContent=
 '.rows .part-swipe-wrap,.rows .part-swipe-wrap *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}' +
 '.part-swipe-wrap{position:relative;overflow:hidden;border-radius:15px;flex:0 0 auto;touch-action:pan-y}' +
@@ -230,6 +230,7 @@ async function decorate(){const serial=++updateNumber,b=bike();const all=[...row
  }
 }
 function refresh(){if(!drag)decorate()}
+document.addEventListener('motorcycle:vehicle-saved',()=>{try{data=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch{}refresh()});
 document.addEventListener('motorcycle:change',refresh);
 document.addEventListener('motorcycle:custom-parts-change',()=>queueMicrotask(refresh));
 const observer=new MutationObserver(records=>{if(arranging||drag)return;if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&(n.classList?.contains('custom-part')||n.querySelector?.('.custom-part:not(.part-swipe-wrap .custom-part)')||(n.matches?.('img')&&n.closest?.('.custom-part'))))))refresh()});
