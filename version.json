@@ -1,6 +1,6 @@
 {
-  "version": "2.1.0",
-  "cache": "motorcycle-maintenance-v2.1",
+  "version": "2.2.0",
+  "cache": "motorcycle-maintenance-v2.2",
   "released": "2026-11-05",
-  "note": "Safari와 다른 브라우저 간 정비기록 파일 이동 및 가져오기 전 기록 건수 비교"
+  "note": "정비기록 차량 선택, 다음 교체 예정 주행거리와 주행거리 변경 내역 조회"
 }
