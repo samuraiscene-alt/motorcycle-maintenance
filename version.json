@@ -1,6 +1,6 @@
 {
-  "version": "2.9.13",
-  "cache": "motorcycle-maintenance-v2.9.13",
+  "version": "2.9.14",
+  "cache": "motorcycle-maintenance-v2.9.14",
   "released": "2026-11-06",
-  "note": "소모품 카드 부품명·정비주기 안내 문구의 줄바꿈 및 버튼 영역 침범 수정"
+  "note": "거리 기준 교체·점검·청소 정비 알림 구분, 정비 이력 미확인 항목 보호"
 }
