@@ -85,7 +85,7 @@ function validate(payload){
  const maintenance=JSON.parse(payload.local['motorcycle-skeleton-maintenance-v1']||'{}');
  for(const vehicle of Object.values(maintenance)){
   if(!obj(vehicle)||!obj(vehicle.records))throw new Error('정비 데이터 구조가 올바르지 않아.');
-  for(const records of Object.values(vehicle.records))if(!Array.isArray(records)||records.some(x=>!obj(x)||!Number.isSafeInteger(x.at)||x.at<0||!Number.isSafeInteger(x.interval)||x.interval<1||typeof x.date!=='string'))throw new Error('정비기록 형식이 맞지 않아.');
+  for(const records of Object.values(vehicle.records))if(!Array.isArray(records)||records.some(x=>!obj(x)||!Number.isSafeInteger(x.at)||x.at<0||!Number.isSafeInteger(x.interval)||x.interval<0||typeof x.date!=='string'))throw new Error('정비기록 형식이 맞지 않아.');
  }
  if(payload.images.length>2000)throw new Error('사진이 너무 많아.');
  const keys=new Set();
