@@ -9,17 +9,25 @@ css.textContent+='.fleet-odometer-history{margin:-3px 0 4px;border:1px solid #45
 css.textContent+='.fleet-appearance{border:1px solid #577992;border-radius:11px;padding:12px;margin:14px 0;background:#142c42}.fleet-appearance-form{display:grid;gap:10px;margin-top:9px}.fleet-appearance-form label{color:#d6e8f7;font-size:12px;font-weight:800}.fleet-appearance-form input,.fleet-appearance-form select{display:block;width:100%;margin-top:5px;height:43px;border:1px solid #9bbed8;border-radius:8px;padding:6px 10px;font-size:16px;background:#f4f9ff;color:#12263a}.fleet-appearance-feedback{min-height:18px;color:#a9e6ff!important}';
 document.head.appendChild(css);
 const section=document.createElement('section');
-section.innerHTML='<strong>차량별 기록 관리</strong><p>기존 차량 기록은 보관하고 새 오토바이를 등록할 수 있어. 차량을 선택하면 해당 차량의 정비기록과 소모품 상태를 확인할 수 있어.</p><div class="fleet-list"></div><div class="fleet-appearance"><strong>현재 차량 외관 설정</strong><p>연식에 따라 차체의 사용감을 조절해. 영역 마스크가 검증되지 않은 차량에는 녹·흠집을 임의로 그리지 않아.</p><form class="fleet-appearance-form"><label>제조 연식<input name="year" type="number" inputmode="numeric" min="1950" max="2100" placeholder="예: 2020"></label><label>외관 상태<select name="wear"><option value="auto">연식 기준 자동</option><option value="0">새 차처럼 깨끗함</option><option value="1">가벼운 사용감</option><option value="2">생활 흔적</option><option value="3">오래 사용한 외관</option></select></label><button class="backup-btn secondary" type="submit">차량 외관 설정 저장</button><p class="fleet-appearance-feedback" aria-live="polite"></p></form></div><button class="backup-btn secondary fleet-add" type="button" style="margin-top:12px">새 차량으로 시작</button><form class="fleet-new-form" hidden><label>새 차량 이름<input name="name" maxlength="55" required placeholder="예: YAMAHA NMAX125"></label><label>차량 상태<select name="condition"><option value="new">신차</option><option value="used">중고차</option></select></label><label>제조 연식 (선택)<input name="year" type="number" inputmode="numeric" min="1950" max="2100" placeholder="예: 2020"></label><label>최초·현재 주행거리 (km)<input name="km" type="number" inputmode="numeric" min="0" max="9999999" step="1" required value="0"></label><p>기존 차량은 삭제되지 않으며, 새 차량의 정비기록은 별도로 시작돼.</p><div class="fleet-actions"><button type="button" class="fleet-cancel">취소</button><button type="submit">새 차량 저장</button></div></form><p class="fleet-message" aria-live="polite"></p>';
+section.innerHTML='<strong>차량별 기록 관리</strong><p>기존 차량 기록은 보관하고 새 오토바이를 등록할 수 있어. 차량을 선택하면 해당 차량의 정비기록과 소모품 상태를 확인할 수 있어.</p><div class="fleet-list"></div><div class="fleet-appearance"><strong>현재 차량 연식 설정</strong><p>제조 연식을 입력하면 노후 단계를 자동으로 계산해. 검증된 부품 영역이 없는 차종에는 임의의 녹·파손을 추가하지 않아.</p><form class="fleet-appearance-form"><label>제조 연식<input name="year" type="number" inputmode="numeric" min="1950" max="2100" placeholder="예: 2020"></label><p class="fleet-auto-aging" aria-live="polite">제조 연식을 입력하면 사용감 단계가 자동 계산돼.</p><button class="backup-btn secondary" type="submit">차량 외관 설정 저장</button><p class="fleet-appearance-feedback" aria-live="polite"></p></form></div><button class="backup-btn secondary fleet-add" type="button" style="margin-top:12px">새 차량으로 시작</button><form class="fleet-new-form" hidden><label>새 차량 이름<input name="name" maxlength="55" required placeholder="예: YAMAHA NMAX125"></label><label>차량 상태<select name="condition"><option value="new">신차</option><option value="used">중고차</option></select></label><label>제조 연식 (선택)<input name="year" type="number" inputmode="numeric" min="1950" max="2100" placeholder="예: 2020"></label><label>최초·현재 주행거리 (km)<input name="km" type="number" inputmode="numeric" min="0" max="9999999" step="1" required value="0"></label><p>기존 차량은 삭제되지 않으며, 새 차량의 정비기록은 별도로 시작돼.</p><div class="fleet-actions"><button type="button" class="fleet-cancel">취소</button><button type="submit">새 차량 저장</button></div></form><p class="fleet-message" aria-live="polite"></p>';
 const reset=document.createElement('section');
 reset.innerHTML='<strong>전체 데이터 초기화</strong><p>등록 차량, 주행거리, 정비기록, 소모품 설정 및 사진을 모두 삭제하고 처음부터 시작해. 되돌릴 수 없으니 먼저 전체 백업을 저장해.</p><button type="button" class="backup-btn fleet-reset">전체 데이터 초기화</button>';
 root.querySelector('.backup-panel-header')?.after(section);
 root.querySelector('.backup-status')?.before(reset);
 const list=section.querySelector('.fleet-list'),form=section.querySelector('.fleet-new-form'),message=section.querySelector('.fleet-message');
+function describeYear(form){
+ const text=section.querySelector('.fleet-auto-aging'),raw=form.elements.year.value.trim(),year=Number(raw);
+ if(!raw||!Number.isSafeInteger(year)||year<1950||year>new Date().getFullYear()){text.textContent='연식 입력 시 외관 단계가 자동 계산돼.';return}
+ const lib=window.MotorcycleWearLibrary;
+ const profile=lib?.profile(year);
+ text.textContent=profile?profile.age+'년 경과 · '+profile.description:'연식 계산 정보를 확인해.';
+}
+section.querySelector('.fleet-appearance-form').elements.year.addEventListener('input',e=>describeYear(e.target.form));
 function refresh(){
  const regs=parse(REG),db=parse(DATA),selected=localStorage.getItem(SEL);
  const appearanceForm=section.querySelector('.fleet-appearance-form'),activeReg=regs[selected];
  section.querySelector('.fleet-appearance').hidden=!activeReg;
- if(activeReg){appearanceForm.elements.year.value=activeReg.year||'';appearanceForm.elements.wear.value=['auto','0','1','2','3'].includes(String(activeReg.wear??'auto'))?String(activeReg.wear??'auto'):'auto'}
+ if(activeReg){appearanceForm.elements.year.value=activeReg.year||'';describeYear(appearanceForm)}
  list.replaceChildren();
  for(const [id,r] of Object.entries(regs)){
   if(!r||typeof r!=='object')continue;
@@ -47,11 +55,11 @@ section.querySelector('.fleet-appearance-form').addEventListener('submit',e=>{
  const id=localStorage.getItem(SEL),regs=parse(REG),r=regs[id],form=e.currentTarget;
  const message=section.querySelector('.fleet-appearance-feedback');
  if(!r){message.textContent='현재 등록된 차량이 없어.';return}
- const raw=form.elements.year.value.trim(),year=raw===''?null:Number(raw),wear=form.elements.wear.value;
+ const raw=form.elements.year.value.trim(),year=raw===''?null:Number(raw);
  const current=new Date().getFullYear();
- if((year!==null&&(!Number.isSafeInteger(year)||year<1950||year>current))||!['auto','0','1','2','3'].includes(wear)){message.textContent='제조 연식을 확인해.';return}
+ if(year!==null&&(!Number.isSafeInteger(year)||year<1950||year>current)){message.textContent='제조 연식을 확인해.';return}
  try{
-  localStorage.setItem(REG,JSON.stringify({...regs,[id]:{...r,year,wear}}));
+  localStorage.setItem(REG,JSON.stringify({...regs,[id]:{...r,year,wear:'auto'}}));
   message.textContent='연식과 외관 상태를 저장했어.';
   document.dispatchEvent(new CustomEvent('motorcycle:appearance-changed',{detail:{bikeId:id}}));
  }catch{message.textContent='저장공간을 확인해.'}
