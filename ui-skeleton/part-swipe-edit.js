@@ -231,6 +231,7 @@ async function decorate(){const serial=++updateNumber,b=bike();const all=[...row
 }
 function refresh(){if(!drag)decorate()}
 document.addEventListener('motorcycle:vehicle-saved',()=>{try{data=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch{}refresh()});
+document.addEventListener('motorcycle:appearance-changed',()=>{try{data=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch{}refresh()});
 document.addEventListener('motorcycle:change',refresh);
 document.addEventListener('motorcycle:custom-parts-change',()=>queueMicrotask(refresh));
 const observer=new MutationObserver(records=>{if(arranging||drag)return;if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&(n.classList?.contains('custom-part')||n.querySelector?.('.custom-part:not(.part-swipe-wrap .custom-part)')||(n.matches?.('img')&&n.closest?.('.custom-part'))))))refresh()});
