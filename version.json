@@ -1,6 +1,6 @@
 {
-  "version": "2.9.15",
-  "cache": "motorcycle-maintenance-v2.9.15",
+  "version": "2.9.16",
+  "cache": "motorcycle-maintenance-v2.9.16",
   "released": "2026-11-06",
-  "note": "기간 기준 정비 알림(30일 이내·기한 초과) 추가, 마지막 교체일 미확인 항목 별도 표시"
+  "note": "정비 이력 미확인과 정상 알림 구분, 차종·연식 표시, 비혼다 차량 참고 이미지 오인 방지"
 }
