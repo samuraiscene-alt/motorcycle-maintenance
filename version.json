@@ -1,6 +1,6 @@
 {
-  "version": "2.9.7",
-  "cache": "motorcycle-maintenance-v2.9.7",
+  "version": "2.9.8",
+  "cache": "motorcycle-maintenance-v2.9.8",
   "released": "2026-11-06",
-  "note": "혼다 공식 공통 설명서 기반 PCX125 2021·2022·2023년형 정비주기 추가. 연식별 검증된 항목만 자동 적용"
+  "note": "기간 기준 정비기록(교체주기 0km)이 포함된 백업 파일의 생성·복원 검증 오류 수정"
 }
