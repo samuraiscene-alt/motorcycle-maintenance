@@ -53,14 +53,27 @@ const nextReg={...registered,[currentBike().id]:{condition,km:at}},nextData={...
 try{write(regKey,nextReg);write(dataKey,nextData);localStorage.setItem(chosenKey,currentBike().id);registered=nextReg;database=nextData;renderInfo();closeReg();check.classList.add('visible');checkTimer=setTimeout(hideCheck,720)}catch{regError.textContent='저장할 수 없어. 브라우저 저장공간을 확인해.'}
 });
 regClose.addEventListener('click',closeReg);regMask.addEventListener('click',e=>{if(e.target===regMask)closeReg()});
-const odoButton=$('odometer-button'),odoMask=$('odometer-mask'),odoForm=$('odometer-form'),odoInput=$('odometer-input'),odoError=$('odometer-error'),odoClose=$('odometer-close');
+const odoButton=$('odometer-button'),odoMask=$('odometer-mask'),odoForm=$('odometer-form'),odoInput=$('odometer-input'),odoError=$('odometer-error'),odoClose=$('odometer-close'),odoDisplay=$('odometer-display'),odoKeypad=$('odometer-keypad');
+let odoReplaceOnDigit=true;
+function showOdometerValue(){odoDisplay.replaceChildren(document.createTextNode(odoInput.value?fmt(Number(odoInput.value))+' ':'— '));const unit=document.createElement('small');unit.textContent='km';odoDisplay.appendChild(unit)}
 function closeOdometer(){odoMask.hidden=true;document.body.classList.remove('registration-open');odoError.textContent='';}
 function openOdometer(){
  if(!odoMask.hidden||!recordMask.hidden||!regMask.hidden)return;
  if(!currentRegistration()){openReg();return}
- odoInput.value=String(getOdometer());odoInput.min=String(getOdometer());odoError.textContent='';
- odoMask.hidden=false;document.body.classList.add('registration-open');odoInput.focus({preventScroll:true});
+ odoInput.value=String(getOdometer());odoReplaceOnDigit=true;odoError.textContent='';showOdometerValue();
+ odoMask.hidden=false;document.body.classList.add('registration-open');
 }
+odoKeypad.addEventListener('click',event=>{
+ const button=event.target.closest('button');if(!button)return;
+ const digit=button.dataset.digit,action=button.dataset.action;
+ if(digit!==undefined){
+  const value=odoReplaceOnDigit?'':odoInput.value;
+  if(value.length>=7)return;
+  odoInput.value=String(Number(value+digit));odoReplaceOnDigit=false;
+ }else if(action==='clear'){odoInput.value='';odoReplaceOnDigit=false}
+ else if(action==='backspace'){odoInput.value=odoReplaceOnDigit?'':odoInput.value.slice(0,-1);odoReplaceOnDigit=false}
+ odoError.textContent='';showOdometerValue();
+});
 odoButton.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openOdometer()});
 odoButton.addEventListener('keydown',e=>e.stopPropagation());
 odoClose.addEventListener('click',closeOdometer);
