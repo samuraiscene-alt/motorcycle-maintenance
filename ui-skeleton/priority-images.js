@@ -8,6 +8,6 @@
  for(const [id,b64] of [['drive-system-service',pics.drive],['chain-sprockets',pics.chain],['front-tire',pics.front],['rear-tire',pics.rear]]){
  const row=[...document.querySelectorAll('.rows .part[data-part-id]')].find(x=>x.dataset.partId===id);
  if(!row)continue;
- const img=row.querySelector('.part-img img');if(img){img.src='data:image/webp;base64,'+b64;img.classList.remove('stock-part-photo');img.classList.add('stock-part-center')}
+ const img=row.querySelector('.part-img img');if(img){img.src='data:image/webp;base64,'+b64;img.classList.remove('stock-part-center');img.classList.add('stock-part-photo')}
  }
 })();
