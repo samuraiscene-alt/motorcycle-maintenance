@@ -89,8 +89,31 @@ document.addEventListener('motorcycle:update-vehicle',event=>{
  const lastService=entries.reduce((max,v)=>valid(v?.at)?Math.max(max,v.at):max,0);
  const current=Number.isSafeInteger(database[id]?.odometer)?database[id].odometer:prior.km;
  if(d.km>current||(lastService&&d.km>lastService))return;
- const next={...registered,[id]:{...prior,name:display,brand:brandName,model:modelName,cc:d.cc,year:d.year,km:d.km,wear:'auto'}};
- try{write(regKey,next)}catch{return}
+ const changedProfile=String(prior.brand||'').toUpperCase()!==brandName.toUpperCase()
+  ||String(prior.model||'').toUpperCase()!==modelName.toUpperCase()||prior.year!==d.year;
+ const newProfile=changedProfile?window.MotorcycleCatalog?.findOfficialProfile(brandName,modelName,d.year)||null:null;
+ const profileFields=changedProfile?{
+  maintenanceProfileStatus:newProfile?'official':'unverified',
+  maintenanceProfileSource:newProfile?.source||null
+ }:{};
+ const next={...registered,[id]:{...prior,name:display,brand:brandName,model:modelName,cc:d.cc,year:d.year,km:d.km,wear:'auto',...profileFields}};
+ try{
+  if(changedProfile){
+   const key='motorcycle-skeleton-part-appearance-v1',all=load(key),existing=all[id]||{},updated={};
+   for(const [part,cfg] of Object.entries(existing)){
+    const clean={...cfg};if(clean.intervalSource==='official'){delete clean.interval;delete clean.intervalSource}
+    updated[part]=clean;
+   }
+   for(const [part,km] of Object.entries(newProfile?.intervals||{})){
+    if(!Number.isSafeInteger(km)||km<=0)continue;
+    const current=updated[part]||{};
+    if(!Object.prototype.hasOwnProperty.call(current,'interval'))
+     updated[part]={...current,interval:km,intervalSource:'official'};
+   }
+   write(key,{...all,[id]:updated});
+  }
+  write(regKey,next);
+ }catch{return}
  registered=next;
  const bike=bikes.find(b=>b.id===id);
  if(bike){bike.name=display;bike.brand=brandName.toLowerCase()==='honda'?'honda':brandName}
