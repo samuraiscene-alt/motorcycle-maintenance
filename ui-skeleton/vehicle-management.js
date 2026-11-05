@@ -10,10 +10,10 @@ css.textContent+='.fleet-appearance{border:1px solid #577992;border-radius:11px;
 css.textContent+='.fleet-swipe-shell{position:relative;margin-top:7px;overflow:hidden;border-radius:9px;touch-action:pan-y}.fleet-swipe-shell .fleet-item{position:relative;z-index:1;margin-top:0;transform:translateX(0);transition:transform .2s ease;touch-action:pan-y;user-select:none;-webkit-user-select:none}.fleet-swipe-shell.open .fleet-item{transform:translateX(-84px)}.fleet-swipe-delete{position:absolute;right:0;top:0;bottom:0;width:84px;background:#bd3445;color:white;border:0;border-radius:0 9px 9px 0;font-size:13px;font-weight:900;z-index:0}.fleet-swipe-shell:focus-within .fleet-swipe-delete{outline-offset:-3px}';
 css.textContent+='.fleet-swipe-hint{font-size:10px!important;color:#a8d0ec!important}.fleet-swipe-shell.open .fleet-swipe-delete{background:#d83a4e}.fleet-item .fleet-actions{min-width:0;max-width:55%;gap:4px}.fleet-item .fleet-actions button{min-width:0}';
 css.textContent+='.fleet-edit[hidden]{display:none!important}.fleet-edit{display:grid;gap:9px;margin:10px 0;padding:12px;border:1px solid #8bb0cd;border-radius:10px;background:#142e45}.fleet-edit label{font-size:12px;font-weight:800;color:#dceeff}.fleet-edit input{width:100%;height:43px;margin-top:5px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #8eaec9;background:#f6faff;color:#132a3b}.fleet-edit-buttons{display:flex;gap:8px}.fleet-edit-buttons button{flex:1;min-height:42px;border-radius:8px;border:1px solid #8eaec9;background:#31577a;color:white;font-weight:800}.fleet-edit-feedback{font-size:12px;color:#ace0ff}.fleet-item .fleet-actions{flex-shrink:0}.fleet-item .fleet-actions button{padding:8px}';
-css.textContent+='.fleet-new-overlay[hidden]{display:none!important}.fleet-new-overlay{position:fixed;inset:0;z-index:220;display:flex;align-items:flex-end;justify-content:center;padding:12px 12px max(24px,env(safe-area-inset-bottom));background:#02070ddb}.fleet-new-panel{width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;border:1px solid #91b5d1;border-radius:17px;background:linear-gradient(150deg,#344a61,#14293d 40%,#0b1b2c);padding:17px;box-shadow:0 15px 45px #000a}.fleet-new-head{display:flex;justify-content:space-between;align-items:center;color:#edf7ff}.fleet-new-head strong{font-size:18px}.fleet-new-close{width:36px;height:36px;border:1px solid #89a9c4;border-radius:9px;background:#1b344b;color:#fff;font-size:26px}.fleet-new-overlay .fleet-new-form{display:grid;margin-top:12px}.fleet-new-overlay .fleet-new-form[hidden]{display:none!important}';
+css.textContent+='.fleet-brand-other[hidden],.fleet-model-other[hidden]{display:none!important}.fleet-catalog-hint{font-size:12px;color:#bcd6e9;line-height:1.5;margin:3px 0}.fleet-new-overlay[hidden]{display:none!important}.fleet-new-overlay{position:fixed;inset:0;z-index:220;display:flex;align-items:flex-end;justify-content:center;padding:12px 12px max(24px,env(safe-area-inset-bottom));background:#02070ddb}.fleet-new-panel{width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;border:1px solid #91b5d1;border-radius:17px;background:linear-gradient(150deg,#344a61,#14293d 40%,#0b1b2c);padding:17px;box-shadow:0 15px 45px #000a}.fleet-new-head{display:flex;justify-content:space-between;align-items:center;color:#edf7ff}.fleet-new-head strong{font-size:18px}.fleet-new-close{width:36px;height:36px;border:1px solid #89a9c4;border-radius:9px;background:#1b344b;color:#fff;font-size:26px}.fleet-new-overlay .fleet-new-form{display:grid;margin-top:12px}.fleet-new-overlay .fleet-new-form[hidden]{display:none!important}';
 document.head.appendChild(css);
 const section=document.createElement('section');
-section.innerHTML='<strong>차량별 기록 관리</strong><p>기존 차량 기록은 보관하고 새 오토바이를 등록할 수 있어. 차량을 선택하면 해당 차량의 정비기록과 소모품 상태를 확인할 수 있어.</p><div class="fleet-list"></div><div class="fleet-appearance"><strong>현재 차량 연식 설정</strong><p>제조 연식을 입력하면 노후 단계를 자동으로 계산해. 검증된 부품 영역이 없는 차종에는 임의의 녹·파손을 추가하지 않아.</p><form class="fleet-appearance-form"><label>제조 연식<input name="year" type="number" inputmode="numeric" min="1950" max="2100" placeholder="예: 2020"></label><p class="fleet-auto-aging" aria-live="polite">제조 연식을 입력하면 사용감 단계가 자동 계산돼.</p><button class="backup-btn secondary" type="submit">차량 외관 설정 저장</button><p class="fleet-appearance-feedback" aria-live="polite"></p></form></div><button class="backup-btn secondary fleet-add" type="button" style="margin-top:12px">새 차량으로 시작</button><form class="fleet-new-form" hidden><label>제조사<input name="brand" maxlength="40" required placeholder="예: YAMAHA"></label><label>기종<input name="model" maxlength="55" required placeholder="예: NMAX"></label><label>배기량 (cc)<input name="cc" type="number" min="1" max="3000" step="1" inputmode="numeric" required placeholder="예: 125"></label><label>제조 연식 (필수)<input name="year" type="number" inputmode="numeric" min="1950" max="2100" required placeholder="예: 2020"></label><label>앱 사용 시작 주행거리 (km)<input name="km" type="number" inputmode="numeric" min="0" max="9999999" step="1" required value="0"></label><p>기존 차량은 삭제되지 않으며, 새 차량의 정비기록은 별도로 시작돼.</p><div class="fleet-actions"><button type="button" class="fleet-cancel">취소</button><button type="submit">새 차량 저장</button></div></form><p class="fleet-message" aria-live="polite"></p>';
+section.innerHTML='<strong>차량별 기록 관리</strong><p>기존 차량 기록은 보관하고 새 오토바이를 등록할 수 있어. 차량을 선택하면 해당 차량의 정비기록과 소모품 상태를 확인할 수 있어.</p><div class="fleet-list"></div><div class="fleet-appearance"><strong>현재 차량 연식 설정</strong><p>제조 연식을 입력하면 노후 단계를 자동으로 계산해. 검증된 부품 영역이 없는 차종에는 임의의 녹·파손을 추가하지 않아.</p><form class="fleet-appearance-form"><label>제조 연식<input name="year" type="number" inputmode="numeric" min="1950" max="2100" placeholder="예: 2020"></label><p class="fleet-auto-aging" aria-live="polite">제조 연식을 입력하면 사용감 단계가 자동 계산돼.</p><button class="backup-btn secondary" type="submit">차량 외관 설정 저장</button><p class="fleet-appearance-feedback" aria-live="polite"></p></form></div><button class="backup-btn secondary fleet-add" type="button" style="margin-top:12px">새 차량으로 시작</button><form class="fleet-new-form" hidden><label>제조사<select name="brand" required></select></label><label class="fleet-brand-other" hidden>제조사 직접 입력<input name="brandOther" maxlength="40" placeholder="제조사명"></label><label>기종<select name="model" required></select></label><label class="fleet-model-other" hidden>기종 직접 입력<input name="modelOther" maxlength="55" placeholder="기종명"></label><label>배기량 (cc)<input name="cc" type="number" min="1" max="3000" step="1" inputmode="numeric" required placeholder="예: 125"></label><label>제조 연식 (필수)<select name="year" required></select></label><label>앱 사용 시작 주행거리 (km)<input name="km" type="number" inputmode="numeric" min="0" max="9999999" step="1" required value="0"></label><p>기존 차량은 삭제되지 않으며, 새 차량의 정비기록은 별도로 시작돼.</p><div class="fleet-actions"><button type="button" class="fleet-cancel">취소</button><button type="submit">새 차량 저장</button></div></form><p class="fleet-message" aria-live="polite"></p>';
 const reset=document.createElement('section');
 reset.innerHTML='<strong>전체 데이터 초기화</strong><p>등록 차량, 주행거리, 정비기록, 소모품 설정 및 사진을 모두 삭제하고 처음부터 시작해. 되돌릴 수 없으니 먼저 전체 백업을 저장해.</p><button type="button" class="backup-btn fleet-reset">전체 데이터 초기화</button>';
 root.querySelector('.backup-panel-header')?.after(section);
@@ -23,10 +23,38 @@ const newOverlay=document.createElement('div');newOverlay.className='fleet-new-o
 const newPanel=document.createElement('div');newPanel.className='fleet-new-panel';
 const newHead=document.createElement('div');newHead.className='fleet-new-head';newHead.innerHTML='<strong>새 차량 등록</strong><button type="button" class="fleet-new-close" aria-label="닫기">×</button>';
 const newFeedback=document.createElement('p');newFeedback.className='fleet-message';newFeedback.setAttribute('aria-live','polite');
-form.querySelector('.fleet-actions').before(newFeedback);
+const catalogHint=document.createElement('p');catalogHint.className='fleet-catalog-hint';
+catalogHint.textContent='차종·연식은 등록 정보 선택용이야. 공식 정비자료가 검증되지 않은 차종은 교체주기를 자동으로 채우지 않아.';
+form.querySelector('.fleet-actions').before(catalogHint,newFeedback);
+const catalog=window.MotorcycleCatalog;
+const brandSelect=form.elements.brand,modelSelect=form.elements.model,yearSelect=form.elements.year;
+function setChoices(select,rows,placeholder){
+ select.replaceChildren();const first=new Option(placeholder,'');select.add(first);
+ for(const [label,value] of rows)select.add(new Option(label,String(value)));
+}
+function refreshModels(){
+ const brand=brandSelect.value,found=catalog?.brands.find(x=>x.id===brand);
+ form.querySelector('.fleet-brand-other').hidden=brand!=='OTHER';
+ const options=found?.models.map(([model])=>[model,model])||[];
+ setChoices(modelSelect,[...options,['기종 직접 입력','OTHER']],'기종 선택');
+ form.querySelector('.fleet-model-other').hidden=true;
+ form.elements.modelOther.value='';form.elements.cc.value='';
+}
+function refreshModelChoice(){
+ const other=modelSelect.value==='OTHER';
+ form.querySelector('.fleet-model-other').hidden=!other;
+ const found=catalog?.brands.find(x=>x.id===brandSelect.value);
+ const model=found?.models.find(([name])=>name===modelSelect.value);
+ form.elements.cc.value=model?String(model[1]):'';
+}
+setChoices(brandSelect,[...(catalog?.brands||[]).map(x=>[x.label,x.id]),['기타 제조사 (직접 입력)','OTHER']],'제조사 선택');
+setChoices(yearSelect,Array.from({length:new Date().getFullYear()-1949},(_,i)=>{const y=new Date().getFullYear()-i;return[String(y)+'년',y]}),'연식 선택');
+brandSelect.addEventListener('change',refreshModels);
+modelSelect.addEventListener('change',refreshModelChoice);
+refreshModels();
 newPanel.append(newHead,form);newOverlay.appendChild(newPanel);document.body.appendChild(newOverlay);
 let newFormReturnFocus=null;
-function closeNewVehicleForm(){newOverlay.hidden=true;form.hidden=true;form.reset();message.textContent='';newFeedback.textContent='';if(newFormReturnFocus?.focus&&newFormReturnFocus.isConnected)newFormReturnFocus.focus({preventScroll:true});newFormReturnFocus=null}
+function closeNewVehicleForm(){newOverlay.hidden=true;form.hidden=true;form.reset();refreshModels();message.textContent='';newFeedback.textContent='';if(newFormReturnFocus?.focus&&newFormReturnFocus.isConnected)newFormReturnFocus.focus({preventScroll:true});newFormReturnFocus=null}
 newHead.querySelector('.fleet-new-close').addEventListener('click',closeNewVehicleForm);
 newOverlay.addEventListener('click',e=>{if(e.target===newOverlay)closeNewVehicleForm()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!newOverlay.hidden){e.stopImmediatePropagation();closeNewVehicleForm()}});
@@ -192,7 +220,7 @@ document.addEventListener('motorcycle:open-new-vehicle',showNewVehicleForm);
 form.querySelector('.fleet-cancel').addEventListener('click',closeNewVehicleForm);
 form.addEventListener('submit',e=>{
  e.preventDefault();
- const brand=form.elements.brand.value.trim(),model=form.elements.model.value.trim(),cc=Number(form.elements.cc.value),name=(brand+' '+model).trim(),km=Number(form.elements.km.value),yearValue=form.elements.year.value.trim(),year=yearValue?Number(yearValue):null;
+ const brand=(form.elements.brand.value==='OTHER'?form.elements.brandOther.value:form.elements.brand.value).trim(),model=(form.elements.model.value==='OTHER'?form.elements.modelOther.value:form.elements.model.value).trim(),cc=Number(form.elements.cc.value),name=(brand+' '+model).trim(),km=Number(form.elements.km.value),yearValue=form.elements.year.value.trim(),year=yearValue?Number(yearValue):null;
  if(!brand||brand.length>40||!model||model.length>55||name.length>100||!Number.isSafeInteger(cc)||cc<1||cc>3000||!Number.isSafeInteger(km)||km<0||km>9999999||(!Number.isSafeInteger(year)||year<1950||year>new Date().getFullYear())){newFeedback.textContent='제조사·기종·배기량·제조 연식·시작 주행거리를 확인해.';return}
  const id='bike-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
  document.dispatchEvent(new CustomEvent('motorcycle:register-new-vehicle',{detail:{id,name,brand,model,cc,km,year,wear:'auto'}}));
