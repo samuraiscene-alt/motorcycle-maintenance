@@ -11,6 +11,30 @@ const brands=[
  {id:'VESPA',label:'VESPA',models:[['PRIMAVERA125',125],['GTS300',300]]}
 ];
 const officialProfiles=Object.freeze({
+ 'YAMAHA|NMAX125|2025':Object.freeze({
+  verified:true,region:'2025 GPD125-A',modelCode:'GPD125-A',year:2025,
+  source:'https://www.ysk.co.kr/support/manual.php?boardid=manual&idx=62&mode=view',
+  sourceText:'https://manualzz.com/doc/91138987/yamaha-nmax-125-scooter-owner-s-manual',
+  sourcePages:['4-8','7-3','7-4','7-5'],
+  sourceType:'Yamaha NMAX GPD125-A 2025 owner manual (model-specific)',
+  intervals:Object.freeze({
+   oil:6000,filter:18000,'drive-belt':18000
+  }),
+  tasks:Object.freeze({
+   oil:{replaceKm:6000,firstReplaceKm:1000,firstRegularOdometerKm:6000,indicator:true},
+   filter:{replaceKm:18000},
+   'drive-belt':{replaceKm:18000,indicator:true},
+   'brake-fluid':{replaceMonths:24},
+   'brake-hose':{replaceMonths:48,inspectKm:6000},
+   coolant:{replaceMonths:36,inspectKm:6000},
+   brake:{inspectKm:6000,replaceWhenWorn:true},
+   tire:{inspectKm:6000,replaceWhenWorn:true},
+   'oil-strainer':{cleanAtService:true},
+   'valve-clearance':{inspectAsScheduled:true},
+   'spark-plug':{inspectAsScheduled:true}
+  }),
+  actionByPart:Object.freeze({'oil-strainer':'clean','valve-clearance':'inspect'})
+ }),
  'HONDA|PCX125|2025':Object.freeze({
   verified:true,region:'KO',modelCode:'WW125A',year:2025,
   source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/WW125S_A%20%28PCX%29/2025/WW125SA_OM_32K1YE00_web.pdf',
