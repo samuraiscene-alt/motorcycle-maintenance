@@ -210,13 +210,13 @@ function updateMaintenanceNotices(){
    if(!last&&(reg.km!==0||odo>firstDue)){unknown++;continue}
    const due=last?last.at+km:firstDue;
    const remaining=due-odo;if(remaining>500)continue;
-   notices.push({title,action,due,remaining,kind:'distance'});
+   notices.push({id,title,action,due,remaining,kind:'distance'});
   }
   if(Number.isSafeInteger(task?.replaceMonths)&&task.replaceMonths>0){
    const calendar=dateBasedStatus(reg,id,records);
    if(calendar?.missing){missingDates.push(title+' · '+task.replaceMonths+'개월 주기')}
    else if(calendar&&calendar.days<=30){
-    notices.push({title,action:'replace',due:calendar.due,remaining:calendar.days,kind:'calendar'});
+    notices.push({id,title,action:'replace',due:calendar.due,remaining:calendar.days,kind:'calendar'});
    }
   }
  }
@@ -230,7 +230,16 @@ function updateMaintenanceNotices(){
  if(unknown)parts.push('이력 확인 '+unknown+'건');
  count.textContent=parts.join(' · ')||'도래·임박 없음';
  for(const n of notices){
-  const item=document.createElement('div');item.className='maintenance-notice-item';item.dataset.level=n.remaining<=0?'due':'soon';
+  const item=document.createElement('button');item.type='button';item.className='maintenance-notice-item';item.dataset.level=n.remaining<=0?'due':'soon';
+ item.setAttribute('aria-label',n.title+' '+actionText(n.action)+' 정비기록 열기');
+ item.addEventListener('click',()=>{
+  const partRow=[...document.querySelectorAll('.rows .part[data-part-id]')].find(row=>row.dataset.partId===n.id);
+  if(!partRow)return;
+  partRow.classList.add('maintenance-notice-target');
+  partRow.scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(()=>partRow.classList.remove('maintenance-notice-target'),1800);
+  openRecord(partRow);actionSelect.value=n.action;syncAction();
+ });
   const title=document.createElement('strong');title.textContent=n.title+' · '+actionText(n.action);
   const detail=document.createElement('span');
   detail.textContent=n.kind==='calendar'
@@ -255,6 +264,25 @@ document.addEventListener('motorcycle:change',updateMaintenanceNotices);
 document.addEventListener('motorcycle:vehicle-saved',updateMaintenanceNotices);
 document.addEventListener('motorcycle:appearance-changed',updateMaintenanceNotices);
 
+/* Wall signage: Honda remains in the original garage scene; Yamaha uses a documented, real illuminated dealer sign photo. */
+const garageSign=document.createElement('div');
+garageSign.className='garage-sign';garageSign.setAttribute('aria-label','정비소 벽 간판');
+garageSign.innerHTML='<span class="garage-sign-caption">MOTORCYCLE SERVICE</span><img alt="실제 야마하 조명 딜러 간판" loading="lazy">';
+stage.appendChild(garageSign);
+const yamahaSignPhoto='https://thesignexperience.com/cdn/shop/products/b1d9215f-f0cd-454b-97eb-0d5660babf96_1200x1200.jpg?v=1672225191';
+const yamahaSignImg=garageSign.querySelector('img');
+yamahaSignImg.addEventListener('load',()=>garageSign.classList.add('sign-photo-ready'));
+yamahaSignImg.addEventListener('error',()=>garageSign.classList.remove('sign-photo-ready'));
+function setGarageSign(maker){
+ garageSign.classList.remove('sign-photo-ready');
+ garageSign.dataset.brand=maker==='HONDA'?'HONDA':maker==='YAMAHA'?'YAMAHA':'GENERAL';
+ garageSign.hidden=maker==='HONDA';
+ garageSign.querySelector('.garage-sign-caption').textContent=maker==='YAMAHA'?'YAMAHA':'MOTORCYCLE SERVICE';
+ if(maker==='YAMAHA'){
+  if(yamahaSignImg.getAttribute('src')!==yamahaSignPhoto)yamahaSignImg.src=yamahaSignPhoto;
+  else if(yamahaSignImg.complete&&yamahaSignImg.naturalWidth>0)garageSign.classList.add('sign-photo-ready');
+ }else yamahaSignImg.removeAttribute('src');
+}
 const showroomNotice=document.createElement('span');
 showroomNotice.className='showroom-reference-note';
 showroomNotice.textContent='차종 전용 이미지 미등록 · 참고용 스쿠터';
@@ -269,6 +297,7 @@ function renderInfo(){
  if(empty){
   name.textContent='등록된 차량 없음';meta.textContent='설정에서 새 차량을 등록해.';
   document.body.classList.remove('vehicle-locked','non-honda-bike');
+ garageSign.hidden=true;
   stage.setAttribute('aria-label','차량이 없는 정비소');
   document.body.dataset.activeBike='';
   renderParts();
@@ -278,6 +307,7 @@ function renderInfo(){
  const b=currentBike(),r=currentRegistration(),odo=getOdometer();name.textContent=b.name;
 const maker=String(r?.brand||b.brand||'').trim().toUpperCase(),isHonda=maker==='HONDA';
 document.body.classList.toggle('non-honda-bike',!isHonda);
+setGarageSign(maker);
 meta.textContent=r?(r.year?r.year+'년형 · ':'연식 미확인 · ')+'시작 '+fmt(r.km)+'km · 현재 '+fmt(odo)+'km':b.demo;
 const odometerReadout=$('odometer-readout');if(odometerReadout)odometerReadout.textContent=r?fmt(odo)+'km':'등록 전';
 brand.innerHTML=isHonda?hondaLogo:unknownLogo;
