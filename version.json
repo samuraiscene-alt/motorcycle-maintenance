@@ -1,6 +1,6 @@
 {
-  "version": "2.6.2",
-  "cache": "motorcycle-maintenance-v2.6.2",
+  "version": "2.7.0",
+  "cache": "motorcycle-maintenance-v2.7",
   "released": "2026-11-05",
-  "note": "차량 0대일 때 정비소 원본 배경 복구, 오토바이만 숨기고 검은 마스크 제거"
+  "note": "기존 차량 제조사·기종·배기량·제조 연식·시작 주행거리 수정, 정비기록 보호"
 }
