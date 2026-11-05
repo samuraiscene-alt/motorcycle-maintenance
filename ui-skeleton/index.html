@@ -81,22 +81,15 @@
 .odometer-button{position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:3;width:94px;height:69px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0;padding:4px 3px;border:1px solid #7d91a5;border-radius:12px;background:linear-gradient(160deg,#182c40,#070e19 64%,#27384b);box-shadow:inset 0 2px 2px #a5bacd99,0 2px 5px #0008;cursor:pointer;color:#d2edff;-webkit-tap-highlight-color:transparent}
 .odometer-button svg{width:69px;height:42px;display:block;overflow:visible;filter:drop-shadow(0 1px 1px #0009)}.odometer-readout{font-size:11px;font-weight:900;letter-spacing:-.3px;line-height:15px;color:#d7eeff;font-variant-numeric:tabular-nums;white-space:nowrap}.odometer-button:focus-visible{outline:3px solid #149afa;outline-offset:3px}.odometer-button:active{filter:brightness(1.25)}
 @media(max-width:390px){.odometer-button{right:6px;width:76px;height:60px}.odometer-button svg{height:36px;width:60px}.odometer-readout{font-size:10px}.bike-model,.bike-meta{max-width:calc(100% - 122px)}}
-/* Empty garage: retain the workshop background but never show prototype motorcycles. */
-.no-registered-vehicles .showroom-track,
+/* Empty garage: showroom slide retains the approved garage artwork. Hide only bike layers. */
+.no-registered-vehicles .showroom-slide .motorcycle-hero,
+.no-registered-vehicles .showroom-slide .ground-shadow,
 .no-registered-vehicles .showroom-count,
 .no-registered-vehicles .showroom-check,
 .no-registered-vehicles .brand-slot,
 .no-registered-vehicles .odometer-button{display:none!important}
 .no-registered-vehicles .vehicle-lines{inset:0 16px;align-items:center;justify-content:center;text-align:center}
 .no-registered-vehicles .bike-model,.no-registered-vehicles .bike-meta{max-width:100%}
-/* HONDA neon is baked into the original workshop background. Feathered blackout only
-   covers this sign when no bike is registered, without changing the supplied artwork. */
-.no-registered-vehicles .garage::before{
- content:"";position:absolute;left:23%;top:20%;width:21%;height:22%;z-index:2;
- pointer-events:none;background:#04080d;
- -webkit-mask-image:radial-gradient(ellipse,#000 38%,#000d 53%,transparent 76%);
- mask-image:radial-gradient(ellipse,#000 38%,#000d 53%,transparent 76%)
-}
 /* Vehicle identity fits between brand slot and odometer without overlapping either. */
 .vehicle-lines{inset:0 110px 0 99px;min-width:0}
 .bike-model{max-width:100%;font-size:clamp(17px,4.3vw,24px)}
@@ -239,8 +232,8 @@ body.part-add-open{overflow:hidden}
 <article class="part"><div class="part-img"><img src="../assets/tire.webp" alt="타이어"></div><div class="part-body"><div class="part-line"><strong>타이어</strong><span>5,200 / 10,000km</span></div><div class="gauge"><div class="gauge-fill blue" style="width:52%"></div></div></div><div class="service blue" aria-label="타이어 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
 <article class="part"><div class="part-img"><img src="../assets/coolant.webp" alt="냉각수"></div><div class="part-body"><div class="part-line"><strong>냉각수</strong><span>12,300 / 20,000km</span></div><div class="gauge"><div class="gauge-fill blue" style="width:62%"></div></div></div><div class="service blue" aria-label="냉각수 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
 <article class="part"><div class="part-img"><img src="../assets/air-filter.webp" alt="에어필터"></div><div class="part-body"><div class="part-line"><strong>에어필터</strong><span>9,100 / 12,000km</span></div><div class="gauge"><div class="gauge-fill amber" style="width:76%"></div></div></div><div class="service amber" aria-label="에어필터 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
-</main><div class="note"><strong>오토바이 정비 · 차량별 정비기록 시제품</strong> | 오토바이별 독립 저장</div></div><script src="./vehicle-data.js?v=empty-garage-17" defer></script>
-<script src="./part-customize.js?v=accordion-order-3" defer></script><script src="./priority-parts.js?v=priority-13-2" defer></script><script src="./priority-images.js?v=studio-icons-4" defer></script><script src="./part-swipe-edit.js?v=restore-visible-8" defer></script><script src="./backup-restore.js?v=browser-transfer-2" defer></script><script src="./wear-library.js?v=shared-materials-1" defer></script><script src="./i18n.js?v=locale-scaffold-1" defer></script><script src="./vehicle-management.js?v=swipe-delete-9" defer></script><script src="./version-check.js?v=app-version-261" defer></script><script src="./bike-aging.js?v=parts-safe-2" defer></script><div id="registration-mask" class="registration-mask" role="dialog" aria-modal="true" aria-labelledby="registration-title" hidden>
+</main><div class="note"><strong>오토바이 정비 · 차량별 정비기록 시제품</strong> | 오토바이별 독립 저장</div></div><script src="./vehicle-data.js?v=empty-garage-18" defer></script>
+<script src="./part-customize.js?v=accordion-order-3" defer></script><script src="./priority-parts.js?v=priority-13-2" defer></script><script src="./priority-images.js?v=studio-icons-4" defer></script><script src="./part-swipe-edit.js?v=restore-visible-8" defer></script><script src="./backup-restore.js?v=browser-transfer-2" defer></script><script src="./wear-library.js?v=shared-materials-1" defer></script><script src="./i18n.js?v=locale-scaffold-1" defer></script><script src="./vehicle-management.js?v=swipe-delete-9" defer></script><script src="./version-check.js?v=app-version-262" defer></script><script src="./bike-aging.js?v=parts-safe-2" defer></script><div id="registration-mask" class="registration-mask" role="dialog" aria-modal="true" aria-labelledby="registration-title" hidden>
  <form id="registration-form" class="registration-panel" autocomplete="off">
   <div class="registration-heading"><div><strong id="registration-title">오토바이 등록</strong><p id="registration-model">HONDA PCX125</p></div><button type="button" id="registration-close" aria-label="닫기">×</button></div>
   
