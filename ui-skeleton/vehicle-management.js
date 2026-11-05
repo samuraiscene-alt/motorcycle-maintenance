@@ -168,7 +168,16 @@ section.querySelector('.fleet-appearance-form').addEventListener('submit',e=>{
   document.dispatchEvent(new CustomEvent('motorcycle:appearance-changed',{detail:{bikeId:id}}));
  }catch{message.textContent='저장공간을 확인해.'}
 });
-section.querySelector('.fleet-add').addEventListener('click',()=>{closeEdit();form.hidden=false;message.textContent='';form.elements.brand.focus({preventScroll:true})});
+function showNewVehicleForm(){
+ closeEdit();form.hidden=false;message.textContent='';
+ const overlay=root.closest('.backup-overlay');
+ if(overlay)overlay.hidden=false;
+ refresh();
+ form.scrollIntoView({block:'nearest'});
+ form.elements.brand.focus({preventScroll:true});
+}
+section.querySelector('.fleet-add').addEventListener('click',showNewVehicleForm);
+document.addEventListener('motorcycle:open-new-vehicle',showNewVehicleForm);
 section.querySelector('.fleet-cancel').addEventListener('click',()=>{form.hidden=true;form.reset()});
 form.addEventListener('submit',e=>{
  e.preventDefault();
