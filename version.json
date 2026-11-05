@@ -1,6 +1,6 @@
 {
-  "version": "2.9.5",
-  "cache": "motorcycle-maintenance-v2.9.5",
+  "version": "2.9.6",
+  "cache": "motorcycle-maintenance-v2.9.6",
   "released": "2026-11-06",
-  "note": "홈 화면 아이콘을 새 파란색·주황색 오토바이 및 공구 디자인으로 변경"
+  "note": "공식 정비표 연식 확대: HONDA PCX125 2024, YAMAHA NMAX125 2022 추가. 미확인 연식은 자동설정 제외"
 }
