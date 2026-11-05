@@ -1,6 +1,6 @@
 {
-  "version": "2.9.8",
-  "cache": "motorcycle-maintenance-v2.9.8",
+  "version": "2.9.9",
+  "cache": "motorcycle-maintenance-v2.9.9",
   "released": "2026-11-06",
-  "note": "기간 기준 정비기록(교체주기 0km)이 포함된 백업 파일의 생성·복원 검증 오류 수정"
+  "note": "업데이트 뒤 구버전이 반복 실행되는 문제 대응: 버전 검사·백업 스크립트 캐시 식별자 갱신"
 }
