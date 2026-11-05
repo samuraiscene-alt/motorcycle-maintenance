@@ -25,6 +25,11 @@ const hasRegisteredBikes=()=>Object.values(registered).some(r=>r&&typeof r==='ob
 const isLocked=()=>!!registered[bikes[index]?.id];
 const hondaLogo=brand.innerHTML,unknownLogo='<svg viewBox="0 0 64 42" aria-hidden="true" class="generic-bike-mark"><circle cx="15" cy="30" r="8"/><circle cx="49" cy="30" r="8"/><path d="M15 30 26 14h13l10 16M25 14l8 16H15m18 0 10-13h8"/></svg><strong>BRAND</strong>';
 const fmt=n=>Number(n).toLocaleString('ko-KR'),valid=n=>Number.isSafeInteger(n)&&n>=0&&n<=9999999;
+function validMaintenanceDate(raw){
+ if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(raw))return false;
+ const date=new Date(raw+'T00:00:00');
+ return Number.isFinite(date.getTime())&&date.getFullYear()===Number(raw.slice(0,4))&&date.getMonth()+1===Number(raw.slice(5,7))&&date.getDate()===Number(raw.slice(8,10));
+}
 function currentBike(){return bikes[index]}function currentRegistration(){return registered[currentBike().id]}
 function getVehicleData(id){const x=database[id];return x&&typeof x==='object'&&!Array.isArray(x)?x:{records:{}}}
 function getOdometer(){const r=currentRegistration(),v=getVehicleData(currentBike().id);return r?valid(v.odometer)&&v.odometer>=r.km?v.odometer:r.km:null}
@@ -89,9 +94,11 @@ meta.textContent=r?'시작 '+fmt(r.km)+'km · 현재 '+fmt(odo)+'km':b.demo;cons
 brand.innerHTML=b.brand==='honda'?hondaLogo:unknownLogo;brand.setAttribute('aria-label',b.brand==='honda'?'혼다':'제조사 미정');
 counter.textContent=isLocked()?'':bikes.map((_,i)=>i===index?'●':'○').join(' ');document.body.classList.toggle('vehicle-locked',isLocked());stage.setAttribute('aria-label',isLocked()?'등록된 내 오토바이 이미지':'오토바이 이미지: 좌우 스와이프로 차량 선택');document.body.dataset.activeBike=b.id;renderParts();document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:b.id}}))}
 function renderParts(){const reg=currentRegistration(),odo=getOdometer(),data=getVehicleData(currentBike().id);
-document.querySelectorAll('.part:not(.part-add-card)').forEach((row,i)=>{const id=row.dataset.partId||items[i]?.id;const item=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};if(!id)return;const records=data.records&&Array.isArray(data.records[item.id])?data.records[item.id]:[],last=records.length?[...records].sort((a,b)=>Number(a.at)-Number(b.at)||String(a.date).localeCompare(String(b.date)))[records.length-1]:null;
+document.querySelectorAll('.part:not(.part-add-card)').forEach((row,i)=>{const id=row.dataset.partId||items[i]?.id;const item=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};if(!id)return;const records=data.records&&Array.isArray(data.records[item.id])?data.records[item.id]:[];
+const usable=records.filter(record=>record&&valid(record.at)&&valid(record.interval)&&record.interval>0&&record.at<=odo);
+const last=usable.length?[...usable].sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||'')))[usable.length-1]:null;
 const text=row.querySelector('.part-line span'),bar=row.querySelector('.gauge-fill'),btn=row.querySelector('.service');
-bar.classList.remove('blue','amber','red');bar.classList.add('blue');btn.classList.remove('blue','amber','red');btn.classList.add('blue');
+bar.classList.remove('blue','amber','red');bar.classList.add('blue');btn.classList.remove('blue','amber','red');btn.classList.add('blue');delete row.dataset.maintenancePercent;
 if(!reg){text.textContent='차량 등록 후 확인';bar.style.width='0%';row.classList.add('part-unregistered');}
 else{
  const interval=last&&valid(last.interval)&&last.interval>0?last.interval:item.interval;
@@ -174,7 +181,7 @@ function renderHistory(){const d=getVehicleData(currentBike().id),arr=Array.isAr
 document.querySelector('.rows').addEventListener('click',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn)openRecord(btn.closest('.part'))});document.querySelector('.rows').addEventListener('keydown',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openRecord(btn.closest('.part'))}});
 recordForm.addEventListener('submit',e=>{e.preventDefault();if(!editingItem)return;const at=Number(recordAt.value),interval=Number(recordInterval.value),date=recordDate.value,reg=currentRegistration(),odo=getOdometer();
 if(!reg){recordError.textContent='정비기록을 저장하려면 먼저 오토바이 등록이 필요해.';return}
-if(recordAt.value.trim()===''||!valid(at)||at<reg.km||at>odo||!valid(interval)||interval<1||interval>1000000||!/^\d{4}-\d\d-\d\d$/.test(date)||!Number.isFinite(Date.parse(date))){recordError.textContent='주행거리·날짜·교체주기를 확인해. 정비 주행거리는 시작~현재 범위여야 해.';return}
+if(recordAt.value.trim()===''||!valid(at)||at<reg.km||at>odo||!valid(interval)||interval<1||interval>1000000||!validMaintenanceDate(date)){recordError.textContent='주행거리·날짜·교체주기를 확인해. 정비 주행거리는 시작~현재 범위여야 해.';return}
 const d=getVehicleData(currentBike().id),records={...(d.records||{})},old=Array.isArray(records[editingItem.id])?records[editingItem.id]:[];
 records[editingItem.id]=[...old,{at,interval,date}].sort((a,b)=>a.at-b.at||a.date.localeCompare(b.date));
 const next={...database,[currentBike().id]:{...d,odometer:odo,records}};
@@ -287,7 +294,7 @@ maintenanceEditForm.addEventListener('submit',e=>{
  const date=maintenanceEditForm.elements.date.value,at=Number(maintenanceEditForm.elements.at.value),interval=Number(maintenanceEditForm.elements.interval.value);
  const reg=registered[ref.bikeId],vehicle=database[ref.bikeId],maximum=vehicle?.odometer;
  const err=maintenanceEditMask.querySelector('.maintenance-edit-error');
- if(!reg||!/^\d{4}-\d{2}-\d{2}$/.test(date)||(!Number.isFinite(Date.parse(date+'T00:00:00'))||new Date(date+'T00:00:00').getDate()!==Number(date.slice(8,10)))||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at<reg.km||at>maximum||maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||interval<1||interval>1000000){
+ if(!reg||!validMaintenanceDate(date)||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at<reg.km||at>maximum||maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||interval<1||interval>1000000){
   err.textContent='날짜·정비 주행거리·교체 주기를 확인해. 정비 주행거리는 시작~현재 범위여야 해.';return;
  }
  const source=getVehicleData(ref.bikeId),arr=source.records?.[ref.id]||[];
