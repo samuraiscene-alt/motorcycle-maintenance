@@ -74,33 +74,64 @@ function imageKey(b,id){return 'appearance:'+b+':'+id}
 function wrap(row){if(!row.dataset.partId||row.closest('.part-swipe-wrap'))return;const parent=row.parentNode;const shell=document.createElement('div');shell.className='part-swipe-wrap';shell.dataset.partId=row.dataset.partId;const actions=document.createElement('div');actions.className='part-swipe-actions';actions.innerHTML='<button class="part-swipe-edit" type="button">수정</button><button class="part-swipe-delete" type="button">삭제</button>';parent.insertBefore(shell,row);shell.append(actions,row);actions.querySelector('.part-swipe-edit').addEventListener('click',()=>edit(row));actions.querySelector('.part-swipe-delete').addEventListener('click',()=>remove(row));shell.addEventListener('touchstart',start,{passive:true});shell.addEventListener('touchmove',move,{passive:false});shell.addEventListener('touchend',finish,{passive:true});shell.addEventListener('touchcancel',cancelGesture,{passive:true});
 }
 /* A 380ms stationary hold starts a card reorder; a quick left swipe still reveals actions. */
-function groupKey(parent){if(parent===rows)return 'base';if(parent.classList.contains('extra-stock-container'))return 'extra';if(parent.classList.contains('custom-part-container'))return 'custom';if(parent.classList.contains('stock-part-container'))return 'standard';return null}
-function cardChildren(parent){return [...parent.children].filter(el=>el.classList.contains('part-swipe-wrap'))}
-function saveOrder(){const parents=[rows,...rows.querySelectorAll('.stock-part-container,.custom-part-container')];const next={...(orders[bike()]||{})};for(const p of parents){const g=groupKey(p);if(g)next[g]=cardChildren(p).map(el=>el.dataset.partId)}orders[bike()]=next;localStorage.setItem(orderKey,JSON.stringify(orders))}
-function restoreOrder(){const parents=[rows,...rows.querySelectorAll('.stock-part-container,.custom-part-container')];const groups=new Map(parents.map(p=>[groupKey(p),p]).filter(x=>x[0]));const saved=orders[bike()]||{};const all=[...rows.querySelectorAll('.part-swipe-wrap')];const indexed=new Map(all.map(el=>[el.dataset.partId,el]));
- // Rebuild each group's sequence using saved IDs, leaving new and unlisted parts in their natural groups.
- for(const [key,ids] of Object.entries(saved)){const parent=groups.get(key);if(!parent||!Array.isArray(ids))continue;
-  for(const id of ids){const shell=indexed.get(id);if(shell&&shell.parentElement!==parent)parent.appendChild(shell)}
-  let at=parent.firstElementChild;
-  for(const id of ids){const shell=indexed.get(id);if(!shell||shell.parentElement!==parent)continue;
-   if(shell!==at)parent.insertBefore(shell,at);
-   at=shell.nextElementSibling;
+/* A single sortable top area plus an expandable area. Any card may move between them. */
+const topZone=rows.querySelector('.stock-part-container:not(.extra-stock-container)');
+const extraZone=rows.querySelector('.extra-stock-container');
+const toggle=rows.querySelector('.extra-parts-toggle');
+let arranging=false;
+function directCards(zone){return [...zone.children].filter(el=>el.classList.contains('part-swipe-wrap'))}
+function allCards(){return [...rows.querySelectorAll('.part-swipe-wrap')]}
+function normalizeZones(){
+ if(!topZone||!extraZone)return;
+ // The original five cards began as direct children of rows; move them to the same freely sortable area.
+ for(const shell of directCards(rows))topZone.appendChild(shell);
+ const custom=extraZone.querySelector('.custom-part-container');
+ if(custom)for(const shell of directCards(custom))extraZone.insertBefore(shell,custom);
+}
+function saveOrder(){
+ if(!topZone||!extraZone)return;
+ const current={top:directCards(topZone).map(el=>el.dataset.partId),extra:directCards(extraZone).map(el=>el.dataset.partId)};
+ orders[bike()]=current;localStorage.setItem(orderKey,JSON.stringify(orders));
+ updateToggleCount();
+}
+function restoreOrder(){
+ if(!topZone||!extraZone||arranging)return;
+ arranging=true;
+ try{
+  normalizeZones();
+  const saved=orders[bike()]||{};
+  // Convert positions from older builds without deleting existing user settings.
+  const topIds=Array.isArray(saved.top)?saved.top:[...(saved.base||[]),...(saved.standard||[])];
+  const extraIds=Array.isArray(saved.extra)?saved.extra:[...(saved.extra||[]),...(saved.custom||[])];
+  const available=new Map(allCards().map(el=>[el.dataset.partId,el]));
+  for(const [zone,ids] of [[topZone,topIds],[extraZone,extraIds]]){
+   for(const id of ids){const shell=available.get(id);if(shell)zone.appendChild(shell)}
+   // Reinsert saved cards first, preserving their order and leaving unlisted newcomers after them.
+   const ordered=ids.map(id=>available.get(id)).filter(el=>el&&el.parentElement===zone);
+   const other=directCards(zone).filter(el=>!ordered.includes(el));
+   const desired=[...ordered,...other];
+   for(const el of desired)zone.appendChild(el);
   }
- }
+  updateToggleCount();
+ }finally{arranging=false}
 }
-function canTarget(shell,target){if(!target||target===shell||target.hidden)return false;
- const baseIds=['oil','brake','tire','coolant','filter'];
- const groupOf=el=>{if(baseIds.includes(el.dataset.partId))return 'base';if(el.closest('.extra-stock-container'))return 'extra';if(el.closest('.stock-part-container'))return 'standard';return null};
- const source=groupOf(shell),destination=groupOf(target);
- // The five base items always remain above the accordion; user-created items remain inside it.
- return !!source&&source===destination;
+function updateToggleCount(){
+ if(!extraZone||!toggle)return;
+ const count=allCards().filter(el=>extraZone.contains(el)).length;
+ toggle.textContent=extraZone.hidden?'추가 정비 항목 펼치기 ('+count+'개) ▾':'추가 정비 항목 접기 ▴';
 }
-function findTarget(x,y){if(!drag)return null;
- const shells=[...rows.querySelectorAll('.part-swipe-wrap')].filter(el=>canTarget(drag.shell,el)&&el.getClientRects().length);
+function canTarget(shell,target){return !!target&&target!==shell&&!target.hidden}
+function findTarget(x,y){
+ if(!drag)return null;
+ const rect=toggle?.getBoundingClientRect();
+ if(rect&&y>=rect.top-10&&y<=rect.bottom+10)return toggle;
+ const eligible=allCards().filter(el=>canTarget(drag.shell,el)&&el.getClientRects().length&&!el.closest('[hidden]'));
  let nearest=null,distance=Infinity;
- for(const el of shells){const r=el.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)continue;const gap=y<r.top?r.top-y:y>r.bottom?y-r.bottom:0;
- if(gap<distance){distance=gap;nearest=el}}
- return distance<110?nearest:null;
+ for(const el of eligible){const r=el.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)continue;
+  const gap=y<r.top?r.top-y:y>r.bottom?y-r.bottom:0;
+  if(gap<distance){distance=gap;nearest=el}
+ }
+ return distance<90?nearest:null;
 }
 function start(e){if(e.touches.length!==1||!mask.hidden)return;const t=e.touches[0],shell=e.currentTarget;
  gesture={wrap:shell,x:t.clientX,y:t.clientY,currentX:t.clientX,currentY:t.clientY,dragging:false,timer:null};
@@ -112,7 +143,6 @@ function beginDrag(g){const shell=g.wrap;if(!shell?.isConnected)return;closeSwip
  drag={g,shell,ghost,from:shell.parentElement,y:g.currentY,target:null,after:false};
  if(navigator.vibrate)try{navigator.vibrate(18)}catch{}
 }
-function findTarget(x,y){if(!drag)return;const el=document.elementFromPoint(x,y),shell=el?.closest('.part-swipe-wrap');if(!shell||shell===drag.shell||shell.parentElement!==drag.from||shell.hidden)return;return shell}
 function move(e){const g=gesture;if(!g||g.wrap!==e.currentTarget||e.touches.length!==1)return;const t=e.touches[0];g.currentX=t.clientX;g.currentY=t.clientY;
  if(!g.dragging){if(Math.hypot(t.clientX-g.x,t.clientY-g.y)>12){clearTimeout(g.timer);g.timer=null}return}
  e.preventDefault();if(!drag)return;
@@ -133,7 +163,12 @@ function cleanupDrag(commit){if(!drag)return;const d=drag;
  const after=target?t.currentY>target.getBoundingClientRect().top+target.getBoundingClientRect().height/2:false;
  if(d.target)d.target.classList.remove('part-drop-before','part-drop-after');
  d.shell.classList.remove('drag-source');d.ghost.remove();drag=null;
- if(commit&&target&&canTarget(d.shell,target)){const parent=target.parentElement;parent.insertBefore(d.shell,after?target.nextSibling:target);try{saveOrder()}catch(err){console.warn('Part order could not be saved:',err)}}
+ if(commit&&target&&canTarget(d.shell,target)){
+  // Dropping onto the accordion header moves the card into the expandable list, even while closed.
+  const destination=target===toggle?extraZone:target.parentElement;
+  if(destination){destination.insertBefore(d.shell,target===toggle?destination.firstElementChild:(after?target.nextSibling:target));
+   try{saveOrder();document.dispatchEvent(new CustomEvent('motorcycle:parts-reordered'))}catch(err){console.warn('Part order could not be saved:',err)}}
+ }
  suppressUntil=Date.now()+600}
 function finish(e){if(!gesture||gesture.wrap!==e.currentTarget)return;const g=gesture;clearTimeout(g.timer);gesture=null;if(g.dragging){cleanupDrag(true);return}
  const touch=e.changedTouches[0],dx=touch.clientX-g.x,dy=touch.clientY-g.y;if(Math.abs(dx)<37||Math.abs(dx)<Math.abs(dy)*1.3)return;const shell=e.currentTarget;if(dx<0){closeSwipe();shell.classList.add('swiped');openWrap=shell}else if(shell===openWrap)closeSwipe()}
@@ -158,10 +193,10 @@ async function decorate(){const serial=++updateNumber,b=bike();const all=[...row
  else if(pic.classList.contains('part-user-picture')){pic.innerHTML=defaults.html;pic.className=defaults.cls}
  }
 }
-function refresh(){decorate()}
+function refresh(){if(!drag)decorate()}
 document.addEventListener('motorcycle:change',refresh);
 document.addEventListener('motorcycle:custom-parts-change',()=>queueMicrotask(refresh));
-const observer=new MutationObserver(records=>{if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.part')||n.querySelector?.('.part')||(n.matches?.('img')&&n.closest?.('.custom-part'))))))refresh()});
+const observer=new MutationObserver(records=>{if(arranging||drag)return;if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&(n.classList?.contains('custom-part')||n.querySelector?.('.custom-part:not(.part-swipe-wrap .custom-part)')||(n.matches?.('img')&&n.closest?.('.custom-part'))))))refresh()});
 observer.observe(rows,{subtree:true,childList:true});
 refresh();
 })();
