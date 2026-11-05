@@ -188,6 +188,19 @@ body.part-add-open{overflow:hidden}
 .part:not(.part-add-card) .part-line strong{display:block;min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;overflow:visible;text-overflow:clip;line-height:1.35}
 .part:not(.part-add-card) .part-line span{display:block;min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:keep-all;line-height:1.45}
 .part:not(.part-add-card) .gauge{width:100%;min-width:0}
+/* v2.9.14 maintenance notice panel */
+.maintenance-notices{margin:0 15px 15px;padding:0 13px;border:1px solid #55748f;border-radius:12px;background:#102237;color:#e8f5ff}
+.maintenance-notices[hidden]{display:none!important}
+.maintenance-notices>summary{min-height:46px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none}
+.maintenance-notices>summary::-webkit-details-marker{display:none}
+.maintenance-notices>summary strong{font-size:14px;white-space:nowrap}
+.maintenance-notice-count{font-size:12px;color:#b6d7ef;text-align:right}
+.maintenance-notice-items{border-top:1px solid #3e5a72;padding:9px 0 12px;display:flex;flex-direction:column;gap:9px}
+.maintenance-notice-item{display:flex;flex-direction:column;gap:2px;border-left:3px solid #e6b158;padding:5px 9px;background:#1c3044;border-radius:4px}
+.maintenance-notice-item[data-level="due"]{border-left-color:#ef7777}
+.maintenance-notice-item strong{font-size:13px}.maintenance-notice-item span{color:#c6d8e8;font-size:12px;line-height:1.45}
+.maintenance-notice-items p{font-size:12px;line-height:1.5;color:#c8d9e9;margin:0}
+.maintenance-notice-items .maintenance-notice-disclaimer{color:#a2b8cb;font-size:11px}
 </style></head><body><div class="app"><section class="garage" id="garage" aria-label="오토바이 쇼룸. 좌우 스와이프로 다른 차량을 볼 수 있습니다">
 <div class="showroom-track" id="showroom-track">
   <div class="showroom-slide" data-index="0" role="group" aria-label="첫 번째 오토바이">
@@ -241,8 +254,8 @@ body.part-add-open{overflow:hidden}
 <article class="part"><div class="part-img"><img src="../assets/tire.webp" alt="타이어"></div><div class="part-body"><div class="part-line"><strong>타이어</strong><span>5,200 / 10,000km</span></div><div class="gauge"><div class="gauge-fill blue" style="width:52%"></div></div></div><div class="service blue" aria-label="타이어 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
 <article class="part"><div class="part-img"><img src="../assets/coolant.webp" alt="냉각수"></div><div class="part-body"><div class="part-line"><strong>냉각수</strong><span>12,300 / 20,000km</span></div><div class="gauge"><div class="gauge-fill blue" style="width:62%"></div></div></div><div class="service blue" aria-label="냉각수 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
 <article class="part"><div class="part-img"><img src="../assets/air-filter.webp" alt="에어필터"></div><div class="part-body"><div class="part-line"><strong>에어필터</strong><span>9,100 / 12,000km</span></div><div class="gauge"><div class="gauge-fill amber" style="width:76%"></div></div></div><div class="service amber" aria-label="에어필터 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
-</main><div class="note"><strong>오토바이 정비 · 차량별 정비기록 시제품</strong> | 오토바이별 독립 저장</div></div><script src="./vehicle-catalog.js?v=pcx-2021-2023-5" defer></script><script src="./vehicle-data.js?v=calendar-maintenance-34-yearlink" defer></script>
-<script src="./part-customize.js?v=accordion-order-3" defer></script><script src="./priority-parts.js?v=priority-13-2" defer></script><script src="./priority-images.js?v=studio-icons-4" defer></script><script src="./part-swipe-edit.js?v=official-cycle-safe-12" defer></script><script src="./backup-restore.js?v=browser-transfer-2-backupfix-298" defer></script><script src="./wear-library.js?v=shared-materials-1" defer></script><script src="./i18n.js?v=locale-scaffold-1" defer></script><script src="./vehicle-management.js?v=brand-model-picker-15-yearlink" defer></script><script src="./version-check.js?v=app-version-313" defer></script><script src="./bike-aging.js?v=parts-safe-2" defer></script><div id="registration-mask" class="registration-mask" role="dialog" aria-modal="true" aria-labelledby="registration-title" hidden>
+</main><div class="note"><strong>오토바이 정비 · 차량별 정비기록 시제품</strong> | 오토바이별 독립 저장</div></div><script src="./vehicle-catalog.js?v=pcx-2021-2023-5" defer></script><script src="./vehicle-data.js?v=calendar-maintenance-35-notices" defer></script>
+<script src="./part-customize.js?v=accordion-order-3" defer></script><script src="./priority-parts.js?v=priority-13-2" defer></script><script src="./priority-images.js?v=studio-icons-4" defer></script><script src="./part-swipe-edit.js?v=official-cycle-safe-12" defer></script><script src="./backup-restore.js?v=browser-transfer-2-backupfix-298" defer></script><script src="./wear-library.js?v=shared-materials-1" defer></script><script src="./i18n.js?v=locale-scaffold-1" defer></script><script src="./vehicle-management.js?v=brand-model-picker-15-yearlink" defer></script><script src="./version-check.js?v=app-version-314" defer></script><script src="./bike-aging.js?v=parts-safe-2" defer></script><div id="registration-mask" class="registration-mask" role="dialog" aria-modal="true" aria-labelledby="registration-title" hidden>
  <form id="registration-form" class="registration-panel" autocomplete="off">
   <div class="registration-heading"><div><strong id="registration-title">오토바이 등록</strong><p id="registration-model">등록된 차량</p></div><button type="button" id="registration-close" aria-label="닫기">×</button></div>
   
