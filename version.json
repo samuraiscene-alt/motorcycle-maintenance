@@ -1,6 +1,6 @@
 {
-  "version": "2.5.0",
-  "cache": "motorcycle-maintenance-v2.5",
+  "version": "2.5.1",
+  "cache": "motorcycle-maintenance-v2.5.1",
   "released": "2026-11-05",
-  "note": "차량 등록 제조사·기종·배기량·연식 분리, 신차·중고차 UI 제거, 기록 기준 정비 계산"
+  "note": "신규 차량 제조 연식 필수 입력, 앱 사용 시작 주행거리 명확화, 현재 주행거리 자동 초기화"
 }
