@@ -1,6 +1,6 @@
 {
-  "version": "2.9.16",
-  "cache": "motorcycle-maintenance-v2.9.16",
+  "version": "2.9.17",
+  "cache": "motorcycle-maintenance-v2.9.17",
   "released": "2026-11-06",
-  "note": "정비 이력 미확인과 정상 알림 구분, 차종·연식 표시, 비혼다 차량 참고 이미지 오인 방지"
+  "note": "기존 차고 복원·브랜드별 실제 간판/영문 정비소 표시, 정비 알림 터치 시 정비기록 바로 열기"
 }
