@@ -30,8 +30,8 @@ const officialProfiles=Object.freeze({
  }),
  'HONDA|PCX125|2024':Object.freeze({
   verified:true,coverage:'partial',region:'KO/ED',modelCode:'WW125S/A',year:2024,
-  source:'https://www.manualslib.com/manual/3601308/Honda-Pcx125-2024.html',
-  sourceType:'Honda PCX125 (WW125S/A) 2024 manufacturer owner manual, reproduced by ManualsLib',
+  source:'https://www.hondamotopub.com/om/HMEE/WW125A%20(PCX)/2023-2024',
+  sourceType:'Honda MotoPub official shared 2023–2024 WW125A PCX manual (32K1YC11)',
   sourcePages:[133,134,135],
   intervals:Object.freeze({
    oil:6000,filter:18000,'spark-plug':12000,'drive-belt':24000,
