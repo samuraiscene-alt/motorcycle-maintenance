@@ -7,6 +7,25 @@ document.head.appendChild(style);
 const overlay=document.createElement('div');overlay.className='backup-overlay';overlay.hidden=true;
 overlay.innerHTML='<div class="backup-panel" role="dialog" aria-modal="true" aria-label="백업 및 복원"><div class="backup-panel-header"><strong>설정 · 백업 및 복원</strong><button type="button" class="backup-close" aria-label="닫기">×</button></div><p>차량 정보, 정비기록, 주행거리, 소모품 설정과 순서, 직접 추가한 항목 및 사용자 사진까지 백업해.</p><section><strong>전체 백업</strong><p>현재 기기 데이터를 파일 앱이나 iCloud Drive에 보관해.</p><button type="button" class="backup-btn backup-save">전체 백업 파일 저장</button></section><section><strong>전체 복원</strong><p>백업 파일을 선택하면 해당 앱 데이터가 백업 시점으로 변경돼.</p><button type="button" class="backup-btn secondary backup-load">백업 파일 선택하여 복원</button><input type="file" class="backup-file" accept=".json,application/json"></section><p>복원 전에는 현재 데이터도 백업해. Safari 웹사이트 데이터를 삭제하면 기록이 사라질 수 있어.</p><p class="backup-status" role="status" aria-live="polite"></p></div>';
 document.body.appendChild(overlay);
+const transferSection=document.createElement('section');
+transferSection.className='browser-transfer-section';
+transferSection.innerHTML='<strong>Safari ↔ 다른 브라우저 기록 옮기기</strong><p>두 브라우저는 저장 공간이 달라 자동으로 같은 기록을 사용하지 않아. 기록이 맞는 브라우저에서 내보낸 파일을 다른 브라우저에서 가져오면 돼.</p><div class="browser-transfer-details" role="status" aria-live="polite"></div><button type="button" class="backup-btn browser-transfer-export">① 이 브라우저 기록 파일로 내보내기</button><button type="button" class="backup-btn secondary browser-transfer-import" style="margin-top:9px">② 다른 브라우저의 기록 파일 가져오기</button><p>가져오기는 기존 기록과 합치는 것이 아니라 <b>이 브라우저의 모든 차량·정비기록·설정을 파일 내용으로 교체</b>해. 가져오기 전에 이쪽 기록도 백업하는 걸 권장해.</p>';
+overlay.querySelector('.backup-panel-header').after(transferSection);
+function recordCount(raw){
+ try{const all=JSON.parse(raw||'{}');return Object.values(all).reduce((sum,b)=>sum+Object.values(b?.records||{}).reduce((n,entries)=>n+(Array.isArray(entries)?entries.length:0),0),0)}catch{return 0}
+}
+function vehicleCount(raw){try{return Object.keys(JSON.parse(raw||'{}')).length}catch{return 0}}
+const transferInfo=transferSection.querySelector('.browser-transfer-details');
+function refreshTransferInfo(){
+ const registered=localStorage.getItem('motorcycle-skeleton-registrations-v1'),maintenance=localStorage.getItem('motorcycle-skeleton-maintenance-v1');
+ transferInfo.textContent='현재 이 브라우저: 등록 차량 '+vehicleCount(registered)+'대 · 정비기록 '+recordCount(maintenance)+'건';
+}
+transferSection.querySelector('.browser-transfer-export').addEventListener('click',()=>overlay.querySelector('.backup-save').click());
+transferSection.querySelector('.browser-transfer-import').addEventListener('click',()=>overlay.querySelector('.backup-load').click());
+const extraStyle=document.createElement('style');
+extraStyle.textContent='.browser-transfer-section{border-color:#69a0cc!important}.browser-transfer-details{padding:10px;border-radius:8px;background:#213c56;color:#e9f5ff;font-size:12px;font-weight:850;margin:10px 0}.browser-transfer-section b{color:#ffdbb7}';
+document.head.appendChild(extraStyle);
+
 const get=x=>overlay.querySelector(x),save=get('.backup-save'),load=get('.backup-load'),pick=get('.backup-file'),status=get('.backup-status');
 let busy=false;
 function message(x){status.textContent=x}
@@ -17,8 +36,8 @@ overlay.addEventListener('click',e=>{if(e.target===overlay)hide()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)hide()});
 for(const el of [...document.querySelectorAll('.tabs .tab'),...document.querySelectorAll('.bottom .nav')]){
  if(el.textContent.trim()!=='설정')continue;
- el.tabIndex=0;el.setAttribute('role','button');el.addEventListener('click',()=>{overlay.hidden=false;message('')});
- el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();overlay.hidden=false;message('')}});
+ el.tabIndex=0;el.setAttribute('role','button');el.addEventListener('click',()=>{overlay.hidden=false;message('');refreshTransferInfo()});
+ el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();overlay.hidden=false;message('');refreshTransferInfo()}});
 }
 function locals(){const result={};for(const k of KEYS)result[k]=localStorage.getItem(k);return result}
 function setLocals(result){for(const k of KEYS){if(result[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,result[k])}}
@@ -97,7 +116,12 @@ pick.addEventListener('change',async()=>{
   validate(doc.payload);
   if(await checksum(doc.payload)!==doc.sha256)throw new Error('백업 파일이 손상되었거나 수정됐어.');
   const incoming=unpackImages(doc.payload.images);
-  if(!confirm('백업 날짜: '+doc.createdAt+'\\n사진 '+incoming.length+'개 포함\\n\\n현재 기기의 차량·정비기록·설정·사진을 이 백업으로 덮어쓸까?\\n현재 데이터도 먼저 백업하는 것을 권장해.')){message('복원 취소: 기존 데이터 유지');return}
+  const incomingRegs=vehicleCount(doc.payload.local['motorcycle-skeleton-registrations-v1']);
+  const incomingRecords=recordCount(doc.payload.local['motorcycle-skeleton-maintenance-v1']);
+  const existingRegs=vehicleCount(localStorage.getItem('motorcycle-skeleton-registrations-v1'));
+  const existingRecords=recordCount(localStorage.getItem('motorcycle-skeleton-maintenance-v1'));
+  const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건\\n\\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
+  if(!confirm(summary)){message('복원 취소: 기존 데이터 유지');return}
   const oldLocal=locals(),oldImages=await getImages();message('전체 데이터를 복원 중…');
   try{await setImages(incoming);setLocals(doc.payload.local)}
   catch(err){
