@@ -1,6 +1,6 @@
 {
-  "version": "2.9.2",
-  "cache": "motorcycle-maintenance-v2.9.2",
+  "version": "2.9.3",
+  "cache": "motorcycle-maintenance-v2.9.3",
   "released": "2026-11-06",
-  "note": "2025년형 HONDA PCX125 공식 정비주기 자동 적용 및 사용자 수정값 보존 안정화"
+  "note": "YAMAHA NMAX125 2025년형 공식 정비주기: 엔진오일 최초 1000km·이후 6000km, 에어필터·구동벨트 18000km, 기간별 점검정보"
 }
