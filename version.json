@@ -1,6 +1,6 @@
 {
-  "version": "2.7.1",
-  "cache": "motorcycle-maintenance-v2.7.1",
+  "version": "2.7.2",
+  "cache": "motorcycle-maintenance-v2.7.2",
   "released": "2026-11-05",
-  "note": "정비 날짜 유효성 검증, 최신 유효 교체기록 기준 계산, 빈 기록 게이지 상태 초기화"
+  "note": "교체기록 없을 때 앱 사용 시작 주행거리 기준 소모율 계산, 100% 초과 진행률과 초과 거리 표시"
 }
