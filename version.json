@@ -1,6 +1,6 @@
 {
-  "version": "2.3.0",
-  "cache": "motorcycle-maintenance-v2.3",
+  "version": "2.4.0",
+  "cache": "motorcycle-maintenance-v2.4",
   "released": "2026-11-05",
-  "note": "차량 연식·외관 상태 저장 및 투명 차체 내부에만 안전한 노후 효과"
+  "note": "공통 재질별 노후 효과 엔진, 차종별 검증 마스크 안전장치, 연식 자동 계산"
 }
