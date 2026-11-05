@@ -1,6 +1,6 @@
 {
-  "version": "2.8.1",
-  "cache": "motorcycle-maintenance-v2.8.1",
+  "version": "2.9.0",
+  "cache": "motorcycle-maintenance-v2.9.0",
   "released": "2026-11-05",
-  "note": "원터치 소모품 교체완료, 정비기록 수정/삭제, 차량별 교체주기 수정, 주행거리 이력 날짜/km 수정 및 삭제"
+  "note": "제조사·기종·연식 선택 기반 차량 등록, 공식 정비주기 검증용 데이터 구조, 검증되지 않은 차종 임의 주기 미적용"
 }
