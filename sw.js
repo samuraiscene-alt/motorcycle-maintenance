@@ -1,1 +1,32 @@
-const CACHE='motorcycle-maintenance-v0.3';self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','./index.html','./style.css','./app.js','./manifest.webmanifest','./assets/garage.svg','./assets/bike-pcx-cut.svg','./assets/bike-pcx-cut.svg','./icon-192.png','./icon-512.png'])));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('motorcycle-maintenance-')&&k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const url=new URL(e.request.url);if(url.origin!==self.location.origin)return;e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy))}return r}).catch(()=>caches.match(e.request).then(r=>r||caches.match('./index.html'))))});
+const CACHE='motorcycle-maintenance-v1.0';
+const ROOT=new URL('./',self.location.href);
+const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
+const PRECACHE=[
+  SHELL,
+  new URL('./ui-skeleton/vehicle-data.js?v=history-accordion-5',ROOT).href,
+  new URL('./ui-skeleton/part-customize.js?v=accordion-order-3',ROOT).href,
+  new URL('./ui-skeleton/part-swipe-edit.js?v=restore-visible-8',ROOT).href,
+  new URL('./manifest.webmanifest',ROOT).href
+];
+self.addEventListener('install',event=>{
+ event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(PRECACHE)).then(()=>self.skipWaiting()));
+});
+self.addEventListener('activate',event=>{
+ event.waitUntil(caches.keys().then(keys=>Promise.all(
+   keys.filter(key=>key.startsWith('motorcycle-maintenance-')&&key!==CACHE).map(key=>caches.delete(key))
+ )).then(()=>self.clients.claim()));
+});
+self.addEventListener('fetch',event=>{
+ if(event.request.method!=='GET')return;
+ const url=new URL(event.request.url);
+ if(url.origin!==self.location.origin||!url.pathname.startsWith(ROOT.pathname))return;
+ event.respondWith(fetch(event.request).then(response=>{
+   if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)));}
+   return response;
+ }).catch(async()=>{
+   const stored=await caches.match(event.request);
+   if(stored)return stored;
+   if(event.request.mode==='navigate')return caches.match(SHELL);
+   return Response.error();
+ }));
+});
