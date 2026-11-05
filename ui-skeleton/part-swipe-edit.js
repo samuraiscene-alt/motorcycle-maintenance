@@ -84,7 +84,7 @@ function allCards(){return [...rows.querySelectorAll('.part-swipe-wrap')]}
 function normalizeZones(){
  if(!topZone||!extraZone)return;
  // The original five cards began as direct children of rows; move them to the same freely sortable area.
- for(const shell of directCards(rows))topZone.appendChild(shell);
+ const originalFive=directCards(rows);for(let i=originalFive.length-1;i>=0;i--)topZone.insertBefore(originalFive[i],topZone.firstChild);
  const custom=extraZone.querySelector('.custom-part-container');
  if(custom)for(const shell of directCards(custom))extraZone.insertBefore(shell,custom);
 }
