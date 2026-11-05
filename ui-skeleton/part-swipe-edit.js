@@ -89,11 +89,11 @@ function restoreOrder(){const parents=[rows,...rows.querySelectorAll('.stock-par
  }
 }
 function canTarget(shell,target){if(!target||target===shell||target.hidden)return false;
- const srcId=shell.dataset.partId,tid=target.dataset.partId,baseIds=['oil','brake','tire','coolant','filter'];
- // The five initial consumables stay permanently visible above the expand/collapse section.
- if(baseIds.includes(srcId))return baseIds.includes(tid);
- if(baseIds.includes(tid))return false;
- return true;
+ const baseIds=['oil','brake','tire','coolant','filter'];
+ const groupOf=el=>{if(baseIds.includes(el.dataset.partId))return 'base';if(el.closest('.extra-stock-container'))return 'extra';if(el.closest('.stock-part-container'))return 'standard';return null};
+ const source=groupOf(shell),destination=groupOf(target);
+ // The five base items always remain above the accordion; user-created items remain inside it.
+ return !!source&&source===destination;
 }
 function findTarget(x,y){if(!drag)return null;
  const shells=[...rows.querySelectorAll('.part-swipe-wrap')].filter(el=>canTarget(drag.shell,el)&&el.getClientRects().length);
