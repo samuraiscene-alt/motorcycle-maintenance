@@ -22,7 +22,7 @@ const style=document.createElement('style');style.textContent=
 '.part-swipe-actions{position:absolute;right:0;top:0;bottom:0;width:136px;display:flex;align-items:stretch;z-index:1}' +
 '.part-swipe-actions button{border:0;color:white;font-weight:900;font-size:14px;flex:1;min-width:0}' +
 '.part-swipe-edit{background:linear-gradient(#2498e7,#0959a3)}.part-swipe-delete{background:linear-gradient(#e56867,#a52f39)}' +
-'.part-restore-button{width:100%;margin:4px 0 0;padding:13px;border-radius:12px;border:1px solid #7898b3;background:#14273b;color:#ecf8ff;font-weight:800;font-size:13px}' +
+'.part-restore-button{width:100%;margin:4px 0 0;padding:13px;border-radius:12px;border:1px solid #7898b3;background:#14273b;color:#ecf8ff;font-weight:800;font-size:13px}.part-restore-button:disabled{opacity:.48}' +
 '.part-img.part-user-picture img.part-user-replacement{position:absolute;inset:0;left:0;top:0;transform:none;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:normal;filter:none;z-index:5}' +
 '.part-swipe-wrap[hidden]{display:none!important}' +
 '.part-swipe-wrap.drag-source{background:transparent!important;box-shadow:none!important;border-color:transparent!important}' +
@@ -209,7 +209,7 @@ const restore=document.createElement('button');restore.type='button';restore.cla
 restore.addEventListener('click',()=>{const b=bike(),hidden=Object.entries(active()).filter(([id,x])=>x.hidden).map(([id])=>id);if(!hidden.length)return;if(!confirm('숨긴 정비 항목 '+hidden.length+'개를 다시 표시할까?'))return;hidden.forEach(id=>setPart(id,{hidden:false}));refresh()});
 function ensureName(row){if(!originals.has(row)){const strong=row.querySelector('.part-line strong');const pic=row.querySelector('.part-img');originals.set(row,{name:strong?.textContent||'',html:pic?.innerHTML||'',cls:pic?.className||''})}}
 async function decorate(){const serial=++updateNumber,b=bike();const all=[...rows.querySelectorAll('.part:not(.part-add-card)')];all.forEach(wrap);restoreOrder();
- const values=active(),hidden=Object.values(values).filter(v=>v.hidden).length;restore.hidden=!hidden;restore.textContent='삭제한 정비 항목 복원 ('+hidden+'개)';
+ const values=active(),hidden=Object.values(values).filter(v=>v.hidden).length;restore.hidden=false;restore.disabled=!hidden;restore.textContent=hidden?'삭제한 정비 항목 복원 ('+hidden+'개)':'삭제된 정비 항목 없음';
  for(const row of all){if(serial!==updateNumber||bike()!==b)return;const id=row.dataset.partId;if(!id)continue;ensureName(row);const defaults=originals.get(row),cfg=values[id]||{},shell=row.closest('.part-swipe-wrap'),title=row.querySelector('.part-line strong'),pic=row.querySelector('.part-img');if(shell)shell.hidden=!!cfg.hidden;
  if(title)title.textContent=cfg.name||defaults.name;
  // Preserve original SVG/asset rendering and custom uploaded images unless an override exists.
