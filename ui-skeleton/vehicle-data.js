@@ -35,6 +35,31 @@ function currentBike(){return bikes[index]}function currentRegistration(){return
 function getVehicleData(id){const x=database[id];return x&&typeof x==='object'&&!Array.isArray(x)?x:{records:{}}}
 function getOdometer(){const r=currentRegistration(),v=getVehicleData(currentBike().id);return r?valid(v.odometer)&&v.odometer>=r.km?v.odometer:r.km:null}
 function write(key,obj){localStorage.setItem(key,JSON.stringify(obj))}
+function reconnectOfficialProfile(id){
+ const reg=registered[id];if(!reg)return false;
+ const profile=window.MotorcycleCatalog?.findOfficialProfile(reg.brand,reg.model,reg.year)||null;
+ if(!profile||reg.maintenanceProfileStatus==='official'&&reg.maintenanceProfileSource===profile.source)return false;
+ const nextReg={...registered,[id]:{...reg,maintenanceProfileStatus:'official',maintenanceProfileSource:profile.source}};
+ const key='motorcycle-skeleton-part-appearance-v1',all=load(key),existing=all[id]||{},updated={...existing};
+ for(const [part,km] of Object.entries(profile.intervals||{})){
+  if(!Number.isSafeInteger(km)||km<=0||km>1000000)continue;
+  const item=existing[part]||{};
+  if(Object.prototype.hasOwnProperty.call(item,'interval'))continue;
+  updated[part]={...item,interval:km,intervalSource:'official'};
+ }
+ try{
+  write(key,{...all,[id]:updated});write(regKey,nextReg);
+  registered=nextReg;return true;
+ }catch(err){console.warn('공식 정비주기 연결 실패:',err);return false}
+}
+for(const id of Object.keys(registered))reconnectOfficialProfile(id);
+document.addEventListener('motorcycle:year-changed',event=>{
+ const id=event.detail?.bikeId,reg=registered[id];if(!reg)return;
+ const current=load(regKey)[id];if(!current)return;
+ registered={...registered,[id]:current};
+ if(reconnectOfficialProfile(id))renderInfo();
+ else renderInfo();
+});
 function partSettings(bikeId,partId){return load('motorcycle-skeleton-part-appearance-v1')[bikeId]?.[partId]||{}}
 function officialProfile(reg){
  return reg?.maintenanceProfileStatus==='official'
