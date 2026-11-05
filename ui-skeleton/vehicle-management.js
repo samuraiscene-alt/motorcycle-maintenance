@@ -55,8 +55,22 @@ reset.querySelector('.fleet-reset').addEventListener('click',async()=>{
  if(!confirm('전체 차량과 모든 정비기록을 삭제할까?\n전체 백업을 먼저 저장하는 것을 권장해.'))return;
  if(prompt('정말 모두 삭제하려면 아래 입력창에 초기화를 입력해.')!=='초기화')return;
  try{
+  if('indexedDB' in window){
+   await new Promise((resolve,reject)=>{
+    const req=indexedDB.open('motorcycle-skeleton-added-images-v1',1);
+    req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('images'))req.result.createObjectStore('images')};
+    req.onerror=()=>reject(req.error||new Error('사용자 사진 저장소를 열지 못했어.'));
+    req.onsuccess=()=>{
+     const db=req.result;
+     if(!db.objectStoreNames.contains('images')){db.close();resolve();return}
+     const tx=db.transaction('images','readwrite');tx.objectStore('images').clear();
+     tx.oncomplete=()=>{db.close();resolve()};
+     tx.onerror=()=>{db.close();reject(tx.error||new Error('사진 기록을 초기화하지 못했어.'))};
+     tx.onabort=()=>{db.close();reject(tx.error||new Error('사진 기록 초기화가 중단됐어.'))};
+    };
+   });
+  }
   for(const key of Object.keys(localStorage))if(key.startsWith(KEY_PREFIX))localStorage.removeItem(key);
-  if('indexedDB' in window){try{indexedDB.deleteDatabase('motorcycle-skeleton-added-images-v1')}catch{}}
   location.reload();
  }catch(err){message.textContent='초기화 중 오류가 발생했어: '+err.message}
 });
