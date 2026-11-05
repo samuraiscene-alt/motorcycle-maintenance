@@ -1,6 +1,6 @@
 {
-  "version": "2.0.0",
-  "cache": "motorcycle-maintenance-v2.0",
+  "version": "2.1.0",
+  "cache": "motorcycle-maintenance-v2.1",
   "released": "2026-11-05",
-  "note": "브라우저별 실행 버전 확인 및 업데이트 안내"
+  "note": "Safari와 다른 브라우저 간 정비기록 파일 이동 및 가져오기 전 기록 건수 비교"
 }
