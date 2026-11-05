@@ -171,7 +171,7 @@ function move(e){const g=gesture;if(!g||g.wrap!==e.currentTarget||e.touches.leng
     // The real 12px gap gently moves the adjacent cards apart.
    }
   }
- }else if(drag.target!==toggle){
+ }else{
   clearDropHint();
   drag.target=null;
   drag.gap.remove();
