@@ -1,6 +1,6 @@
 {
-  "version": "2.9.17",
-  "cache": "motorcycle-maintenance-v2.9.17",
+  "version": "2.9.18",
+  "cache": "motorcycle-maintenance-v2.9.18",
   "released": "2026-11-06",
-  "note": "기존 차고 복원·브랜드별 실제 간판/영문 정비소 표시, 정비 알림 터치 시 정비기록 바로 열기"
+  "note": "기존 차고 유지, 야마하 임의 글자 대신 실제 2025년 공식 로고 적용, 차량 연식·주행거리 줄바꿈 수정"
 }
