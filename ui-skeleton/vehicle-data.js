@@ -62,8 +62,7 @@ document.addEventListener('motorcycle:year-changed',event=>{
 });
 function partSettings(bikeId,partId){return load('motorcycle-skeleton-part-appearance-v1')[bikeId]?.[partId]||{}}
 function officialProfile(reg){
- return reg?.maintenanceProfileStatus==='official'
-  ?window.MotorcycleCatalog?.findOfficialProfile(reg.brand,reg.model,reg.year)||null:null;
+ return reg?window.MotorcycleCatalog?.findOfficialProfile(reg.brand,reg.model,reg.year)||null:null;
 }
 function officialTask(reg,partId){return officialProfile(reg)?.tasks?.[partId]||null}
 function partAction(reg,partId){
@@ -207,8 +206,9 @@ function updateMaintenanceNotices(){
   for(const [action,km] of [['replace',kmReplace],['inspect',task?.inspectKm||0],['clean',task?.cleanKm||0]]){
    if(!Number.isSafeInteger(km)||km<=0)continue;
    const last=records.filter(x=>x&&valid(x.at)&&x.at<=odo&&(x.action||'replace')===action).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
-   if(!last&&reg.km!==0){unknown++;continue}
-   const due=last?last.at+km:action==='replace'&&id==='oil'&&task?.firstReplaceKm?task.firstReplaceKm:km;
+   const firstDue=action==='replace'&&id==='oil'&&task?.firstReplaceKm?task.firstReplaceKm:km;
+   if(!last&&(reg.km!==0||odo>firstDue)){unknown++;continue}
+   const due=last?last.at+km:firstDue;
    const remaining=due-odo;if(remaining>500)continue;
    notices.push({title,action,due,remaining,kind:'distance'});
   }
@@ -222,7 +222,13 @@ function updateMaintenanceNotices(){
  }
  notices.sort((a,b)=>a.remaining-b.remaining||a.title.localeCompare(b.title));
  const dueCount=notices.filter(x=>x.remaining<=0).length,soon=notices.length-dueCount;
- count.textContent=(dueCount?'도래 '+dueCount+'건 · ':'')+(soon?'임박 '+soon+'건 · ':'')+(missingDates.length?'날짜 확인 '+missingDates.length+'건':(!notices.length?'도래·임박 없음':'')).replace(/ · $/,'');
+ const profile=officialProfile(reg),parts=[];
+ if(!profile)parts.push('공식 주기 확인');
+ if(dueCount)parts.push('도래 '+dueCount+'건');
+ if(soon)parts.push('임박 '+soon+'건');
+ if(missingDates.length)parts.push('날짜 확인 '+missingDates.length+'건');
+ if(unknown)parts.push('이력 확인 '+unknown+'건');
+ count.textContent=parts.join(' · ')||'도래·임박 없음';
  for(const n of notices){
   const item=document.createElement('div');item.className='maintenance-notice-item';item.dataset.level=n.remaining<=0?'due':'soon';
   const title=document.createElement('strong');title.textContent=n.title+' · '+actionText(n.action);
@@ -232,12 +238,16 @@ function updateMaintenanceNotices(){
    :n.remaining<=0?'정비 예정 거리 '+fmt(-n.remaining)+'km 경과 · '+fmt(n.due)+'km 기준':'정비까지 '+fmt(n.remaining)+'km · '+fmt(n.due)+'km 예정';
   item.append(title,detail);box.appendChild(item);
  }
- if(!notices.length&&!missingDates.length){const p=document.createElement('p');p.textContent='현재 500km 또는 30일 이내의 정비 알림이 없어.';box.appendChild(p)}
+ if(!profile){
+  const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
+  p.textContent=(reg.year?reg.year+'년형':'연식 미입력')+' '+String(reg.brand||'')+' '+String(reg.model||'')+'의 공식 정비주기가 연결되지 않았어. 차량정보에서 제조사·기종·연식을 확인해.';box.appendChild(p);
+ }
+ if(!notices.length&&!missingDates.length&&!unknown&&profile){const p=document.createElement('p');p.textContent='현재 500km 또는 30일 이내의 정비 알림이 없어.';box.appendChild(p)}
  if(missingDates.length){
   const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
   p.textContent='마지막 교체일 확인 필요 ('+missingDates.length+'건): '+missingDates.join(', ')+'. 날짜를 확인하기 전에는 교체 기한을 추정하지 않아.';box.appendChild(p);
  }
- if(unknown){const p=document.createElement('p');p.className='maintenance-notice-disclaimer';p.textContent='정비 이력을 확인할 수 없는 '+unknown+'개 항목은 예측에서 제외했어.';box.appendChild(p)}
+ if(unknown){const p=document.createElement('p');p.className='maintenance-notice-disclaimer';p.textContent='정비 이력 확인 필요 '+unknown+'건: 기록된 정비 기준 없이 현재 주행거리만으로는 다음 교체·점검일을 확정할 수 없어. 과거 정비기록을 확인해.';box.appendChild(p)}
  const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
  p.textContent='거리·날짜 기준 앱 내부 참고 알림이야. 정비 이력과 제조사 설명서의 운행 조건도 확인해.';box.appendChild(p);
 }
@@ -245,6 +255,10 @@ document.addEventListener('motorcycle:change',updateMaintenanceNotices);
 document.addEventListener('motorcycle:vehicle-saved',updateMaintenanceNotices);
 document.addEventListener('motorcycle:appearance-changed',updateMaintenanceNotices);
 
+const showroomNotice=document.createElement('span');
+showroomNotice.className='showroom-reference-note';
+showroomNotice.textContent='차종 전용 이미지 미등록 · 참고용 스쿠터';
+stage.appendChild(showroomNotice);
 function renderInfo(){
  const empty=!hasRegisteredBikes();
  document.body.classList.toggle('no-registered-vehicles',empty);
@@ -254,7 +268,7 @@ function renderInfo(){
  if(odometerButton){odometerButton.hidden=empty;odometerButton.disabled=empty}
  if(empty){
   name.textContent='등록된 차량 없음';meta.textContent='설정에서 새 차량을 등록해.';
-  document.body.classList.remove('vehicle-locked');
+  document.body.classList.remove('vehicle-locked','non-honda-bike');
   stage.setAttribute('aria-label','차량이 없는 정비소');
   document.body.dataset.activeBike='';
   renderParts();
@@ -262,8 +276,13 @@ function renderInfo(){
   return;
  }
  const b=currentBike(),r=currentRegistration(),odo=getOdometer();name.textContent=b.name;
-meta.textContent=r?'시작 '+fmt(r.km)+'km · 현재 '+fmt(odo)+'km':b.demo;const odometerReadout=$('odometer-readout');if(odometerReadout)odometerReadout.textContent=r?fmt(odo)+'km':'등록 전';
-brand.innerHTML=b.brand==='honda'?hondaLogo:unknownLogo;brand.setAttribute('aria-label',b.brand==='honda'?'혼다':'제조사 미정');
+const maker=String(r?.brand||b.brand||'').trim().toUpperCase(),isHonda=maker==='HONDA';
+document.body.classList.toggle('non-honda-bike',!isHonda);
+meta.textContent=r?(r.year?r.year+'년형 · ':'연식 미확인 · ')+'시작 '+fmt(r.km)+'km · 현재 '+fmt(odo)+'km':b.demo;
+const odometerReadout=$('odometer-readout');if(odometerReadout)odometerReadout.textContent=r?fmt(odo)+'km':'등록 전';
+brand.innerHTML=isHonda?hondaLogo:unknownLogo;
+if(!isHonda){const mark=brand.querySelector('strong');if(mark)mark.textContent=maker||'BRAND'}
+brand.setAttribute('aria-label',maker||'제조사 미정');
 counter.textContent=isLocked()?'':bikes.map((_,i)=>i===index?'●':'○').join(' ');document.body.classList.toggle('vehicle-locked',isLocked());stage.setAttribute('aria-label',isLocked()?'등록된 내 오토바이 이미지':'오토바이 이미지: 좌우 스와이프로 차량 선택');document.body.dataset.activeBike=b.id;renderParts();document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:b.id}}))}
 function renderParts(){const reg=currentRegistration(),odo=getOdometer(),data=getVehicleData(currentBike().id);
 document.querySelectorAll('.part:not(.part-add-card)').forEach((row,i)=>{const id=row.dataset.partId||items[i]?.id;const item=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};if(!id)return;const records=data.records&&Array.isArray(data.records[item.id])?data.records[item.id]:[];
