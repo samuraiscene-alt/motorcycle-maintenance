@@ -267,9 +267,10 @@ document.addEventListener('motorcycle:appearance-changed',updateMaintenanceNotic
 /* Wall signage: Honda remains in the original garage scene; Yamaha uses a documented, real illuminated dealer sign photo. */
 const garageSign=document.createElement('div');
 garageSign.className='garage-sign';garageSign.setAttribute('aria-label','정비소 벽 간판');
-garageSign.innerHTML='<span class="garage-sign-caption">MOTORCYCLE SERVICE</span><img alt="실제 야마하 조명 딜러 간판" loading="lazy">';
+garageSign.innerHTML='<span class="garage-sign-caption">MOTORCYCLE SERVICE</span><img alt="야마하 모터 2025 공식 로고" loading="eager">';
 stage.appendChild(garageSign);
-const yamahaSignPhoto='https://thesignexperience.com/cdn/shop/products/b1d9215f-f0cd-454b-97eb-0d5660babf96_1200x1200.jpg?v=1672225191';
+/* Yamaha Motor's real, unmodified 2025 logomark (not a newly invented logo). */
+const yamahaSignPhoto='https://upload.wikimedia.org/wikipedia/commons/1/1b/Yamaha_Motor_2025.svg';
 const yamahaSignImg=garageSign.querySelector('img');
 yamahaSignImg.addEventListener('load',()=>garageSign.classList.add('sign-photo-ready'));
 yamahaSignImg.addEventListener('error',()=>garageSign.classList.remove('sign-photo-ready'));
@@ -308,7 +309,12 @@ function renderInfo(){
 const maker=String(r?.brand||b.brand||'').trim().toUpperCase(),isHonda=maker==='HONDA';
 document.body.classList.toggle('non-honda-bike',!isHonda);
 setGarageSign(maker);
-meta.textContent=r?(r.year?r.year+'년형 · ':'연식 미확인 · ')+'시작 '+fmt(r.km)+'km · 현재 '+fmt(odo)+'km':b.demo;
+meta.replaceChildren();
+if(r){
+ const yearLine=document.createElement('span');yearLine.className='bike-meta-year';yearLine.textContent=r.year?r.year+'년형':'연식 미확인';
+ const kmLine=document.createElement('span');kmLine.className='bike-meta-km';kmLine.textContent='시작 '+fmt(r.km)+'km · 현재 '+fmt(odo)+'km';
+ meta.append(yearLine,kmLine);
+}else meta.textContent=b.demo;
 const odometerReadout=$('odometer-readout');if(odometerReadout)odometerReadout.textContent=r?fmt(odo)+'km':'등록 전';
 brand.innerHTML=isHonda?hondaLogo:unknownLogo;
 if(!isHonda){const mark=brand.querySelector('strong');if(mark)mark.textContent=maker||'BRAND'}
