@@ -102,13 +102,45 @@ const officialProfiles=Object.freeze({
   actionByPart:Object.freeze({'oil-strainer':'clean','valve-clearance':'inspect'})
  })
 });
+// Honda officially publishes shared manuals for 2021–2022 and 2023–2024 model years.
+// These additions use only the cross-checked maintenance fields from those manual families.
+const honda2122=Object.freeze({
+ ...officialProfiles['HONDA|PCX125|2024'],
+ verified:true,coverage:'partial',
+ modelCode:'WW125A',
+ source:'https://www.hondamotopub.com/om/HMEE/WW125A%20(PCX)/2021-2022',
+ sourceType:'Honda MotoPub official 2021–2022 WW125A PCX manual (32K1YC001)',
+ sourcePages:['Maintenance Schedule'],
+ intervals:Object.freeze({
+  oil:6000,filter:18000,'spark-plug':12000,'drive-belt':24000,'valve-clearance':6000
+ }),
+ tasks:Object.freeze({
+  oil:{replaceKm:6000,firstReplaceKm:1000,firstRegularOdometerKm:6000},
+  filter:{replaceKm:18000},'spark-plug':{inspectKm:6000,replaceKm:12000},
+  'drive-belt':{inspectKm:12000,replaceKm:24000},
+  'valve-clearance':{inspectKm:6000},'brake-fluid':{replaceMonths:24},
+  'gear-oil':{replaceMonths:24},coolant:{replaceMonths:36}
+ }),
+ actionByPart:Object.freeze({'valve-clearance':'inspect'})
+});
+const expandedOfficialProfiles=Object.freeze({
+ ...officialProfiles,
+ 'HONDA|PCX125|2021':Object.freeze({...honda2122,year:2021}),
+ 'HONDA|PCX125|2022':Object.freeze({...honda2122,year:2022}),
+ 'HONDA|PCX125|2023':Object.freeze({
+  ...officialProfiles['HONDA|PCX125|2024'],year:2023,
+  source:'https://www.hondamotopub.com/om/HMEE/WW125A%20(PCX)/2023-2024',
+  sourceType:'Honda MotoPub official shared 2023–2024 WW125A PCX manual (32K1YC11)',
+  coverage:'partial'
+ })
+});
 const profileKey=(brand,model,year)=>[String(brand).trim().toUpperCase(),String(model).trim().toUpperCase(),String(year)].join('|');
 window.MotorcycleCatalog=Object.freeze({
  brands,
- officialProfiles,
+ officialProfiles:expandedOfficialProfiles,
  profileKey,
  findOfficialProfile(brand,model,year){
-  const value=officialProfiles[profileKey(brand,model,year)];
+  const value=expandedOfficialProfiles[profileKey(brand,model,year)];
   return value&&value.verified===true&&value.source?value:null;
  }
 });
