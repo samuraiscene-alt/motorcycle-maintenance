@@ -27,7 +27,7 @@ const hondaLogo=brand.innerHTML,unknownLogo='<svg viewBox="0 0 64 42" aria-hidde
 const fmt=n=>Number(n).toLocaleString('ko-KR'),valid=n=>Number.isSafeInteger(n)&&n>=0&&n<=9999999;
 function todayLocal(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
 function validMaintenanceDate(raw){
- if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(raw))return false;
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(raw))return false;
  const date=new Date(raw+'T00:00:00');
  return Number.isFinite(date.getTime())&&date.getFullYear()===Number(raw.slice(0,4))&&date.getMonth()+1===Number(raw.slice(5,7))&&date.getDate()===Number(raw.slice(8,10));
 }
@@ -48,6 +48,27 @@ function actionText(action){return action==='inspect'?'점검':action==='clean'?
 function effectiveInterval(bikeId,partId,defaultInterval){
  const cfg=partSettings(bikeId,partId);
  return Number.isSafeInteger(cfg.interval)&&cfg.interval>=0?cfg.interval:defaultInterval;
+}
+function addCalendarMonths(yyyyMMdd,months){
+ if(!validMaintenanceDate(yyyyMMdd)||!Number.isSafeInteger(months)||months<1)return null;
+ const [year,month,day]=yyyyMMdd.split('-').map(Number);
+ const first=new Date(Date.UTC(year,month-1+months,1));
+ const last=new Date(Date.UTC(first.getUTCFullYear(),first.getUTCMonth()+1,0)).getUTCDate();
+ const due=new Date(Date.UTC(first.getUTCFullYear(),first.getUTCMonth(),Math.min(day,last)));
+ return due.toISOString().slice(0,10);
+}
+function dateBasedStatus(reg,partId,records){
+ const months=officialTask(reg,partId)?.replaceMonths;
+ if(!Number.isSafeInteger(months)||months<1)return null;
+ const past=records.filter(x=>x&&validMaintenanceDate(x.date)&&(x.action||'replace')==='replace'&&x.date<=todayLocal())
+  .sort((a,b)=>String(a.date).localeCompare(String(b.date))||Number(a.at)-Number(b.at));
+ const last=past.at(-1);
+ if(!last)return {months,missing:true};
+ const due=addCalendarMonths(last.date,months);
+ if(!due)return {months,missing:true};
+ const today=todayLocal();
+ const days=Math.round((Date.parse(due+'T00:00:00Z')-Date.parse(today+'T00:00:00Z'))/86400000);
+ return {months,due,days,missing:false};
 }
 function timingDescription(task){
  if(!task)return '';
@@ -167,15 +188,27 @@ else{
  const nextFirst=profile?.tasks?.oil?.firstRegularOdometerKm||interval;
  const due=firstOil&&!last?initialDue:firstOil&&last.at<=initialDue?nextFirst:last?last.at+interval:knownBase+interval;
  const span=Math.max(1,due-knownBase);
+ const calendar=dateBasedStatus(reg,id,records);
  if(!valid(knownBase)||!Number.isSafeInteger(interval)||interval<=0){
-  text.textContent=interval>0?'교체기록 없음 / 주기 '+fmt(interval)+'km'
+  text.textContent=calendar?(calendar.missing?'마지막 교체일 입력 필요 · '+calendar.months+'개월 주기':calendar.days<0?'교체기한 '+Math.abs(calendar.days)+'일 초과 · '+calendar.due:calendar.days<=30?'교체까지 '+calendar.days+'일 · '+calendar.due:'다음 교체 '+calendar.due)
+  :interval>0?'교체기록 없음 / 주기 '+fmt(interval)+'km'
   :timingDescription(task)||(reg.maintenanceProfileStatus?'공식 거리주기 미확인':'교체주기 미설정');
-  bar.style.width='0%';row.classList.add('part-unregistered');
+  if(calendar&&!calendar.missing){
+   const fullDays=Math.max(1,calendar.months*30.4375);
+   bar.style.width=Math.min(100,Math.max(0,Math.round((fullDays-calendar.days)/fullDays*100)))+'%';
+   const color=calendar.days<0?'red':calendar.days<=30?'amber':'blue';
+   bar.classList.add(color);bar.classList.remove(...['blue','amber','red'].filter(x=>x!==color));
+   btn.classList.add(color);btn.classList.remove(...['blue','amber','red'].filter(x=>x!==color));
+   row.classList.remove('part-unregistered');
+  }else{bar.style.width='0%';row.classList.add('part-unregistered');}
  }else{
   const used=Math.max(0,odo-knownBase),percent=Math.floor(used/span*100),ratio=Math.min(100,percent);
-  text.textContent=odo>due?fmt(percent)+'% · '+fmt(odo-due)+'km 초과':fmt(used)+' / '+fmt(span)+'km · '+fmt(percent)+'%';
+  const distanceLabel=odo>due?fmt(percent)+'% · '+fmt(odo-due)+'km 초과':fmt(used)+' / '+fmt(span)+'km · '+fmt(percent)+'%';
+  text.textContent=calendar&&!calendar.missing
+   ?distanceLabel+' · '+(calendar.days<0?'날짜 '+Math.abs(calendar.days)+'일 초과':calendar.days<=30?'날짜 '+calendar.days+'일 남음':'날짜 '+calendar.due)
+   :distanceLabel;
   bar.style.width=ratio+'%';row.classList.remove('part-unregistered');
-  const color=percent<=50?'blue':percent<=80?'amber':'red';
+  const color=calendar&&!calendar.missing&&calendar.days<0?'red':calendar&&!calendar.missing&&calendar.days<=30?'amber':percent<=50?'blue':percent<=80?'amber':'red';
   bar.classList.remove('blue','amber','red');bar.classList.add(color);
   btn.classList.remove('blue','amber','red');btn.classList.add(color);
   row.dataset.maintenancePercent=String(percent);
@@ -252,13 +285,19 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!odoMask.hidden){e.
 function openRecord(row){if(!currentRegistration()){alert('먼저 차량을 등록해.');return}const id=row.dataset.partId;editingItem=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};returnFocus=document.activeElement;const action=partAction(currentRegistration(),id);recordTitle.textContent=row.querySelector('strong').textContent+' '+actionText(action)+' 완료';recordAt.value=String(getOdometer()??0);recordDate.max=todayLocal();recordDate.value=todayLocal();const history=getVehicleData(currentBike().id).records?.[id]||[];const last=[...history].filter(x=>x&&valid(x.at)&&valid(x.interval)&&x.interval>0&&(x.action||'replace')===action).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);const reg=currentRegistration(),profile=officialProfile(reg);
  const fallback=reg?.maintenanceProfileStatus?0:editingItem.interval;
  const interval=effectiveInterval(currentBike().id,id,last?.interval||profile?.intervals?.[id]||fallback);
- const button=recordForm.querySelector('button[type="submit"]');if(button)button.textContent=actionText(action)+' 완료 저장';recordInterval.value=interval?String(interval):'';recordAt.readOnly=true;recordInterval.readOnly=Number(recordInterval.value)>0;recordError.textContent='';renderHistory();recordMask.hidden=false;document.body.classList.add('registration-open');recordClose.focus()}
+ const button=recordForm.querySelector('button[type="submit"]');if(button)button.textContent=actionText(action)+' 완료 저장';
+ const timeOnly=!!(officialTask(reg,id)?.replaceMonths)&&!interval;
+ const cycleLabel=recordInterval.closest('label');
+ if(cycleLabel)cycleLabel.hidden=timeOnly;
+ recordInterval.required=!timeOnly;
+ recordInterval.value=interval?String(interval):'';
+ recordAt.readOnly=true;recordInterval.readOnly=Number(recordInterval.value)>0;recordError.textContent='';renderHistory();recordMask.hidden=false;document.body.classList.add('registration-open');recordClose.focus()}
 function closeRecord(){recordMask.hidden=true;document.body.classList.remove('registration-open');if(returnFocus?.focus)returnFocus.focus()}
-function renderHistory(){const d=getVehicleData(currentBike().id),arr=Array.isArray(d.records?.[editingItem.id])?d.records[editingItem.id]:[];recordHistory.replaceChildren();if(!arr.length){recordHistory.textContent='저장된 정비기록이 없습니다.';return}const ul=document.createElement('ul');[...arr].sort((a,b)=>Number(b.at)-Number(a.at)||String(b.date||'').localeCompare(String(a.date||''))).slice(0,8).forEach(x=>{const li=document.createElement('li');li.textContent=x.date+' · '+actionText(x.action||'replace')+' · '+fmt(x.at)+'km · 주기 '+fmt(x.interval)+'km';ul.appendChild(li)});recordHistory.appendChild(ul)}
+function renderHistory(){const d=getVehicleData(currentBike().id),arr=Array.isArray(d.records?.[editingItem.id])?d.records[editingItem.id]:[];recordHistory.replaceChildren();if(!arr.length){recordHistory.textContent='저장된 정비기록이 없습니다.';return}const ul=document.createElement('ul');[...arr].sort((a,b)=>Number(b.at)-Number(a.at)||String(b.date||'').localeCompare(String(a.date||''))).slice(0,8).forEach(x=>{const li=document.createElement('li');li.textContent=x.date+' · '+actionText(x.action||'replace')+' · '+fmt(x.at)+'km'+(Number(x.interval)>0?' · 주기 '+fmt(x.interval)+'km':' · 기간 기준');ul.appendChild(li)});recordHistory.appendChild(ul)}
 document.querySelector('.rows').addEventListener('click',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn)openRecord(btn.closest('.part'))});document.querySelector('.rows').addEventListener('keydown',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openRecord(btn.closest('.part'))}});
 recordForm.addEventListener('submit',e=>{e.preventDefault();if(!editingItem)return;const at=Number(recordAt.value),interval=Number(recordInterval.value),date=recordDate.value,reg=currentRegistration(),odo=getOdometer();
 if(!reg){recordError.textContent='정비기록을 저장하려면 먼저 오토바이 등록이 필요해.';return}
-if(recordAt.value.trim()===''||!valid(at)||at!==odo||at<reg.km||!valid(interval)||interval<1||interval>1000000||!validMaintenanceDate(date)||date>todayLocal()){recordError.textContent='정비 당시 주행거리·교체주기·날짜를 확인해. 미래 날짜는 저장할 수 없어.';return}
+if(recordAt.value.trim()===''||!valid(at)||at!==odo||at<reg.km||!valid(interval)||(recordInterval.required?interval<1:interval<0)||interval>1000000||!validMaintenanceDate(date)||date>todayLocal()){recordError.textContent='정비 당시 주행거리·교체주기·날짜를 확인해. 미래 날짜는 저장할 수 없어.';return}
 const d=getVehicleData(currentBike().id),records={...(d.records||{})},old=Array.isArray(records[editingItem.id])?records[editingItem.id]:[];
 if(old.some(item=>item&&item.at===at&&item.date===date)){recordError.textContent='같은 날짜와 주행거리의 정비기록이 이미 있어. 기존 기록을 수정해.';return}
 records[editingItem.id]=[...old,{at,interval,date,action:partAction(reg,editingItem.id)}].sort((a,b)=>a.at-b.at||a.date.localeCompare(b.date));
@@ -332,8 +371,12 @@ function showHistory(){
    actions.innerHTML='<button type="button" class="maintenance-history-edit">수정</button><button type="button" class="maintenance-history-delete">삭제</button>';
    const card=document.createElement('article');card.className='maintenance-entry';
    const title=document.createElement('strong');title.textContent=currentPartName(e.id);
-   const detail=document.createElement('small');detail.textContent=e.date+' · 정비 당시 '+fmt(e.at)+'km · 교체주기 '+fmt(e.interval)+'km';
-   const due=document.createElement('span');due.className='maintenance-record-next';due.textContent='다음 교체 예정 '+fmt(Number(e.at)+Number(e.interval))+'km';card.append(title,detail,due);wrap.append(actions,card);(i<5?box:older).appendChild(wrap);
+   const detail=document.createElement('small');detail.textContent=e.date+' · '+actionText(e.action||'replace')+' · 당시 '+fmt(e.at)+'km'+(Number(e.interval)>0?' · 주기 '+fmt(e.interval)+'km':' · 기간 기준');
+   const due=document.createElement('span');due.className='maintenance-record-next';
+   const task=officialTask(currentRegistration(),e.id);
+   due.textContent=(e.action||'replace')==='replace'&&task?.replaceMonths
+    ?'날짜 기준 다음 교체 '+addCalendarMonths(e.date,task.replaceMonths)
+    :Number(e.interval)>0?'다음 '+actionText(e.action||'replace')+' 예정 '+fmt(Number(e.at)+Number(e.interval))+'km':'날짜 기준 정비기록';card.append(title,detail,due);wrap.append(actions,card);(i<5?box:older).appendChild(wrap);
    actions.querySelector('.maintenance-history-edit').addEventListener('click',()=>openMaintenanceEdit(e.id,e.seq));
    actions.querySelector('.maintenance-history-delete').addEventListener('click',()=>deleteMaintenanceRecord(e.id,e.seq));
    let startX=0,startY=0;
@@ -379,6 +422,10 @@ function openMaintenanceEdit(id,seq){
  maintenanceEditForm.elements.date.value=item.date;
  maintenanceEditForm.elements.at.value=item.at;
  maintenanceEditForm.elements.interval.value=item.interval;
+ const timeOnly=Number(item.interval)===0&&!!officialTask(currentRegistration(),id)?.replaceMonths;
+ const intervalLabel=maintenanceEditForm.elements.interval.closest('label');
+ if(intervalLabel)intervalLabel.hidden=timeOnly;
+ maintenanceEditForm.elements.interval.required=!timeOnly;
  maintenanceEditMask.querySelector('.maintenance-edit-part').textContent=currentPartName(id);
  maintenanceEditForm.elements.date.max=todayLocal();
  maintenanceEditMask.querySelector('.maintenance-edit-error').textContent='';
@@ -391,7 +438,7 @@ maintenanceEditForm.addEventListener('submit',e=>{
  const date=maintenanceEditForm.elements.date.value,at=Number(maintenanceEditForm.elements.at.value),interval=Number(maintenanceEditForm.elements.interval.value);
  const reg=registered[ref.bikeId],vehicle=database[ref.bikeId],maximum=vehicle?.odometer;
  const err=maintenanceEditMask.querySelector('.maintenance-edit-error');
- if(!reg||!validMaintenanceDate(date)||date>todayLocal()||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at<reg.km||at>maximum||maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||interval<1||interval>1000000){
+ if(!reg||!validMaintenanceDate(date)||date>todayLocal()||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at<reg.km||at>maximum||maintenanceEditForm.elements.interval.required&&maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||(maintenanceEditForm.elements.interval.required?interval<1:interval<0)||interval>1000000){
   err.textContent='날짜·정비 주행거리·교체 주기를 확인해. 정비 주행거리는 시작~현재 범위여야 해.';return;
  }
  const source=getVehicleData(ref.bikeId),arr=source.records?.[ref.id]||[];
