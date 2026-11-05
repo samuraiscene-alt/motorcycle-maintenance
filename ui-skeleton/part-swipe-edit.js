@@ -25,7 +25,10 @@ const style=document.createElement('style');style.textContent=
 '.part-restore-button{width:100%;margin:4px 0 0;padding:13px;border-radius:12px;border:1px solid #7898b3;background:#14273b;color:#ecf8ff;font-weight:800;font-size:13px}' +
 '.part-img.part-user-picture img.part-user-replacement{position:absolute;inset:0;left:0;top:0;transform:none;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:normal;filter:none;z-index:5}' +
 '.part-swipe-wrap[hidden]{display:none!important}' +
-'.part-swipe-wrap.drag-source{opacity:.24}' +
+'.part-swipe-wrap.drag-source{background:transparent!important;box-shadow:none!important;border-color:transparent!important}' +
+'.part-swipe-wrap.drag-source>.part,.part-swipe-wrap.drag-source>.part-swipe-actions{visibility:hidden!important}' +
+'.part-drop-gap{flex:0 0 12px;height:12px;min-height:12px;border-radius:7px;margin:0 1px;background:linear-gradient(180deg,#63bdff10,#63bdff25,#63bdff10);border:1px dashed #80ccff82;pointer-events:none;box-sizing:border-box;animation:partGapOpen .16s ease-out both}' +
+'@keyframes partGapOpen{from{height:0;min-height:0;flex-basis:0;opacity:0}to{height:12px;min-height:12px;flex-basis:12px;opacity:1}}' +
 '.part-drag-ghost{position:fixed!important;z-index:999!important;pointer-events:none!important;margin:0!important;box-shadow:0 12px 25px #000b,0 0 0 1px #79cfff!important;opacity:.97;transform-origin:center;animation:partLift .22s ease-out both!important}' +
 '@keyframes partLift{from{transform:scale(1);filter:brightness(1)}to{transform:scale(1.025);filter:brightness(1.07)}}' +
 '.part-swipe-wrap{transition:transform .16s cubic-bezier(.22,.8,.32,1)}' +
@@ -145,7 +148,7 @@ function start(e){if(e.touches.length!==1||!mask.hidden)return;const t=e.touches
  const g=gesture;g.timer=setTimeout(()=>{if(gesture===g)beginDrag(g)},380);
 }
 function beginDrag(g){const shell=g.wrap;if(!shell?.isConnected)return;closeSwipe();window.getSelection()?.removeAllRanges();const row=shell.querySelector(':scope > .part');if(!row)return;const rect=row.getBoundingClientRect();const ghost=row.cloneNode(true);ghost.classList.add('part-drag-ghost');Object.assign(ghost.style,{left:rect.left+'px',top:rect.top+'px',width:rect.width+'px',height:rect.height+'px',transition:'none'});document.body.appendChild(ghost);shell.classList.add('drag-source');g.dragging=true;
- drag={g,shell,ghost,from:shell.parentElement,y:g.currentY,target:null,after:false};
+ const gap=document.createElement('div');gap.className='part-drop-gap';gap.setAttribute('aria-hidden','true');drag={g,shell,ghost,gap,from:shell.parentElement,y:g.currentY,target:null,after:false};
  if(navigator.vibrate)try{navigator.vibrate(18)}catch{}
 }
 function move(e){const g=gesture;if(!g||g.wrap!==e.currentTarget||e.touches.length!==1)return;const t=e.touches[0];g.currentX=t.clientX;g.currentY=t.clientY;
@@ -153,35 +156,47 @@ function move(e){const g=gesture;if(!g||g.wrap!==e.currentTarget||e.touches.leng
  e.preventDefault();if(!drag)return;
  drag.ghost.style.top=(t.clientY-(g.y-drag.shell.getBoundingClientRect().top))+'px';
  const candidate=findTarget(t.clientX,t.clientY);
- clearDropHint();
  if(candidate){
   const after=candidate===toggle?false:t.clientY>candidate.getBoundingClientRect().top+candidate.getBoundingClientRect().height/2;
-  drag.target=candidate;drag.after=after;
-  candidate.classList.add(after?'part-drop-after':'part-drop-before');
-  if(candidate!==toggle){
-   const siblings=[...candidate.parentElement.children].filter(el=>el.classList.contains('part-swipe-wrap')&&!el.hidden&&el!==drag.shell);
-   const i=siblings.indexOf(candidate),neighbor=siblings[after?i+1:i-1];
-   if(neighbor)neighbor.classList.add(after?'part-drop-neighbor-down':'part-drop-neighbor-up');
+  const changed=drag.target!==candidate||drag.after!==after;
+  if(changed){
+   clearDropHint();
+   drag.target=candidate;drag.after=after;
+   if(candidate===toggle){
+    toggle.classList.add('part-drop-before');
+    drag.gap.remove();
+   }else{
+    const parent=candidate.parentElement;
+    parent.insertBefore(drag.gap,after?candidate.nextSibling:candidate);
+    // The real 12px gap gently moves the adjacent cards apart.
+   }
   }
- }else{drag.target=null}
+ }else if(drag.target!==toggle){
+  clearDropHint();
+  drag.target=null;
+  drag.gap.remove();
+ }
  // Scroll the page near the viewport edges while the finger holds the card.
  if(t.clientY>innerHeight-105)window.scrollBy(0,11);else if(t.clientY<100)window.scrollBy(0,-11);
 }
 function clearDropHint(){for(const el of rows.querySelectorAll('.part-drop-before,.part-drop-after,.part-drop-neighbor-up,.part-drop-neighbor-down'))el.classList.remove('part-drop-before','part-drop-after','part-drop-neighbor-up','part-drop-neighbor-down')}
 function cleanupDrag(commit){if(!drag)return;const d=drag;
- // Recheck at release, including the gap between cards (the old hit-test lost the drop target there).
- const t=d.g;
- const target=commit?(findTarget(t.currentX,t.currentY)||d.target):null;
- const after=target?t.currentY>target.getBoundingClientRect().top+target.getBoundingClientRect().height/2:false;
+ const target=commit?d.target:null;
+ const gapInUse=d.gap.isConnected;
+ const destination=target===toggle?extraZone:(gapInUse?d.gap.parentElement:target?.parentElement);
  clearDropHint();
- d.shell.classList.remove('drag-source');d.ghost.remove();drag=null;
- if(commit&&target&&canTarget(d.shell,target)){
-  // Dropping onto the accordion header moves the card into the expandable list, even while closed.
-  const destination=target===toggle?extraZone:target.parentElement;
-  if(destination){destination.insertBefore(d.shell,target===toggle?destination.firstElementChild:(after?target.nextSibling:target));
-   try{saveOrder();document.dispatchEvent(new CustomEvent('motorcycle:parts-reordered'))}catch(err){console.warn('Part order could not be saved:',err)}}
+ d.shell.classList.remove('drag-source');
+ d.ghost.remove();
+ if(commit&&target&&destination){
+  if(target===toggle)destination.insertBefore(d.shell,destination.firstElementChild);
+  else if(gapInUse)destination.insertBefore(d.shell,d.gap);
+  else destination.insertBefore(d.shell,d.after?target.nextSibling:target);
+  try{saveOrder();document.dispatchEvent(new CustomEvent('motorcycle:parts-reordered'))}catch(err){console.warn('Part order could not be saved:',err)}
  }
- suppressUntil=Date.now()+600}
+ d.gap.remove();
+ drag=null;
+ suppressUntil=Date.now()+600;
+}
 function finish(e){if(!gesture||gesture.wrap!==e.currentTarget)return;const g=gesture;clearTimeout(g.timer);gesture=null;if(g.dragging){cleanupDrag(true);return}
  const touch=e.changedTouches[0],dx=touch.clientX-g.x,dy=touch.clientY-g.y;if(Math.abs(dx)<37||Math.abs(dx)<Math.abs(dy)*1.3)return;const shell=e.currentTarget;if(dx<0){closeSwipe();shell.classList.add('swiped');openWrap=shell}else if(shell===openWrap)closeSwipe()}
 function cancelGesture(){if(gesture)clearTimeout(gesture.timer);gesture=null;cleanupDrag(false)}
