@@ -8,6 +8,7 @@ css.textContent='.fleet-list{display:flex;flex-direction:column;gap:7px;margin-t
 css.textContent+='.fleet-odometer-history{margin:-3px 0 4px;border:1px solid #456078;border-radius:8px;padding:8px 11px;background:#10273e;color:#d1eaff;font-size:12px}.fleet-odometer-history summary{cursor:pointer;font-weight:800}.fleet-odometer-history>div{max-height:180px;overflow-y:auto;padding:7px 0;line-height:1.8;color:#c2d6e8}';
 css.textContent+='.fleet-appearance{border:1px solid #577992;border-radius:11px;padding:12px;margin:14px 0;background:#142c42}.fleet-appearance-form{display:grid;gap:10px;margin-top:9px}.fleet-appearance-form label{color:#d6e8f7;font-size:12px;font-weight:800}.fleet-appearance-form input,.fleet-appearance-form select{display:block;width:100%;margin-top:5px;height:43px;border:1px solid #9bbed8;border-radius:8px;padding:6px 10px;font-size:16px;background:#f4f9ff;color:#12263a}.fleet-appearance-feedback{min-height:18px;color:#a9e6ff!important}';
 css.textContent+='.fleet-swipe-shell{position:relative;margin-top:7px;overflow:hidden;border-radius:9px;touch-action:pan-y}.fleet-swipe-shell .fleet-item{position:relative;z-index:1;margin-top:0;transform:translateX(0);transition:transform .2s ease;touch-action:pan-y;user-select:none;-webkit-user-select:none}.fleet-swipe-shell.open .fleet-item{transform:translateX(-84px)}.fleet-swipe-delete{position:absolute;right:0;top:0;bottom:0;width:84px;background:#bd3445;color:white;border:0;border-radius:0 9px 9px 0;font-size:13px;font-weight:900;z-index:0}.fleet-swipe-shell:focus-within .fleet-swipe-delete{outline-offset:-3px}';
+css.textContent+='.fleet-swipe-hint{font-size:10px!important;color:#a8d0ec!important}.fleet-swipe-shell.open .fleet-swipe-delete{background:#d83a4e}.fleet-item .fleet-actions{min-width:0;max-width:55%;gap:4px}.fleet-item .fleet-actions button{min-width:0}';
 css.textContent+='.fleet-edit[hidden]{display:none!important}.fleet-edit{display:grid;gap:9px;margin:10px 0;padding:12px;border:1px solid #8bb0cd;border-radius:10px;background:#142e45}.fleet-edit label{font-size:12px;font-weight:800;color:#dceeff}.fleet-edit input{width:100%;height:43px;margin-top:5px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #8eaec9;background:#f6faff;color:#132a3b}.fleet-edit-buttons{display:flex;gap:8px}.fleet-edit-buttons button{flex:1;min-height:42px;border-radius:8px;border:1px solid #8eaec9;background:#31577a;color:white;font-weight:800}.fleet-edit-feedback{font-size:12px;color:#ace0ff}.fleet-item .fleet-actions{flex-shrink:0}.fleet-item .fleet-actions button{padding:8px}';
 document.head.appendChild(css);
 const section=document.createElement('section');
@@ -48,9 +49,9 @@ let openedSwipe=null;
 function closeSwipe(){if(openedSwipe){openedSwipe.classList.remove('open');openedSwipe=null}}
 function enableSwipe(shell){
  const front=shell.querySelector('.fleet-item'),del=shell.querySelector('.fleet-swipe-delete');
- let startX=0,startY=0,tracking=false,consumed=false;
+ let startX=0,startY=0,tracking=false,consumed=false,lastSwipeAt=0;
  shell.addEventListener('touchstart',e=>{
-  if(e.touches.length!==1||e.target.closest('button'))return;
+  if(e.touches.length!==1||e.target.closest('.fleet-swipe-delete'))return;
   startX=e.touches[0].clientX;startY=e.touches[0].clientY;tracking=true;consumed=false;
  },{passive:true});
  shell.addEventListener('touchmove',e=>{
@@ -62,6 +63,7 @@ function enableSwipe(shell){
   if(!tracking)return;tracking=false;
   const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;
   if(!consumed||Math.abs(dx)<45||Math.abs(dx)<Math.abs(dy)*1.25)return;
+  lastSwipeAt=Date.now();
   if(dx<0){if(openedSwipe!==shell)closeSwipe();shell.classList.add('open');openedSwipe=shell}
   else if(openedSwipe===shell)closeSwipe();
  },{passive:true});
@@ -70,7 +72,7 @@ function enableSwipe(shell){
   if(e.key==='ArrowLeft'){e.preventDefault();if(openedSwipe!==shell)closeSwipe();shell.classList.add('open');openedSwipe=shell}
   if(e.key==='ArrowRight'||e.key==='Escape'){closeSwipe()}
  });
- front.addEventListener('click',e=>{if(consumed){e.preventDefault();e.stopPropagation();consumed=false}else if(openedSwipe===shell&&!e.target.closest('button'))closeSwipe()},true);
+ front.addEventListener('click',e=>{if(consumed||Date.now()-lastSwipeAt<600){e.preventDefault();e.stopPropagation();consumed=false}else if(openedSwipe===shell&&!e.target.closest('button'))closeSwipe()},true);
 }
 async function removeBikePhotos(bikeId){
  if(!('indexedDB' in window))return;
@@ -130,7 +132,8 @@ function refresh(){
   const title=document.createElement('span'),details=document.createElement('small'),action=document.createElement('button'),editButton=document.createElement('button');
   title.textContent=name;const odo=db[id]?.odometer??r.km??0;
   details.textContent='현재 '+Number(odo).toLocaleString('ko-KR')+'km · 정비 '+Object.values(db[id]?.records||{}).reduce((sum,a)=>sum+(Array.isArray(a)?a.length:0),0)+'건';
-  title.appendChild(details);action.type='button';action.textContent=id===selected?'선택됨':'차량 보기';
+  const hint=document.createElement('small');hint.textContent='← 왼쪽으로 밀어 삭제';hint.className='fleet-swipe-hint';
+  title.append(details,hint);action.type='button';action.textContent=id===selected?'선택됨':'차량 보기';
   action.disabled=id===selected;action.addEventListener('click',()=>{document.dispatchEvent(new CustomEvent('motorcycle:select-vehicle',{detail:{id}}));root.closest('.backup-overlay').hidden=true;refresh()});
   editButton.type='button';editButton.textContent='수정';editButton.setAttribute('aria-label',name+' 정보 수정');editButton.addEventListener('click',()=>openEdit(id));
   const actions=document.createElement('div');actions.className='fleet-actions';actions.append(editButton,action);
