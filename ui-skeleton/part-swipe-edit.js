@@ -26,8 +26,13 @@ const style=document.createElement('style');style.textContent=
 '.part-img.part-user-picture img.part-user-replacement{position:absolute;inset:0;left:0;top:0;transform:none;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:normal;filter:none;z-index:5}' +
 '.part-swipe-wrap[hidden]{display:none!important}' +
 '.part-swipe-wrap.drag-source{opacity:.24}' +
-'.part-drag-ghost{position:fixed!important;z-index:999!important;pointer-events:none!important;margin:0!important;box-shadow:0 7px 24px #000d,0 0 0 2px #64c7ff!important;opacity:.96}' +
-'.part-drop-before{box-shadow:0 -4px 0 #60c7ff!important}.part-drop-after{box-shadow:0 4px 0 #60c7ff!important}' +
+'.part-drag-ghost{position:fixed!important;z-index:999!important;pointer-events:none!important;margin:0!important;box-shadow:0 12px 25px #000b,0 0 0 1px #79cfff!important;opacity:.97;transform-origin:center;animation:partLift .22s ease-out both!important}' +
+'@keyframes partLift{from{transform:scale(1);filter:brightness(1)}to{transform:scale(1.025);filter:brightness(1.07)}}' +
+'.part-swipe-wrap{transition:transform .16s cubic-bezier(.22,.8,.32,1)}' +
+'.part-swipe-wrap.part-drop-before{transform:translateY(4px)}.part-swipe-wrap.part-drop-after{transform:translateY(-4px)}' +
+'.part-swipe-wrap.part-drop-neighbor-up{transform:translateY(-3px)}.part-swipe-wrap.part-drop-neighbor-down{transform:translateY(3px)}' +
+'.extra-parts-toggle.part-drop-before,.extra-parts-toggle.part-drop-after{box-shadow:inset 0 0 0 2px #79cfff,0 3px 6px #0009}' +
+'@media(prefers-reduced-motion:reduce){.part-drag-ghost{animation:none!important}.part-swipe-wrap{transition:none!important}}' +
 '.part-edit-mask[hidden]{display:none!important}.part-edit-mask{position:fixed;inset:0;background:#02060bd0;z-index:110;display:flex;align-items:flex-end;justify-content:center;padding:12px 12px max(22px,env(safe-area-inset-bottom))}' +
 '.part-edit-panel{width:100%;max-width:520px;max-height:92dvh;overflow:auto;border-radius:18px;padding:18px;background:linear-gradient(150deg,#30455c,#0b1725);border:1px solid #90adc8;color:#f5f9ff;box-shadow:0 12px 35px #000b}' +
 '.part-edit-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-size:18px}.part-edit-head button{border:1px solid #7590a9;background:#15283e;border-radius:9px;color:white;font-size:24px;width:37px;height:37px}' +
@@ -139,7 +144,7 @@ function start(e){if(e.touches.length!==1||!mask.hidden)return;const t=e.touches
  if(e.target.closest('.part-swipe-actions,.service'))return;
  const g=gesture;g.timer=setTimeout(()=>{if(gesture===g)beginDrag(g)},380);
 }
-function beginDrag(g){const shell=g.wrap;if(!shell?.isConnected)return;closeSwipe();window.getSelection()?.removeAllRanges();const row=shell.querySelector(':scope > .part');if(!row)return;const rect=row.getBoundingClientRect();const ghost=row.cloneNode(true);ghost.classList.add('part-drag-ghost');Object.assign(ghost.style,{left:rect.left+'px',top:rect.top+'px',width:rect.width+'px',height:rect.height+'px',transition:'none',transform:'none'});document.body.appendChild(ghost);shell.classList.add('drag-source');g.dragging=true;
+function beginDrag(g){const shell=g.wrap;if(!shell?.isConnected)return;closeSwipe();window.getSelection()?.removeAllRanges();const row=shell.querySelector(':scope > .part');if(!row)return;const rect=row.getBoundingClientRect();const ghost=row.cloneNode(true);ghost.classList.add('part-drag-ghost');Object.assign(ghost.style,{left:rect.left+'px',top:rect.top+'px',width:rect.width+'px',height:rect.height+'px',transition:'none'});document.body.appendChild(ghost);shell.classList.add('drag-source');g.dragging=true;
  drag={g,shell,ghost,from:shell.parentElement,y:g.currentY,target:null,after:false};
  if(navigator.vibrate)try{navigator.vibrate(18)}catch{}
 }
@@ -148,20 +153,27 @@ function move(e){const g=gesture;if(!g||g.wrap!==e.currentTarget||e.touches.leng
  e.preventDefault();if(!drag)return;
  drag.ghost.style.top=(t.clientY-(g.y-drag.shell.getBoundingClientRect().top))+'px';
  const candidate=findTarget(t.clientX,t.clientY);
- if(drag.target&&drag.target!==candidate)drag.target.classList.remove('part-drop-before','part-drop-after');
- if(candidate){const after=t.clientY>candidate.getBoundingClientRect().top+candidate.getBoundingClientRect().height/2;
- if(drag.target===candidate)candidate.classList.remove('part-drop-before','part-drop-after');
- candidate.classList.add(after?'part-drop-after':'part-drop-before');drag.target=candidate;drag.after=after}
- else{drag.target=null}
+ clearDropHint();
+ if(candidate){
+  const after=candidate===toggle?false:t.clientY>candidate.getBoundingClientRect().top+candidate.getBoundingClientRect().height/2;
+  drag.target=candidate;drag.after=after;
+  candidate.classList.add(after?'part-drop-after':'part-drop-before');
+  if(candidate!==toggle){
+   const siblings=[...candidate.parentElement.children].filter(el=>el.classList.contains('part-swipe-wrap')&&!el.hidden&&el!==drag.shell);
+   const i=siblings.indexOf(candidate),neighbor=siblings[after?i+1:i-1];
+   if(neighbor)neighbor.classList.add(after?'part-drop-neighbor-down':'part-drop-neighbor-up');
+  }
+ }else{drag.target=null}
  // Scroll the page near the viewport edges while the finger holds the card.
  if(t.clientY>innerHeight-105)window.scrollBy(0,11);else if(t.clientY<100)window.scrollBy(0,-11);
 }
+function clearDropHint(){for(const el of rows.querySelectorAll('.part-drop-before,.part-drop-after,.part-drop-neighbor-up,.part-drop-neighbor-down'))el.classList.remove('part-drop-before','part-drop-after','part-drop-neighbor-up','part-drop-neighbor-down')}
 function cleanupDrag(commit){if(!drag)return;const d=drag;
  // Recheck at release, including the gap between cards (the old hit-test lost the drop target there).
  const t=d.g;
  const target=commit?(findTarget(t.currentX,t.currentY)||d.target):null;
  const after=target?t.currentY>target.getBoundingClientRect().top+target.getBoundingClientRect().height/2:false;
- if(d.target)d.target.classList.remove('part-drop-before','part-drop-after');
+ clearDropHint();
  d.shell.classList.remove('drag-source');d.ghost.remove();drag=null;
  if(commit&&target&&canTarget(d.shell,target)){
   // Dropping onto the accordion header moves the card into the expandable list, even while closed.
