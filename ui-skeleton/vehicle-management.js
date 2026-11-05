@@ -14,7 +14,7 @@ const reset=document.createElement('section');
 reset.innerHTML='<strong>전체 데이터 초기화</strong><p>등록 차량, 주행거리, 정비기록, 소모품 설정 및 사진을 모두 삭제하고 처음부터 시작해. 되돌릴 수 없으니 먼저 전체 백업을 저장해.</p><button type="button" class="backup-btn fleet-reset">전체 데이터 초기화</button>';
 root.querySelector('.backup-panel-header')?.after(section);
 root.querySelector('.backup-status')?.before(reset);
-const list=section.querySelector('.fleet-list'),form=section.querySelector('form'),message=section.querySelector('.fleet-message');
+const list=section.querySelector('.fleet-list'),form=section.querySelector('.fleet-new-form'),message=section.querySelector('.fleet-message');
 function refresh(){
  const regs=parse(REG),db=parse(DATA),selected=localStorage.getItem(SEL);
  const appearanceForm=section.querySelector('.fleet-appearance-form'),activeReg=regs[selected];
