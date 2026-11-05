@@ -1,6 +1,6 @@
 {
-  "version": "2.7.0",
-  "cache": "motorcycle-maintenance-v2.7",
+  "version": "2.7.1",
+  "cache": "motorcycle-maintenance-v2.7.1",
   "released": "2026-11-05",
-  "note": "기존 차량 제조사·기종·배기량·제조 연식·시작 주행거리 수정, 정비기록 보호"
+  "note": "정비 날짜 유효성 검증, 최신 유효 교체기록 기준 계산, 빈 기록 게이지 상태 초기화"
 }
