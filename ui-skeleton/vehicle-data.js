@@ -31,7 +31,7 @@ function write(key,obj){localStorage.setItem(key,JSON.stringify(obj))}
 document.addEventListener('motorcycle:register-new-vehicle',event=>{
  const info=event.detail||{},id=info.id,name=String(info.name||'').trim(),at=Number(info.km);
  if(!/^bike-[a-z0-9-]+$/.test(id)||!name||name.length>55||registered[id]||!valid(at)||!['new','used'].includes(info.condition))return;
- const nextReg={...registered,[id]:{name,brand:'unknown',condition:info.condition,km:at}};
+ const nextReg={...registered,[id]:{name,brand:'unknown',condition:info.condition,km:at,year:Number.isSafeInteger(info.year)?info.year:null,wear:info.wear||'auto'}};
  const nextData={...database,[id]:{odometer:at,records:{},odometerHistory:[{at,date:new Date().toISOString()}]}};
  try{write(regKey,nextReg);write(dataKey,nextData);localStorage.setItem(chosenKey,id)}
  catch{alert('차량 저장에 실패했어. 기기 저장공간을 확인해.');return}
@@ -88,7 +88,7 @@ if(regKm.value.trim()===''||currentKm.value.trim()===''||!valid(at)||!valid(now)
 const old=getVehicleData(currentBike().id),all=Object.values(old.records||{}).flat().filter(x=>valid(x.at)),maxAt=all.reduce((v,x)=>Math.max(v,x.at),0);
 if(now<maxAt){regError.textContent='이미 기록된 정비 주행거리보다 현재 주행거리를 낮출 수 없어.';return}
 if(previous&&at!==previous.km&&maxAt&&at>maxAt){regError.textContent='시작 주행거리는 기록된 정비 주행거리보다 클 수 없어.';return}
-const nextReg={...registered,[currentBike().id]:{...previous,condition,km:at}},nextData={...database,[currentBike().id]:{...old,odometer:now,records:old.records||{},odometerHistory:[...(old.odometerHistory||[]),{at:now,date:new Date().toISOString()}]}};
+const fresh=load(regKey),nextReg={...fresh,[currentBike().id]:{...fresh[currentBike().id],...previous,year:fresh[currentBike().id]?.year??previous?.year??null,wear:fresh[currentBike().id]?.wear??previous?.wear??'auto',condition,km:at}},nextData={...database,[currentBike().id]:{...old,odometer:now,records:old.records||{},odometerHistory:[...(old.odometerHistory||[]),{at:now,date:new Date().toISOString()}]}};
 try{write(regKey,nextReg);write(dataKey,nextData);localStorage.setItem(chosenKey,currentBike().id);registered=nextReg;database=nextData;renderInfo();closeReg();check.classList.add('visible');checkTimer=setTimeout(hideCheck,720)}catch{regError.textContent='저장할 수 없어. 브라우저 저장공간을 확인해.'}
 });
 regClose.addEventListener('click',closeReg);regMask.addEventListener('click',e=>{if(e.target===regMask)closeReg()});
