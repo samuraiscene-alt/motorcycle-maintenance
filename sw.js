@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v1.9';
+const CACHE='motorcycle-maintenance-v2.0';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
@@ -10,6 +10,8 @@ const PRECACHE=[
   new URL('./ui-skeleton/part-swipe-edit.js?v=restore-visible-8',ROOT).href,
   new URL('./ui-skeleton/backup-restore.js?v=full-backup-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=fleet-3',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=app-version-200',ROOT).href,
+  new URL('./version.json',ROOT).href,
   new URL('./manifest.webmanifest',ROOT).href
 ];
 self.addEventListener('install',event=>{
@@ -24,7 +26,8 @@ self.addEventListener('fetch',event=>{
  if(event.request.method!=='GET')return;
  const url=new URL(event.request.url);
  if(url.origin!==self.location.origin||!url.pathname.startsWith(ROOT.pathname))return;
- event.respondWith(fetch(event.request).then(response=>{
+ const request=event.request.mode==='navigate'?new Request(event.request,{cache:'no-store'}):event.request;
+ event.respondWith(fetch(request).then(response=>{
    if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)));}
    return response;
  }).catch(async()=>{
