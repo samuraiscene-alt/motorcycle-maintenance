@@ -1,6 +1,6 @@
 {
-  "version": "2.7.5",
-  "cache": "motorcycle-maintenance-v2.7.5",
+  "version": "2.7.6",
+  "cache": "motorcycle-maintenance-v2.7.6",
   "released": "2026-11-05",
-  "note": "등록 차량이 없을 때 HONDA PCX125 시연 등록창 대신 제조사·기종 새 차량 등록 화면으로 이동"
+  "note": "정비 주행거리 초과 시 확인 후 계기판 동시 갱신, 미래 정비 날짜 제한, 새 차량 등록 독립 팝업"
 }
