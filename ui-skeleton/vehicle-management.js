@@ -22,9 +22,11 @@ const list=section.querySelector('.fleet-list'),form=section.querySelector('.fle
 const newOverlay=document.createElement('div');newOverlay.className='fleet-new-overlay';newOverlay.hidden=true;newOverlay.setAttribute('role','dialog');newOverlay.setAttribute('aria-modal','true');newOverlay.setAttribute('aria-label','새 차량 등록');
 const newPanel=document.createElement('div');newPanel.className='fleet-new-panel';
 const newHead=document.createElement('div');newHead.className='fleet-new-head';newHead.innerHTML='<strong>새 차량 등록</strong><button type="button" class="fleet-new-close" aria-label="닫기">×</button>';
+const newFeedback=document.createElement('p');newFeedback.className='fleet-message';newFeedback.setAttribute('aria-live','polite');
+form.querySelector('.fleet-actions').before(newFeedback);
 newPanel.append(newHead,form);newOverlay.appendChild(newPanel);document.body.appendChild(newOverlay);
 let newFormReturnFocus=null;
-function closeNewVehicleForm(){newOverlay.hidden=true;form.hidden=true;form.reset();message.textContent='';if(newFormReturnFocus?.focus&&newFormReturnFocus.isConnected)newFormReturnFocus.focus({preventScroll:true});newFormReturnFocus=null}
+function closeNewVehicleForm(){newOverlay.hidden=true;form.hidden=true;form.reset();message.textContent='';newFeedback.textContent='';if(newFormReturnFocus?.focus&&newFormReturnFocus.isConnected)newFormReturnFocus.focus({preventScroll:true});newFormReturnFocus=null}
 newHead.querySelector('.fleet-new-close').addEventListener('click',closeNewVehicleForm);
 newOverlay.addEventListener('click',e=>{if(e.target===newOverlay)closeNewVehicleForm()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!newOverlay.hidden){e.stopImmediatePropagation();closeNewVehicleForm()}});
@@ -182,19 +184,19 @@ function showNewVehicleForm(){
  closeEdit();newFormReturnFocus=document.activeElement;
  const settingsOverlay=root.closest('.backup-overlay');
  if(settingsOverlay)settingsOverlay.hidden=true;
- form.hidden=false;newOverlay.hidden=false;message.textContent='';refresh();
+ form.hidden=false;newOverlay.hidden=false;message.textContent='';newFeedback.textContent='';refresh();
  form.elements.brand.focus({preventScroll:true});
 }
 section.querySelector('.fleet-add').addEventListener('click',showNewVehicleForm);
 document.addEventListener('motorcycle:open-new-vehicle',showNewVehicleForm);
-section.querySelector('.fleet-cancel').addEventListener('click',closeNewVehicleForm);
+form.querySelector('.fleet-cancel').addEventListener('click',closeNewVehicleForm);
 form.addEventListener('submit',e=>{
  e.preventDefault();
  const brand=form.elements.brand.value.trim(),model=form.elements.model.value.trim(),cc=Number(form.elements.cc.value),name=(brand+' '+model).trim(),km=Number(form.elements.km.value),yearValue=form.elements.year.value.trim(),year=yearValue?Number(yearValue):null;
- if(!brand||brand.length>40||!model||model.length>55||name.length>100||!Number.isSafeInteger(cc)||cc<1||cc>3000||!Number.isSafeInteger(km)||km<0||km>9999999||(!Number.isSafeInteger(year)||year<1950||year>new Date().getFullYear())){message.textContent='제조사·기종·배기량·제조 연식·시작 주행거리를 확인해.';return}
+ if(!brand||brand.length>40||!model||model.length>55||name.length>100||!Number.isSafeInteger(cc)||cc<1||cc>3000||!Number.isSafeInteger(km)||km<0||km>9999999||(!Number.isSafeInteger(year)||year<1950||year>new Date().getFullYear())){newFeedback.textContent='제조사·기종·배기량·제조 연식·시작 주행거리를 확인해.';return}
  const id='bike-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
  document.dispatchEvent(new CustomEvent('motorcycle:register-new-vehicle',{detail:{id,name,brand,model,cc,km,year,wear:'auto'}}));
- if(localStorage.getItem(SEL)!==id){message.textContent='새 차량을 저장하지 못했어. 저장공간을 확인해.';return}
+ if(localStorage.getItem(SEL)!==id){newFeedback.textContent='새 차량을 저장하지 못했어. 저장공간을 확인해.';return}
  closeNewVehicleForm();message.textContent='새 차량으로 시작했어. 이전 차량의 기록은 그대로 보관했어.';refresh();
 });
 document.addEventListener('motorcycle:vehicle-saved',refresh);
