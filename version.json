@@ -1,6 +1,6 @@
 {
-  "version": "2.4.0",
-  "cache": "motorcycle-maintenance-v2.4",
+  "version": "2.4.1",
+  "cache": "motorcycle-maintenance-v2.4.1",
   "released": "2026-11-05",
-  "note": "공통 재질별 노후 효과 엔진, 차종별 검증 마스크 안전장치, 연식 자동 계산"
+  "note": "메인 차량카드에서 신차/중고차 표기 제거 및 계기판 글자 겹침 방지"
 }
