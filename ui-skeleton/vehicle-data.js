@@ -157,7 +157,7 @@ window.addEventListener('resize',()=>position(0,false));window.addEventListener(
 // Vehicle-scoped maintenance history: previously saved records are read, never rewritten.
 const historyMask=document.createElement('div');historyMask.className='registration-mask';historyMask.hidden=true;
 historyMask.setAttribute('role','dialog');historyMask.setAttribute('aria-modal','true');historyMask.setAttribute('aria-label','정비기록 전체 보기');
-historyMask.innerHTML='<section class="registration-panel maintenance-list-panel"><div class="registration-heading"><strong>정비기록</strong><button type="button" aria-label="닫기" class="maintenance-list-close">×</button></div><p class="maintenance-list-vehicle"></p><div class="maintenance-list-items"></div></section>';
+historyMask.innerHTML='<section class="registration-panel maintenance-list-panel"><div class="registration-heading"><strong>정비기록</strong><button type="button" aria-label="닫기" class="maintenance-list-close">×</button></div><p class="maintenance-list-vehicle"></p><label class="maintenance-vehicle-label" for="maintenance-vehicle-select">차량 선택</label><select class="maintenance-vehicle-select" id="maintenance-vehicle-select"></select><div class="maintenance-list-items"></div><details class="maintenance-odometer-section"><summary>주행거리 입력 내역</summary><div class="maintenance-odometer-entries"></div></details></section>';
 document.body.appendChild(historyMask);
 const historyCSS=document.createElement('style');historyCSS.textContent=
 '.vehicle-locked .showroom-count{display:none!important}' +
@@ -172,7 +172,8 @@ const historyCSS=document.createElement('style');historyCSS.textContent=
 '.maintenance-edit-sheet{width:100%;max-width:520px;max-height:90dvh;overflow:auto;background:linear-gradient(150deg,#30445c,#0b192a);border:1px solid #90adc8;border-radius:18px;padding:19px;color:#f2faff}' +
 '.maintenance-edit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.maintenance-edit-head strong{font-size:18px}.maintenance-edit-close{width:36px;height:36px;font-size:25px;color:white;border:1px solid #7794ae;background:#162b40;border-radius:9px}' +
 '.maintenance-edit-sheet label{display:block;font-size:13px;font-weight:800;margin-top:12px}.maintenance-edit-sheet input{width:100%;height:47px;margin-top:7px;padding:0 12px;border-radius:10px;border:2px solid #a5c5e3;background:#f3f9ff;color:#14283b;font-size:18px;font-weight:800}' +
-'.maintenance-edit-save{width:100%;height:48px;margin-top:17px;border:1px solid #80d4ff;border-radius:10px;background:linear-gradient(#52b0f6,#0d61b6);color:#fff;font-size:16px;font-weight:850}.maintenance-edit-error{min-height:19px;color:#ffd3b3;font-size:12px;margin:8px 0 0}';
+'.maintenance-edit-save{width:100%;height:48px;margin-top:17px;border:1px solid #80d4ff;border-radius:10px;background:linear-gradient(#52b0f6,#0d61b6);color:#fff;font-size:16px;font-weight:850}.maintenance-edit-error{min-height:19px;color:#ffd3b3;font-size:12px;margin:8px 0 0}' +
+ '.maintenance-vehicle-label{display:block;color:#bbd3e8;font-size:12px;font-weight:800;margin:7px 0 5px}.maintenance-vehicle-select{width:100%;height:43px;border:1px solid #91afc8;border-radius:9px;background:#f2f8ff;color:#132b41;padding:0 10px;font-size:16px;font-weight:850;margin-bottom:13px}.maintenance-odometer-section{margin-top:17px;padding:12px;border:1px solid #5f819f;border-radius:11px;color:#dfedfa;font-size:13px}.maintenance-odometer-section summary{cursor:pointer;font-weight:850}.maintenance-odometer-entries{display:flex;flex-direction:column;gap:7px;margin-top:9px;color:#bed5e8;font-size:12px;max-height:200px;overflow:auto}.maintenance-record-next{display:block;margin-top:5px;color:#8bd2ff;font-size:12px;font-weight:850}';
 document.head.appendChild(historyCSS);
 function currentPartName(id){
  const row=[...document.querySelectorAll('.rows .part[data-part-id]')].find(el=>el.dataset.partId===id);
@@ -180,6 +181,9 @@ function currentPartName(id){
 }
 let expandedOlder=false;
 function showHistory(){
+ const select=historyMask.querySelector('.maintenance-vehicle-select');select.replaceChildren();
+ for(const bike of bikes.filter(b=>registered[b.id])){const opt=document.createElement('option');opt.value=bike.id;opt.textContent=bike.name;select.appendChild(opt)}
+ select.value=currentBike().id;
  const all=getVehicleData(currentBike().id).records||{};
  const events=Object.entries(all).flatMap(([id,arr])=>Array.isArray(arr)?arr.map((item,seq)=>({id,...item,seq})):[])
   .sort((a,b)=>String(b.date).localeCompare(String(a.date))||Number(b.at)-Number(a.at));
@@ -195,7 +199,7 @@ function showHistory(){
    const card=document.createElement('article');card.className='maintenance-entry';
    const title=document.createElement('strong');title.textContent=currentPartName(e.id);
    const detail=document.createElement('small');detail.textContent=e.date+' · 정비 당시 '+fmt(e.at)+'km · 교체주기 '+fmt(e.interval)+'km';
-   card.append(title,detail);wrap.append(actions,card);(i<5?box:older).appendChild(wrap);
+   const due=document.createElement('span');due.className='maintenance-record-next';due.textContent='다음 교체 예정 '+fmt(Number(e.at)+Number(e.interval))+'km';card.append(title,detail,due);wrap.append(actions,card);(i<5?box:older).appendChild(wrap);
    actions.querySelector('.maintenance-history-edit').addEventListener('click',()=>openMaintenanceEdit(e.id,e.seq));
    actions.querySelector('.maintenance-history-delete').addEventListener('click',()=>deleteMaintenanceRecord(e.id,e.seq));
    let startX=0,startY=0;
@@ -208,6 +212,13 @@ function showHistory(){
    toggle.addEventListener('click',()=>{older.hidden=!older.hidden;expandedOlder=!older.hidden;toggle.setAttribute('aria-expanded',String(expandedOlder));toggle.textContent=older.hidden?'이전 기록 펼치기 ('+(events.length-5)+'건) ▾':'이전 기록 접기 ▴'});
    box.append(toggle,older);
   }
+ }
+ const kmBox=historyMask.querySelector('.maintenance-odometer-entries');kmBox.replaceChildren();
+ const kmLog=Array.isArray(getVehicleData(currentBike().id).odometerHistory)?getVehicleData(currentBike().id).odometerHistory:[];
+ if(!kmLog.length){const line=document.createElement('div');line.textContent='저장된 주행거리 변경 내역이 없어.';kmBox.appendChild(line)}
+ else for(const x of [...kmLog].reverse()){
+  if(!valid(Number(x.at)))continue;const line=document.createElement('div'),date=new Date(x.date);
+  line.textContent=(Number.isFinite(date.getTime())?date.toLocaleString('ko-KR'):'날짜 미상')+' · '+fmt(x.at)+'km';kmBox.appendChild(line);
  }
  historyMask.hidden=false;document.body.classList.add('registration-open');
 }
@@ -258,6 +269,9 @@ function deleteMaintenanceRecord(id,seq){
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!maintenanceEditMask.hidden)closeMaintenanceEdit()});
 
 function closeHistory(){historyMask.hidden=true;document.body.classList.remove('registration-open')}
+historyMask.querySelector('.maintenance-vehicle-select').addEventListener('change',e=>{
+ document.dispatchEvent(new CustomEvent('motorcycle:select-vehicle',{detail:{id:e.target.value}}));expandedOlder=false;showHistory();
+});
 historyMask.querySelector('.maintenance-list-close').addEventListener('click',closeHistory);
 historyMask.addEventListener('click',e=>{if(e.target===historyMask)closeHistory()});
 const historyTab=[...document.querySelectorAll('.tabs .tab')].find(el=>el.textContent.trim()==='정비기록');
