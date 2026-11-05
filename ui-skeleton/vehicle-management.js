@@ -205,7 +205,8 @@ section.querySelector('.fleet-appearance-form').addEventListener('submit',e=>{
  try{
   localStorage.setItem(REG,JSON.stringify({...regs,[id]:{...r,year,wear:'auto'}}));
   message.textContent='연식과 외관 상태를 저장했어.';
-  document.dispatchEvent(new CustomEvent('motorcycle:appearance-changed',{detail:{bikeId:id}}));
+  document.dispatchEvent(new CustomEvent('motorcycle:year-changed',{detail:{bikeId:id}}));
+   document.dispatchEvent(new CustomEvent('motorcycle:appearance-changed',{detail:{bikeId:id}}));
  }catch{message.textContent='저장공간을 확인해.'}
 });
 function showNewVehicleForm(){
