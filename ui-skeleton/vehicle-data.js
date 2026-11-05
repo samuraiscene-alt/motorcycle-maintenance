@@ -196,7 +196,7 @@ function updateMaintenanceNotices(){
  box.replaceChildren();const reg=currentRegistration(),odo=getOdometer();
  if(!reg||!valid(odo)){noticePanel.hidden=true;return}
  noticePanel.hidden=false;
- const vehicle=getVehicleData(currentBike().id),notices=[];let unknown=0;
+ const vehicle=getVehicleData(currentBike().id),notices=[];let unknown=0,missingDates=[];
  const rows=[...document.querySelectorAll('.rows .part[data-part-id]')];
  for(const row of rows){
   if(row.closest('.part-swipe-wrap')?.hidden||row.hidden)continue;
@@ -210,22 +210,36 @@ function updateMaintenanceNotices(){
    if(!last&&reg.km!==0){unknown++;continue}
    const due=last?last.at+km:action==='replace'&&id==='oil'&&task?.firstReplaceKm?task.firstReplaceKm:km;
    const remaining=due-odo;if(remaining>500)continue;
-   notices.push({title,action,due,remaining});
+   notices.push({title,action,due,remaining,kind:'distance'});
+  }
+  if(Number.isSafeInteger(task?.replaceMonths)&&task.replaceMonths>0){
+   const calendar=dateBasedStatus(reg,id,records);
+   if(calendar?.missing){missingDates.push(title+' · '+task.replaceMonths+'개월 주기')}
+   else if(calendar&&calendar.days<=30){
+    notices.push({title,action:'replace',due:calendar.due,remaining:calendar.days,kind:'calendar'});
+   }
   }
  }
  notices.sort((a,b)=>a.remaining-b.remaining||a.title.localeCompare(b.title));
  const dueCount=notices.filter(x=>x.remaining<=0).length,soon=notices.length-dueCount;
- count.textContent=dueCount?'도래 '+dueCount+'건 · 임박 '+soon+'건':soon?'임박 '+soon+'건':'도래·임박 없음';
+ count.textContent=(dueCount?'도래 '+dueCount+'건 · ':'')+(soon?'임박 '+soon+'건 · ':'')+(missingDates.length?'날짜 확인 '+missingDates.length+'건':(!notices.length?'도래·임박 없음':'')).replace(/ · $/,'');
  for(const n of notices){
   const item=document.createElement('div');item.className='maintenance-notice-item';item.dataset.level=n.remaining<=0?'due':'soon';
   const title=document.createElement('strong');title.textContent=n.title+' · '+actionText(n.action);
-  const detail=document.createElement('span');detail.textContent=n.remaining<=0?'정비 예정 거리 '+fmt(-n.remaining)+'km 경과 · '+fmt(n.due)+'km 기준':'정비까지 '+fmt(n.remaining)+'km · '+fmt(n.due)+'km 예정';
+  const detail=document.createElement('span');
+  detail.textContent=n.kind==='calendar'
+   ?n.remaining<0?'기한 '+fmt(-n.remaining)+'일 경과 · '+n.due:n.remaining===0?'오늘 교체 기한 · '+n.due:'교체까지 '+fmt(n.remaining)+'일 · '+n.due
+   :n.remaining<=0?'정비 예정 거리 '+fmt(-n.remaining)+'km 경과 · '+fmt(n.due)+'km 기준':'정비까지 '+fmt(n.remaining)+'km · '+fmt(n.due)+'km 예정';
   item.append(title,detail);box.appendChild(item);
  }
- if(!notices.length){const p=document.createElement('p');p.textContent='현재 주행거리에서 500km 이내의 거리 기준 정비 알림이 없어.';box.appendChild(p)}
+ if(!notices.length&&!missingDates.length){const p=document.createElement('p');p.textContent='현재 500km 또는 30일 이내의 정비 알림이 없어.';box.appendChild(p)}
+ if(missingDates.length){
+  const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
+  p.textContent='마지막 교체일 확인 필요 ('+missingDates.length+'건): '+missingDates.join(', ')+'. 날짜를 확인하기 전에는 교체 기한을 추정하지 않아.';box.appendChild(p);
+ }
  if(unknown){const p=document.createElement('p');p.className='maintenance-notice-disclaimer';p.textContent='정비 이력을 확인할 수 없는 '+unknown+'개 항목은 예측에서 제외했어.';box.appendChild(p)}
  const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
- p.textContent='앱 내부 참고 알림이야. 기간 기준 정비와 운행 조건은 별도 확인이 필요해.';box.appendChild(p);
+ p.textContent='거리·날짜 기준 앱 내부 참고 알림이야. 정비 이력과 제조사 설명서의 운행 조건도 확인해.';box.appendChild(p);
 }
 document.addEventListener('motorcycle:change',updateMaintenanceNotices);
 document.addEventListener('motorcycle:vehicle-saved',updateMaintenanceNotices);
