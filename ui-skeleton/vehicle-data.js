@@ -162,8 +162,10 @@ else{
  const officialDefault=profile?.intervals?.[id]||0;
  const interval=effectiveInterval(currentBike().id,id,last&&valid(last.interval)&&last.interval>0?last.interval:officialDefault||fallback);
  const knownBase=last?last.at:reg.km;
- const firstOil=!!(profile&&id==='oil'&&reg.km===0&&settings.intervalSource==='official');
- const due=firstOil&&!last?1000:firstOil&&last.at<=1000?6000:last?last.at+interval:knownBase+interval;
+ const firstOil=!!(profile?.tasks?.oil?.firstReplaceKm&&id==='oil'&&reg.km===0&&settings.intervalSource==='official');
+ const initialDue=profile?.tasks?.oil?.firstReplaceKm||interval;
+ const nextFirst=profile?.tasks?.oil?.firstRegularOdometerKm||interval;
+ const due=firstOil&&!last?initialDue:firstOil&&last.at<=initialDue?nextFirst:last?last.at+interval:knownBase+interval;
  const span=Math.max(1,due-knownBase);
  if(!valid(knownBase)||!Number.isSafeInteger(interval)||interval<=0){
   text.textContent=interval>0?'교체기록 없음 / 주기 '+fmt(interval)+'km'
