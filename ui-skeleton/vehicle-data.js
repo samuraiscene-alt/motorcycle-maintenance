@@ -102,13 +102,13 @@ bar.classList.remove('blue','amber','red');bar.classList.add('blue');btn.classLi
 if(!reg){text.textContent='차량 등록 후 확인';bar.style.width='0%';row.classList.add('part-unregistered');}
 else{
  const interval=last&&valid(last.interval)&&last.interval>0?last.interval:item.interval;
- const knownBase=last?last.at:reg.km===0?0:null;
- if(knownBase===null||!Number.isFinite(interval)||interval<=0){
+ const knownBase=last?last.at:reg.km;
+ if(!valid(knownBase)||!Number.isSafeInteger(interval)||interval<=0){
   text.textContent=interval>0?'교체기록 없음 / 주기 '+fmt(interval)+'km':'교체주기 미설정';
   bar.style.width='0%';row.classList.add('part-unregistered');
  }else{
   const used=Math.max(0,odo-knownBase),percent=Math.floor(used/interval*100),ratio=Math.min(100,percent);
-  text.textContent=used>interval?fmt(used)+' / '+fmt(interval)+'km · '+fmt(used-interval)+'km 초과':fmt(used)+' / '+fmt(interval)+'km';
+  text.textContent=used>interval?fmt(percent)+'% · '+fmt(used-interval)+'km 초과':fmt(used)+' / '+fmt(interval)+'km · '+fmt(percent)+'%';
   bar.style.width=ratio+'%';row.classList.remove('part-unregistered');
   const color=percent<=50?'blue':percent<=80?'amber':'red';
   bar.classList.remove('blue','amber','red');bar.classList.add(color);
