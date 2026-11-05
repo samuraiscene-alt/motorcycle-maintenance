@@ -1,6 +1,6 @@
 {
-  "version": "2.9.4",
-  "cache": "motorcycle-maintenance-v2.9.4",
+  "version": "2.9.5",
+  "cache": "motorcycle-maintenance-v2.9.5",
   "released": "2026-11-06",
-  "note": "공식 기간별 정비 경고: 교체일 기준 2·3·4년 다음 교체일 계산, 30일 이내 경고, 날짜만 기록·수정·삭제 지원"
+  "note": "홈 화면 아이콘을 새 파란색·주황색 오토바이 및 공구 디자인으로 변경"
 }
