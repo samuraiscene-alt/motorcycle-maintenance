@@ -35,6 +35,10 @@ function currentBike(){return bikes[index]}function currentRegistration(){return
 function getVehicleData(id){const x=database[id];return x&&typeof x==='object'&&!Array.isArray(x)?x:{records:{}}}
 function getOdometer(){const r=currentRegistration(),v=getVehicleData(currentBike().id);return r?valid(v.odometer)&&v.odometer>=r.km?v.odometer:r.km:null}
 function write(key,obj){localStorage.setItem(key,JSON.stringify(obj))}
+function effectiveInterval(bikeId,partId,defaultInterval){
+ const cfg=load('motorcycle-skeleton-part-appearance-v1')[bikeId]?.[partId];
+ return Number.isSafeInteger(cfg?.interval)&&cfg.interval>0?cfg.interval:defaultInterval;
+}
 document.addEventListener('motorcycle:register-new-vehicle',event=>{
  const info=event.detail||{},id=info.id,name=String(info.name||'').trim(),at=Number(info.km);
  if(!/^bike-[a-z0-9-]+$/.test(id)||!name||name.length>100||registered[id]||!valid(at)||!Number.isSafeInteger(info.cc)||info.cc<1||info.cc>3000||!String(info.brand||'').trim()||!String(info.model||'').trim()||!Number.isSafeInteger(info.year)||info.year<1950||info.year>new Date().getFullYear())return;
@@ -102,7 +106,7 @@ const text=row.querySelector('.part-line span'),bar=row.querySelector('.gauge-fi
 bar.classList.remove('blue','amber','red');bar.classList.add('blue');btn.classList.remove('blue','amber','red');btn.classList.add('blue');delete row.dataset.maintenancePercent;
 if(!reg){text.textContent='차량 등록 후 확인';bar.style.width='0%';row.classList.add('part-unregistered');}
 else{
- const interval=last&&valid(last.interval)&&last.interval>0?last.interval:item.interval;
+ const interval=effectiveInterval(currentBike().id,id,last&&valid(last.interval)&&last.interval>0?last.interval:item.interval);
  const knownBase=last?last.at:reg.km;
  if(!valid(knownBase)||!Number.isSafeInteger(interval)||interval<=0){
   text.textContent=interval>0?'교체기록 없음 / 주기 '+fmt(interval)+'km':'교체주기 미설정';
@@ -185,7 +189,7 @@ odoForm.addEventListener('submit',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!odoMask.hidden){e.stopImmediatePropagation();closeOdometer()}});
 
-function openRecord(row){if(!currentRegistration()){alert('먼저 차량을 등록해.');return}const id=row.dataset.partId;editingItem=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};returnFocus=document.activeElement;recordTitle.textContent=row.querySelector('strong').textContent+' 교체 완료';recordAt.value=String(getOdometer()??0);recordDate.max=todayLocal();recordDate.value=todayLocal();const history=getVehicleData(currentBike().id).records?.[id]||[];const last=[...history].filter(x=>x&&valid(x.at)&&valid(x.interval)&&x.interval>0).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);recordInterval.value=last?String(last.interval):editingItem.interval?String(editingItem.interval):'';recordAt.readOnly=true;recordInterval.readOnly=Number(recordInterval.value)>0;recordError.textContent='';renderHistory();recordMask.hidden=false;document.body.classList.add('registration-open');recordClose.focus()}
+function openRecord(row){if(!currentRegistration()){alert('먼저 차량을 등록해.');return}const id=row.dataset.partId;editingItem=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};returnFocus=document.activeElement;recordTitle.textContent=row.querySelector('strong').textContent+' 교체 완료';recordAt.value=String(getOdometer()??0);recordDate.max=todayLocal();recordDate.value=todayLocal();const history=getVehicleData(currentBike().id).records?.[id]||[];const last=[...history].filter(x=>x&&valid(x.at)&&valid(x.interval)&&x.interval>0).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);const interval=effectiveInterval(currentBike().id,id,last?.interval||editingItem.interval);recordInterval.value=interval?String(interval):'';recordAt.readOnly=true;recordInterval.readOnly=Number(recordInterval.value)>0;recordError.textContent='';renderHistory();recordMask.hidden=false;document.body.classList.add('registration-open');recordClose.focus()}
 function closeRecord(){recordMask.hidden=true;document.body.classList.remove('registration-open');if(returnFocus?.focus)returnFocus.focus()}
 function renderHistory(){const d=getVehicleData(currentBike().id),arr=Array.isArray(d.records?.[editingItem.id])?d.records[editingItem.id]:[];recordHistory.replaceChildren();if(!arr.length){recordHistory.textContent='저장된 정비기록이 없습니다.';return}const ul=document.createElement('ul');[...arr].sort((a,b)=>Number(b.at)-Number(a.at)||String(b.date||'').localeCompare(String(a.date||''))).slice(0,8).forEach(x=>{const li=document.createElement('li');li.textContent=x.date+' · '+fmt(x.at)+'km · 주기 '+fmt(x.interval)+'km · 다음 교체 '+fmt(Number(x.at)+Number(x.interval))+'km';ul.appendChild(li)});recordHistory.appendChild(ul)}
 document.querySelector('.rows').addEventListener('click',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn)openRecord(btn.closest('.part'))});document.querySelector('.rows').addEventListener('keydown',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openRecord(btn.closest('.part'))}});
@@ -358,7 +362,13 @@ function editOdometerEntry(seq){
  if(!answer.trim()||!valid(value)||value<reg.km){alert('시작 주행거리 이상인 올바른 숫자를 입력해.');return}
  const isLatest=seq===arr.length-1,minService=maxServiceOdometer(bikeId);
  if(isLatest&&value<minService){alert('현재 주행거리는 저장된 정비기록보다 낮을 수 없어.');return}
- const original={...entry},nextArr=arr.map((item,i)=>i===seq?{...item,at:value,editedAt:new Date().toISOString()}:item);
+ const oldDate=new Date(entry.date);
+ const storedDate=Number.isFinite(oldDate.getTime())?[oldDate.getFullYear(),String(oldDate.getMonth()+1).padStart(2,'0'),String(oldDate.getDate()).padStart(2,'0')].join('-'):todayLocal();
+ const dateAnswer=prompt('주행거리 이력 날짜 (YYYY-MM-DD)',storedDate);
+ if(dateAnswer===null)return;
+ const newDate=dateAnswer.trim();
+ if(!validMaintenanceDate(newDate)||newDate>todayLocal()){alert('올바른 과거 또는 오늘 날짜를 입력해.');return}
+ const nextArr=arr.map((item,i)=>i===seq?{...item,at:value,date:new Date(newDate+'T12:00:00').toISOString(),editedAt:new Date().toISOString()}:item);
  const next={...database,[bikeId]:{...source,odometer:isLatest?value:source.odometer,odometerHistory:nextArr}};
  try{write(dataKey,next);database=next;renderInfo();showHistory()}
  catch{alert('주행거리 이력 수정에 실패했어.')}
