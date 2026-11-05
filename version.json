@@ -1,6 +1,6 @@
 {
-  "version": "2.5.1",
-  "cache": "motorcycle-maintenance-v2.5.1",
+  "version": "2.6.0",
+  "cache": "motorcycle-maintenance-v2.6",
   "released": "2026-11-05",
-  "note": "신규 차량 제조 연식 필수 입력, 앱 사용 시작 주행거리 명확화, 현재 주행거리 자동 초기화"
+  "note": "차량 목록 왼쪽 스와이프 개별 삭제, 확인 팝업, 차량별 정비기록·추가 부품·사진 정리"
 }
