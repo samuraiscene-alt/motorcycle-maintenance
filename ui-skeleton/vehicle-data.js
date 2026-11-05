@@ -49,7 +49,7 @@ function position(offset,animate){track.style.transition=animate?'transform 370m
 function renderInfo(){
  const empty=!hasRegisteredBikes();
  document.body.classList.toggle('no-registered-vehicles',empty);
- track.hidden=empty;counter.hidden=empty;check.hidden=empty;
+ track.hidden=false;counter.hidden=empty;check.hidden=empty;
  brand.hidden=empty;
  const odometerButton=$('odometer-button');
  if(odometerButton){odometerButton.hidden=empty;odometerButton.disabled=empty}
