@@ -1,6 +1,6 @@
 {
-  "version": "2.9.58",
-  "cache": "motorcycle-maintenance-v2.9.58",
+  "version": "2.9.59",
+  "cache": "motorcycle-maintenance-v2.9.59",
   "released": "2026-11-06",
-  "note": "읽기 전용 가상 백업 자가진단 4종: 정상 백업·손상 파일·정비거리 오류·사진 손상"
+  "note": "백업 가상 자가진단 6종: 구버전 6항목 호환 및 미등록 차량 기록 차단 테스트 추가"
 }
