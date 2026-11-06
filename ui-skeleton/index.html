@@ -228,6 +228,34 @@ body.non-honda-bike .showroom-slide{background:#111b25 url('./garage.svg') cente
 .bike-meta-year,.bike-meta-km{display:block;white-space:nowrap}
 .bike-meta-km{font-size:clamp(9px,2.18vw,11px);letter-spacing:-.55px;font-variant-numeric:tabular-nums}
 @media(max-width:390px){.bike-meta-km{font-size:9px;letter-spacing:-.7px}}
+/* v2.9.19: original garage stays fixed; only the appropriate wall sign is shown */
+body.garage-sign-honda .showroom-slide::after,
+body.garage-sign-yamaha .showroom-slide::after,
+body.garage-sign-general .showroom-slide::after{
+ content:"";position:absolute;z-index:1;left:55%;top:25%;width:24%;height:31%;
+ background:#1c222bc7;backdrop-filter:blur(13px) brightness(.32);-webkit-backdrop-filter:blur(13px) brightness(.32);
+ mask-image:radial-gradient(ellipse at center,#000 68%,transparent 99%);
+ -webkit-mask-image:radial-gradient(ellipse at center,#000 68%,transparent 99%);pointer-events:none}
+body.garage-sign-yamaha .showroom-slide::before,
+body.garage-sign-general .showroom-slide::before{
+ content:"";position:absolute;z-index:1;left:22%;top:25%;width:24%;height:29%;
+ background:#1b1c25d0;backdrop-filter:blur(13px) brightness(.33);-webkit-backdrop-filter:blur(13px) brightness(.33);
+ mask-image:radial-gradient(ellipse at center,#000 65%,transparent 99%);
+ -webkit-mask-image:radial-gradient(ellipse at center,#000 65%,transparent 99%);pointer-events:none}
+body.garage-sign-general .garage-sign{left:56%;top:28%;width:22%;height:22%}
+body.garage-sign-yamaha .garage-sign{left:23%;top:29%;width:22%;height:17%}
+body.garage-sign-general .garage-sign-caption{font-size:clamp(8px,1.7vw,13px);line-height:1.2}
+body.garage-sign-honda .garage-sign{display:none}
+body.garage-sign-yamaha .garage-sign img{filter:brightness(1.5) drop-shadow(0 0 3px #fff4e8) drop-shadow(0 0 7px #fd5572) drop-shadow(0 0 12px #d9173e)}
+.garage-sign:not([hidden]){animation:garage-neon-flicker 9.1s linear infinite;transform:translateZ(0)}
+.garage:before{content:"";position:absolute;z-index:3;left:39%;top:1%;width:35%;height:16%;pointer-events:none;
+ background:radial-gradient(ellipse at 50% 18%,#b9e6ff4a 0%,#80bded20 36%,transparent 75%);animation:garage-tube-flicker 12.3s linear infinite}
+@keyframes garage-neon-flicker{0%,9%,11%,46%,48%,82%,84%,100%{opacity:1;filter:brightness(1)}10%,47%,83%{opacity:.72;filter:brightness(.75)}}
+@keyframes garage-tube-flicker{0%,19%,21%,55%,57%,89%,91%,100%{opacity:.66}20%,56%,90%{opacity:.34}}
+/* Original Honda sign's baked glow cannot flicker alone; subtle illuminated-wall change is used. */
+body.garage-sign-honda .showroom-slide{animation:garage-brand-honda 11s linear infinite}
+@keyframes garage-brand-honda{0%,13%,15%,61%,63%,100%{filter:brightness(1)}14%,62%{filter:brightness(.93)}}
+@media(prefers-reduced-motion:reduce){.garage-sign:not([hidden]),.garage:before,body.garage-sign-honda .showroom-slide{animation:none!important}}
 </style></head><body><div class="app"><section class="garage" id="garage" aria-label="오토바이 쇼룸. 좌우 스와이프로 다른 차량을 볼 수 있습니다">
 <div class="showroom-track" id="showroom-track">
   <div class="showroom-slide" data-index="0" role="group" aria-label="첫 번째 오토바이">
@@ -281,8 +309,8 @@ body.non-honda-bike .showroom-slide{background:#111b25 url('./garage.svg') cente
 <article class="part"><div class="part-img"><img src="../assets/tire.webp" alt="타이어"></div><div class="part-body"><div class="part-line"><strong>타이어</strong><span>5,200 / 10,000km</span></div><div class="gauge"><div class="gauge-fill blue" style="width:52%"></div></div></div><div class="service blue" aria-label="타이어 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
 <article class="part"><div class="part-img"><img src="../assets/coolant.webp" alt="냉각수"></div><div class="part-body"><div class="part-line"><strong>냉각수</strong><span>12,300 / 20,000km</span></div><div class="gauge"><div class="gauge-fill blue" style="width:62%"></div></div></div><div class="service blue" aria-label="냉각수 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
 <article class="part"><div class="part-img"><img src="../assets/air-filter.webp" alt="에어필터"></div><div class="part-body"><div class="part-line"><strong>에어필터</strong><span>9,100 / 12,000km</span></div><div class="gauge"><div class="gauge-fill amber" style="width:76%"></div></div></div><div class="service amber" aria-label="에어필터 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
-</main><div class="note"><strong>오토바이 정비 · 차량별 정비기록 시제품</strong> | 오토바이별 독립 저장</div></div><script src="./vehicle-catalog.js?v=pcx-2021-2023-5" defer></script><script src="./vehicle-data.js?v=calendar-maintenance-39-sign-layout" defer></script>
-<script src="./part-customize.js?v=accordion-order-3" defer></script><script src="./priority-parts.js?v=priority-13-2" defer></script><script src="./priority-images.js?v=studio-icons-4" defer></script><script src="./part-swipe-edit.js?v=official-cycle-safe-12" defer></script><script src="./backup-restore.js?v=browser-transfer-2-backupfix-298" defer></script><script src="./wear-library.js?v=shared-materials-1" defer></script><script src="./i18n.js?v=locale-scaffold-1" defer></script><script src="./vehicle-management.js?v=brand-model-picker-15-yearlink" defer></script><script src="./version-check.js?v=app-version-318" defer></script><script src="./bike-aging.js?v=parts-safe-2" defer></script><div id="registration-mask" class="registration-mask" role="dialog" aria-modal="true" aria-labelledby="registration-title" hidden>
+</main><div class="note"><strong>오토바이 정비 · 차량별 정비기록 시제품</strong> | 오토바이별 독립 저장</div></div><script src="./vehicle-catalog.js?v=pcx-2021-2023-5" defer></script><script src="./vehicle-data.js?v=calendar-maintenance-40-flicker" defer></script>
+<script src="./part-customize.js?v=accordion-order-3" defer></script><script src="./priority-parts.js?v=priority-13-2" defer></script><script src="./priority-images.js?v=studio-icons-4" defer></script><script src="./part-swipe-edit.js?v=official-cycle-safe-12" defer></script><script src="./backup-restore.js?v=browser-transfer-2-backupfix-298" defer></script><script src="./wear-library.js?v=shared-materials-1" defer></script><script src="./i18n.js?v=locale-scaffold-1" defer></script><script src="./vehicle-management.js?v=brand-model-picker-15-yearlink" defer></script><script src="./version-check.js?v=app-version-319" defer></script><script src="./bike-aging.js?v=parts-safe-2" defer></script><div id="registration-mask" class="registration-mask" role="dialog" aria-modal="true" aria-labelledby="registration-title" hidden>
  <form id="registration-form" class="registration-panel" autocomplete="off">
   <div class="registration-heading"><div><strong id="registration-title">오토바이 등록</strong><p id="registration-model">등록된 차량</p></div><button type="button" id="registration-close" aria-label="닫기">×</button></div>
   
