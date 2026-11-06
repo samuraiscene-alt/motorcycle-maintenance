@@ -1,6 +1,6 @@
 {
-  "version": "2.9.24",
-  "cache": "motorcycle-maintenance-v2.9.24",
+  "version": "2.9.25",
+  "cache": "motorcycle-maintenance-v2.9.25",
   "released": "2026-11-06",
-  "note": "이력 미확인 정비 알림을 부품·작업별로 선택하고 과거 작업 기록창에서 직접 입력"
+  "note": "정비 알림·기록의 주기 계산 일치와 다음 예정 주행거리 표시"
 }
