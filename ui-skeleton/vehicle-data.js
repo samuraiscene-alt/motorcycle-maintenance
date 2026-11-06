@@ -379,7 +379,7 @@ const text=row.querySelector('.part-line span'),bar=row.querySelector('.gauge-fi
 const body=row.querySelector('.part-body');
 let sourceTag=body?.querySelector('.part-interval-source');
 if(body&&!sourceTag){sourceTag=document.createElement('small');sourceTag.className='part-interval-source';const gauge=body.querySelector('.gauge');if(gauge)body.insertBefore(sourceTag,gauge);else body.appendChild(sourceTag)}
-if(sourceTag){sourceTag.textContent='';sourceTag.dataset.source='unknown'}
+if(sourceTag){sourceTag.textContent='';sourceTag.dataset.source='unknown';sourceTag.hidden=true}
 bar.classList.remove('blue','amber','red');bar.classList.add('blue');btn.classList.remove('blue','amber','red');btn.classList.add('blue');delete row.dataset.maintenancePercent;
 if(!reg){text.textContent='차량 등록 후 확인';if(sourceTag)sourceTag.textContent='차량 등록 후 확인';bar.style.width='0%';row.classList.add('part-unregistered');}
 else{
@@ -405,7 +405,9 @@ else{
   else if(fallback>0){origin='default';label='앱 기본값'}
   else if(calendar){origin='official';label='제조사 공식 · 기간 기준'}
   sourceTag.dataset.source=origin;
-  sourceTag.textContent=label+(interval>0?' · '+fmt(interval)+'km':calendar?' · '+calendar.months+'개월':'');
+  const hasKnownCycle=interval>0||!!calendar;
+  sourceTag.hidden=!hasKnownCycle||origin==='unknown';
+  sourceTag.textContent=sourceTag.hidden?'':label;
  }
  if(!valid(knownBase)||!Number.isSafeInteger(interval)||interval<=0){
   text.textContent=calendar?(calendar.missing?'마지막 교체일 입력 필요 · '+calendar.months+'개월 주기':calendar.days<0?'교체기한 '+Math.abs(calendar.days)+'일 초과 · '+calendar.due:calendar.days<=30?'교체까지 '+calendar.days+'일 · '+calendar.due:'다음 교체 '+calendar.due)
@@ -427,6 +429,9 @@ else{
    ?distanceLabel+' · '+(calendar.days<0?'날짜 '+Math.abs(calendar.days)+'일 초과':calendar.days<=30?'날짜 '+calendar.days+'일 남음':'날짜 '+calendar.due)
    :distanceLabel;
   text.textContent+=' · 다음 '+fmt(due)+'km'+inspectLabel;
+  if(firstOil&&!last&&due===initialDue&&initialDue>0&&interval>0&&initialDue!==interval){
+   text.textContent+=' · 최초 교체 (이후 정기 '+fmt(interval)+'km)';
+  }
   bar.style.width=ratio+'%';row.classList.remove('part-unregistered');
   const color=calendar&&!calendar.missing&&calendar.days<0?'red':calendar&&!calendar.missing&&calendar.days<=30?'amber':percent<=50?'blue':percent<=80?'amber':'red';
   bar.classList.remove('blue','amber','red');bar.classList.add(color);
