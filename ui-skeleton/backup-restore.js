@@ -377,7 +377,7 @@ async function simulateRestore(){
     req.onsuccess=resolve;req.onerror=()=>reject(req.error);
     req.onblocked=()=>reject(new Error('시험 저장소 정리가 지연됐어.'));
    });
-  }catch{/* Cleanup can be retried on the next simulation. */}
+  }catch(err){throw new Error('시험 저장소 정리 실패: '+(err.message||err))}
  }
 }
 simulationButton.addEventListener('click',async()=>{
@@ -427,7 +427,7 @@ pick.addEventListener('change',async()=>{
   const incomingRecords=inspection.records;
   const existingRegs=vehicleCount(localStorage.getItem('motorcycle-skeleton-registrations-v1'));
   const existingRecords=recordCount(localStorage.getItem('motorcycle-skeleton-maintenance-v1'));
-  const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건'+(inspection.warnings.length?'\\n\\n주의: 주행거리 이력 일치 여부 확인 필요 '+inspection.warnings.length+'건. 백업 파일 검사에서 내용을 확인해.':'')+'\\n\\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
+  const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건'+(inspection.warnings.length?'\n\n주의: 주행거리 이력 일치 여부 확인 필요 '+inspection.warnings.length+'건. 백업 파일 검사에서 내용을 확인해.':'')+'\n\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
   if(!confirm(summary)){message('복원 취소: 기존 데이터 유지');return}
   // Keep an untouched in-memory snapshot before the first destructive write.
   const oldLocal=locals(),oldImages=await getImages();message('전체 데이터를 복원 중…');
