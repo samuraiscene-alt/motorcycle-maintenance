@@ -853,6 +853,9 @@ function editOdometerEntry(seq){
  const value=Number(answer.trim());
  if(!answer.trim()||!valid(value)||value<reg.km){alert('시작 주행거리 이상인 올바른 숫자를 입력해.');return}
  const isLatest=seq===arr.length-1,minService=maxServiceOdometer(bikeId);
+ if(!isLatest&&value>getOdometer()){
+  alert('과거 주행거리 기록은 현재 계기판 주행거리보다 클 수 없어.');return;
+ }
  if(isLatest&&value<minService){alert('현재 주행거리는 저장된 정비기록보다 낮을 수 없어.');return}
  // A lower latest reading is an odometer correction, not ordinary mileage progress.
  // Ask before changing the displayed reading and preserve correction provenance.
