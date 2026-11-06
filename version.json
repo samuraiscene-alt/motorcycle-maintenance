@@ -1,6 +1,6 @@
 {
-  "version": "2.9.47",
-  "cache": "motorcycle-maintenance-v2.9.47",
+  "version": "2.9.48",
+  "cache": "motorcycle-maintenance-v2.9.48",
   "released": "2026-11-06",
-  "note": "백업 복원 후 사용자 사진별 키·크기·형식·SHA-256 내용까지 비교, 불일치 시 원상복구"
+  "note": "기존 데이터에 손대지 않는 백업 파일 검사: SHA-256·구조 확인 및 차량·정비기록·사진 수 표시"
 }
