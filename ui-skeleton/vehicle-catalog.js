@@ -47,6 +47,21 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'HONDA|ADV350|2025':Object.freeze({
+  verified:true,coverage:'partial',region:'HMEE ADV350A (English owner manual)',modelCode:'ADV350A',year:2025,
+  source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/ADV350A/2025/ADV350A_32K2LA10_eng_WEB.pdf',
+  sourceType:'Honda MotoPub ADV350A 2025 owner manual; maintenance schedule, model/region specific',
+  sourcePages:[106,107],
+  // The first service and subsequent maintenance milestones differ. Avoid treating the inspection as replacement.
+  intervals:Object.freeze({oil:12000,filter:24000,'spark-plug':12000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
+   filter:{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
+   'spark-plug':{replaceKm:12000},
+   coolant:{replaceMonths:36}
+  }),
+  actionByPart:Object.freeze({})
+ }),
  'YAMAHA|NMAX125|2022':Object.freeze({
   verified:true,coverage:'partial',region:'GPD125 / Yamaha Korea 2022',modelCode:'GPD125',year:2022,
   source:'https://www.ysk.co.kr/support/manual.php?boardid=manual&idx=57&mNum=5&mode=view&sNum=7',
