@@ -1,6 +1,6 @@
 {
-  "version": "2.9.21",
-  "cache": "motorcycle-maintenance-v2.9.21",
+  "version": "2.9.22",
+  "cache": "motorcycle-maintenance-v2.9.22",
   "released": "2026-11-06",
-  "note": "날짜 미확인 정비 알림 클릭 시 과거 교체일·당시 주행거리 입력, 기록 무결성 보호"
+  "note": "승인된 야마하 정비소 시안의 상단 장면 실제 적용, 기존 UI와 차량·정비기록 유지"
 }
