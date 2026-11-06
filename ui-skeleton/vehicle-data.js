@@ -113,6 +113,18 @@ function actionInterval(reg,id,action){
  const fallback=action==='inspect'?task?.inspectKm||0:action==='clean'?task?.cleanKm||0:officialProfile(reg)?.intervals?.[id]||0;
  return Number.isSafeInteger(settings[field])&&settings[field]>=0?settings[field]:fallback;
 }
+// One distance schedule for the part card and the maintenance notice.
+function nextServiceDistance(reg,task,action,settings,interval,last){
+ const sourceField=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
+ const firstEligible=action==='replace'&&reg.km===0&&settings[sourceField]!=='user'&&
+  Number.isSafeInteger(task?.firstReplaceKm)&&task.firstReplaceKm>0;
+ const first=firstEligible?task.firstReplaceKm:interval;
+ const firstRegular=Number.isSafeInteger(task?.firstRegularOdometerKm)&&task.firstRegularOdometerKm>first
+  ?task.firstRegularOdometerKm:0;
+ if(!last)return {due:firstEligible?first:reg.km+interval,base:reg.km,firstEligible};
+ if(firstEligible&&last.at<=first&&firstRegular)return {due:firstRegular,base:last.at,firstEligible};
+ return {due:last.at+interval,base:last.at,firstEligible};
+}
 function actionCycleStatus(reg,id,records,action,odo){
  const configured=actionInterval(reg,id,action);
  const last=records.filter(r=>r&&(r.action||'replace')===action&&valid(r.at)&&r.at<=odo).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
@@ -255,10 +267,9 @@ function updateMaintenanceNotices(){
    const km=selected?cfg[field]:last&&Number.isSafeInteger(last.interval)&&last.interval>0
     ?last.interval:defaultKm;
    if(!Number.isSafeInteger(km)||km<=0)continue;
-   const firstDue=action==='replace'&&task?.firstReplaceKm?task.firstReplaceKm:km;
-   if(!last&&(reg.km!==0||odo>firstDue)){unknownEntries.push({id,title,action,km});continue}
-   const due=last&&action==='replace'&&task?.firstReplaceKm&&last.at<=task.firstReplaceKm&&task.firstRegularOdometerKm
-    ?task.firstRegularOdometerKm:last?last.at+km:firstDue;
+   const schedule=nextServiceDistance(reg,task,action,cfg,km,last);
+   if(!last&&(reg.km!==0||odo>schedule.due)){unknownEntries.push({id,title,action,km});continue}
+   const due=schedule.due;
    const remaining=due-odo;if(remaining>500)continue;
    notices.push({id,title,action,due,remaining,kind:'distance'});
   }
@@ -465,11 +476,10 @@ else{
  const previousInterval=last&&Number.isSafeInteger(last.interval)&&last.interval>0?last.interval:0;
  const defaultInterval=action==='replace'?officialDefault||fallback:actionInterval(reg,id,action);
  const interval=selected?settings[cfgKey]:previousInterval||actionInterval(reg,id,action)||defaultInterval;
- const knownBase=last?last.at:reg.km;
- const firstService=action==='replace'&&!!(task?.firstReplaceKm&&reg.km===0&&settings.intervalSource==='official');
- const initialDue=task?.firstReplaceKm||interval;
- const nextFirst=task?.firstRegularOdometerKm||interval;
- const due=firstService&&!last?initialDue:firstService&&last&&last.at<=initialDue?nextFirst:last?last.at+interval:knownBase+interval;
+ const schedule=nextServiceDistance(reg,task,action,settings,interval,last);
+ const knownBase=schedule.base,firstService=schedule.firstEligible;
+ const initialDue=firstService?task.firstReplaceKm:interval;
+ const due=schedule.due;
  const span=Math.max(1,due-knownBase);
  const calendar=dateBasedStatus(reg,id,records);
  // An existing motorcycle may have been serviced before registration.
