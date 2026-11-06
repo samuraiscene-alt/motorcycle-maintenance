@@ -1,6 +1,6 @@
 {
-  "version": "2.9.33",
-  "cache": "motorcycle-maintenance-v2.9.33",
+  "version": "2.9.34",
+  "cache": "motorcycle-maintenance-v2.9.34",
   "released": "2026-11-06",
-  "note": "사용자가 수정한 부품별 정비주기를 제조사 공식 주기로 복원하는 버튼 추가. 다른 설정 및 정비기록 보존"
+  "note": "공식 주기 복원창 최신 차량별 설정 반영과 이름·사진만 수정할 때 주기 출처 유지"
 }
