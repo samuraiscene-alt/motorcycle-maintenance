@@ -39,7 +39,7 @@ function showCheckResult(state,lines){
  checkResult.textContent=lines;
 }
 function message(x){status.textContent=x}
-function lock(x){busy=x;save.disabled=x;load.disabled=x;check.disabled=x;get('.backup-close').disabled=x}
+function lock(x){busy=x;save.disabled=x;load.disabled=x;check.disabled=x;selfTestButton.disabled=x;if(typeof simulationButton!=='undefined')simulationButton.disabled=x;get('.backup-close').disabled=x}
 function hide(){if(!busy)overlay.hidden=true}
 get('.backup-close').addEventListener('click',hide);
 overlay.addEventListener('click',e=>{if(e.target===overlay)hide()});
@@ -367,7 +367,7 @@ async function simulateRestore(){
      !(values.photo instanceof Blob)||
      await blobDigest(values.photo)!==await blobDigest(fixture.photo))
    throw new Error('가상 복원 후 데이터가 일치하지 않아.');
-  return '✓ 복원 모의실험 통과\\n별도 저장소에 가상 차량·정비기록·사진 쓰기와 재읽기 확인 완료.\\n실제 차량·정비기록·사진은 변경하지 않았어.';
+  return '✓ 복원 모의실험 통과\n별도 저장소에 가상 차량·정비기록·사진 쓰기와 재읽기 확인 완료.\n실제 차량·정비기록·사진은 변경하지 않았어.';
  }finally{
   if(db)db.close();
   // Delete only our dedicated simulation database, never the user's production DB.
@@ -385,7 +385,7 @@ simulationButton.addEventListener('click',async()=>{
  lock(true);simulationButton.disabled=true;
  showCheckResult('checking','별도 저장소에서 복원 모의실험 중…');
  try{showCheckResult('ok',await simulateRestore())}
- catch(e){showCheckResult('error','✕ 복원 모의실험 실패\\n'+(e.message||e))}
+ catch(e){showCheckResult('error','✕ 복원 모의실험 실패\n'+(e.message||e))}
  finally{lock(false);simulationButton.disabled=false}
 });
 check.addEventListener('click',()=>{if(busy)return;checkPick.value='';checkPick.click()});
