@@ -411,7 +411,7 @@ async function simulateRestore(){
   });
  }
  if(!passed)throw new Error('복원 모의실험이 완료되지 않았어.');
- return '✓ 복원·원상복구 모의실험 3/3 통과\\n① 가상 데이터 복원\\n② 강제 오류 감지\\n③ 기존 차량·주행거리·정비기록·사진 원상복구 확인\\n실제 사용자 데이터는 변경하지 않았어.';
+ return '✓ 복원·원상복구 모의실험 3/3 통과\n① 가상 데이터 복원\n② 강제 오류 감지\n③ 기존 차량·주행거리·정비기록·사진 원상복구 확인\n실제 사용자 데이터는 변경하지 않았어.';
 }
 simulationButton.addEventListener('click',async()=>{
  if(busy)return;
