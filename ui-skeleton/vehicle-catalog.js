@@ -52,6 +52,34 @@ const officialProfiles=Object.freeze({
   }),
   actionByPart:Object.freeze({'oil-strainer':'clean','valve-clearance':'inspect'})
  }),
+ 'YAMAHA|XMAX300|2025':Object.freeze({
+  verified:true,coverage:'partial',region:'2025 XMAX300 owner manual',modelCode:'XMAX 300',year:2025,
+  source:'https://www.ysk.co.kr/support/manual.php?boardid=manual&idx=64&mNum=5&mode=view&sNum=7',
+  sourceText:'https://www.manualpdf.in/yamaha/xmax-300-2025/manual?p=91',
+  sourceType:'Yamaha Korea 2025 XMAX300 owner manual listing; model-year maintenance charts cross-checked against 2025 manual pages 89–92',
+  sourcePages:['8-3','8-4','8-5','8-6'],
+  intervals:Object.freeze({
+   oil:5000,filter:20000,'air-filter':20000,'drive-belt':20000,
+   'gear-oil':20000,'spark-plug':20000
+  }),
+  tasks:Object.freeze({
+   oil:{replaceKm:5000,firstReplaceKm:1000,firstRegularOdometerKm:4000,indicator:true},
+   filter:{replaceKm:20000,firstReplaceKm:1000,firstRegularOdometerKm:20000},
+   'air-filter':{replaceKm:20000},
+   'drive-belt':{replaceKm:20000,indicator:true},
+   'gear-oil':{replaceKm:20000,firstReplaceKm:1000,firstRegularOdometerKm:20000},
+   'spark-plug':{inspectKm:10000,replaceKm:20000},
+   'valve-clearance':{inspectKm:20000},
+   'pre-air-filter':{cleanKm:20000},
+   'sub-air-filter':{replaceKm:20000},
+   'brake-fluid':{replaceMonths:24},
+   'brake-hose':{replaceMonths:48,inspectKm:10000},
+   coolant:{replaceMonths:36,inspectKm:10000},
+   brake:{inspectKm:10000,replaceWhenWorn:true},
+   tire:{inspectKm:10000,replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','pre-air-filter':'clean'})
+ }),
  'YAMAHA|NMAX125|2025':Object.freeze({
   verified:true,region:'2025 GPD125-A',modelCode:'GPD125-A',year:2025,
   source:'https://www.ysk.co.kr/support/manual.php?boardid=manual&idx=62&mode=view',
