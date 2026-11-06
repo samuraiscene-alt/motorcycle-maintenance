@@ -47,6 +47,27 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'HONDA|C125|2026':Object.freeze({
+  verified:true,coverage:'partial',region:'JP 8BJ-JA71 (2026), frame JA71-1100001+',modelCode:'JA71',year:2026,
+  source:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa009/',
+  sourceText:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa010/',
+  sourceType:'Honda Japan Super Cub C125 JA71 2026 factory oil & oil-filter FAQ; model/year specific',
+  sourcePages:['Honda Japan FAQ qa009','Honda Japan FAQ qa010','Honda Japan FAQ qa013'],
+  // Oil first at 1,000 km or 1 month, later every 3,000 km or 1 year.
+  // Initial 1-month limit is documentation only; app currently lacks an initial-date trigger.
+  // Filter first at 13,000 km and subsequently 25,000 km, 37,000 km ...
+  intervals:Object.freeze({oil:3000,filter:12000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:3000,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12},
+   filter:{replaceKm:12000,firstReplaceKm:13000,firstRegularOdometerKm:25000}
+  }),
+  specs:Object.freeze({
+   oilQuantityAtChangeL:0.8,oilQuantityWithFilterL:0.85,
+   chainSlackMm:[25,35],chainSize:'420-106 links',
+   chainSlackSource:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa013/'
+  }),
+  actionByPart:Object.freeze({})
+ }),
  'HONDA|SUPER CUB110|2022':Object.freeze({
   verified:true,coverage:'partial',region:'JP 8BJ-JA59 (frame JA59-1000001+)',modelCode:'JA59',year:2022,
   source:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa009/',
