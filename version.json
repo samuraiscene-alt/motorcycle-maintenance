@@ -1,6 +1,6 @@
 {
-  "version": "2.9.88",
-  "cache": "motorcycle-maintenance-v2.9.88",
+  "version": "2.9.89",
+  "cache": "motorcycle-maintenance-v2.9.89",
   "released": "2026-11-06",
-  "note": "간판 없는 공통 작업장 배경과 독립 네온 간판·형광등, 로고 로딩 시 공용 간판 표시 방지"
+  "note": "간판 없는 실제 작업장 PNG로 교체 및 독립 네온·형광등 배경 분리 완료"
 }
