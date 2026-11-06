@@ -391,7 +391,7 @@ document.addEventListener('motorcycle:appearance-changed',updateMaintenanceNotic
 document.body.classList.add('garage-rebuilt');
 const makerSign=document.createElement('div');makerSign.className='garage-maker-neon';makerSign.hidden=true;
 const serviceSign=document.createElement('div');serviceSign.className='garage-service-neon';
-serviceSign.innerHTML='<span>정비소</span>';serviceSign.hidden=true;
+serviceSign.innerHTML='<span>MOTORCYCLE</span><span>REPAIR SHOP</span>';serviceSign.hidden=true;
 const tubeGlow=document.createElement('div');tubeGlow.className='garage-fluorescent';tubeGlow.setAttribute('aria-hidden','true');
 let signToken=0;
 function hideGarageSigns(){signToken++;makerSign.hidden=true;serviceSign.hidden=true}
