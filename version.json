@@ -1,6 +1,6 @@
 {
-  "version": "2.9.89",
-  "cache": "motorcycle-maintenance-v2.9.89",
+  "version": "2.9.90",
+  "cache": "motorcycle-maintenance-v2.9.90",
   "released": "2026-11-06",
-  "note": "간판 없는 실제 작업장 PNG로 교체 및 독립 네온·형광등 배경 분리 완료"
+  "note": "기존 덮개·Yamaha 배경 CSS 제거, 공용 무간판 PNG 유지, 구버전 PCX 차량 이미지 복구"
 }
