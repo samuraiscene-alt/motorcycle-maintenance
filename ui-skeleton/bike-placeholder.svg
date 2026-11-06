@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 330" role="img" aria-label="기종 전용 이미지 준비 중">
+<defs><linearGradient id="metal" x1="0" x2="1"><stop stop-color="#8b9aaa"/><stop offset=".5" stop-color="#d3dce4"/><stop offset="1" stop-color="#566a7d"/></linearGradient></defs>
+<ellipse cx="269" cy="292" rx="200" ry="17" fill="#000" opacity=".35"/>
+<g fill="none" stroke="url(#metal)" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="121" cy="242" r="52" stroke-width="17"/><circle cx="420" cy="242" r="52" stroke-width="17"/>
+<circle cx="121" cy="242" r="9" stroke-width="9"/><circle cx="420" cy="242" r="9" stroke-width="9"/>
+<path d="M121 242 203 147 307 162 420 242 311 242 203 147M307 162l-46 80h-140" stroke-width="18"/>
+<path d="m307 162 45-78 66 0m-70 0-26-25m-119 88-35-47-55-2m79 52 34 65" stroke-width="15"/>
+</g><path d="M202 143q42-56 111-32l23 36-32 18-92-1z" fill="#516475" stroke="#c0d2df" stroke-width="5"/>
+<path d="M187 130h-72q-16 0-16-17h110" fill="#1b2732" stroke="#9aaab7" stroke-width="6"/>
+<path d="M332 177h55l-22 32h-49z" fill="#324455" stroke="#a8b9c8" stroke-width="5"/>
+<text x="270" y="319" font-family="sans-serif" font-size="15" text-anchor="middle" fill="#b4c7d9">차종 전용 이미지 준비 중</text></svg>
