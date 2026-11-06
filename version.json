@@ -1,6 +1,6 @@
 {
-  "version": "2.9.38",
-  "cache": "motorcycle-maintenance-v2.9.38",
+  "version": "2.9.39",
+  "cache": "motorcycle-maintenance-v2.9.39",
   "released": "2026-11-06",
-  "note": "점검·청소 전용 정비주기 수정값을 교체주기와 분리해 저장하고 정비 알림에 반영"
+  "note": "교체·점검·청소 주기 독립 저장 및 사용자 설정의 정비 알림 우선 반영, 이름만 수정 시 주기 보존"
 }
