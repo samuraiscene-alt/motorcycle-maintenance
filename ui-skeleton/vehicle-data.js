@@ -74,16 +74,29 @@ function mergeOfficialCycles(previous,cycles){
  }
  return updated;
 }
+function reconcileVehicleOfficialCycles(previous,profile){
+ const cycles=officialCycleSettings(profile),cleaned={};
+ for(const [part,settings] of Object.entries(previous)){
+  const cfg={...settings};
+  for(const field of ['interval','inspectInterval','cleanInterval']){
+   if(cfg[field+'Source']==='official'&&!Object.prototype.hasOwnProperty.call(cycles[part]||{},field)){
+    delete cfg[field];delete cfg[field+'Source'];
+   }
+  }
+  cleaned[part]=cfg;
+ }
+ return mergeOfficialCycles(cleaned,cycles);
+}
 function reconnectOfficialProfile(id){
  const reg=registered[id];if(!reg)return false;
  const profile=window.MotorcycleCatalog?.findOfficialProfile(reg.brand,reg.model,reg.year)||null;
- if(!profile)return false;
  const key='motorcycle-skeleton-part-appearance-v1',all=load(key),existing=all[id]||{};
- const updated=mergeOfficialCycles(existing,officialCycleSettings(profile));
+ const updated=reconcileVehicleOfficialCycles(existing,profile);
  const settingsChanged=JSON.stringify(updated)!==JSON.stringify(existing);
- const registrationChanged=reg.maintenanceProfileStatus!=='official'||reg.maintenanceProfileSource!==profile.source;
+ const status=profile?'official':'unverified',source=profile?.source||null;
+ const registrationChanged=reg.maintenanceProfileStatus!==status||(reg.maintenanceProfileSource||null)!==source;
  if(!settingsChanged&&!registrationChanged)return false;
- const nextReg=registrationChanged?{...registered,[id]:{...reg,maintenanceProfileStatus:'official',maintenanceProfileSource:profile.source}}:registered;
+ const nextReg=registrationChanged?{...registered,[id]:{...reg,maintenanceProfileStatus:status,maintenanceProfileSource:source}}:registered;
  try{
   if(settingsChanged)write(key,{...all,[id]:updated});
   if(registrationChanged){write(regKey,nextReg);registered=nextReg}
