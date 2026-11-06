@@ -363,6 +363,8 @@ showroomNotice.className='showroom-reference-note';
 showroomNotice.textContent='차종 전용 이미지 미등록 · 참고용 스쿠터';
 stage.appendChild(showroomNotice);
 function renderInfo(){
+ // Each motorcycle keeps its own garage scene when the active brand changes.
+ [...track.children].forEach((slide,i)=>slide.classList.toggle('current-bike-slide',i===index));
  const empty=!hasRegisteredBikes();
  document.body.classList.toggle('no-registered-vehicles',empty);
  track.hidden=false;counter.hidden=empty;check.hidden=empty;
