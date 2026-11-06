@@ -1,6 +1,6 @@
 {
-  "version": "2.9.31",
-  "cache": "motorcycle-maintenance-v2.9.31",
+  "version": "2.9.32",
+  "cache": "motorcycle-maintenance-v2.9.32",
   "released": "2026-11-06",
-  "note": "XMAX300 검은 실루엣 해결 및 이력 없는 중고차 정비주기 0% 오판 방지"
+  "note": "XMAX300 2025 흰 배경 제거, 투명 차량 이미지를 기존 야마하 정비소에 합성"
 }
