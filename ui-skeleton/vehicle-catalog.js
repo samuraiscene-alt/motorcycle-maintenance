@@ -47,6 +47,23 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'YAMAHA|MT-07|2021':Object.freeze({
+  verified:true,coverage:'partial',region:'US MT07M/MT07MC Yamaha 2021',modelCode:'MT07M',year:2021,
+  source:'https://library.ymcapps.net/library/om/contents/html/10/BAT-28199-10_02/7-4.html',
+  sourceText:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&idx=44&mode=view&offset=20&sk=&sw=',
+  sourceType:'Yamaha factory 2021 MT-07 general maintenance and lubrication chart',
+  sourcePages:['7-4','7-5'],
+  // Verified chart fields only; engine-oil schedule omitted until full model-year table is checked.
+  intervals:Object.freeze({'air-filter':37000,'chain-sprockets':1000}),
+  tasks:Object.freeze({
+   'air-filter':{replaceKm:37000},
+   'chain-sprockets':{inspectKm:1000},
+   'brake-hose':{replaceMonths:48},
+   'brake-fluid':{replaceMonths:24},
+   brake:{replaceWhenWorn:true},tire:{replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({'chain-sprockets':'inspect'})
+ }),
  'HONDA|REBEL500|2025':Object.freeze({
   verified:true,coverage:'partial',region:'HMEE CMX500A/A2',modelCode:'CMX500A',year:2025,
   source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CMX500/2025/CMX500A_OM_32MLHB10_ENG_web.pdf',
