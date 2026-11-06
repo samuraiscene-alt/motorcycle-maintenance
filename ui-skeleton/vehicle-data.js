@@ -175,7 +175,7 @@ function timingDescription(task){
  if(!task)return '';
  const messages=[];
  if(Number.isSafeInteger(task.replaceMonths))messages.push(task.replaceMonths+'개월마다 교체');
- if(Number.isSafeInteger(task.inspectKm))messages.push(fmt(task.inspectKm)+'km마다 점검');
+ // Inspection interval is shown by actionCycleStatus so it is not repeated here.
  if(task.replaceWhenWorn)messages.push('마모 상태에 따라 교체');
  return messages.join(' · ');
 }
