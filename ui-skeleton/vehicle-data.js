@@ -457,7 +457,7 @@ counter.textContent=isLocked()?'':bikes.map((_,i)=>i===index?'●':'○').join('
 function renderParts(){const reg=currentRegistration(),odo=getOdometer(),data=getVehicleData(currentBike().id);
 document.querySelectorAll('.part:not(.part-add-card)').forEach((row,i)=>{const id=row.dataset.partId||items[i]?.id;const item=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};if(!id)return;const records=data.records&&Array.isArray(data.records[item.id])?data.records[item.id]:[];
 const action=partAction(reg,id);
-const usable=records.filter(record=>record&&valid(record.at)&&valid(record.interval)&&record.interval>0&&record.at<=odo&&(record.action||'replace')===action);
+const usable=records.filter(record=>record&&valid(record.at)&&valid(record.interval)&&record.at<=odo&&(record.action||'replace')===action);
 const last=usable.length?[...usable].sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||'')))[usable.length-1]:null;
 const text=row.querySelector('.part-line span'),bar=row.querySelector('.gauge-fill'),btn=row.querySelector('.service');
 const body=row.querySelector('.part-body');
@@ -740,12 +740,20 @@ function showHistory(){
    actions.innerHTML='<button type="button" class="maintenance-history-edit">수정</button><button type="button" class="maintenance-history-delete">삭제</button>';
    const card=document.createElement('article');card.className='maintenance-entry';
    const title=document.createElement('strong');title.textContent=currentPartName(e.id);
-   const detail=document.createElement('small');detail.textContent=e.date+' · '+actionText(e.action||'replace')+' · 당시 '+fmt(e.at)+'km'+(Number(e.interval)>0?' · 주기 '+fmt(e.interval)+'km':' · 기간 기준');
+   const detail=document.createElement('small');detail.textContent=e.date+' · '+actionText(e.action||'replace')+' · 당시 '+fmt(e.at)+'km'+(Number(e.interval)>0?' · 주기 '+fmt(e.interval)+'km':' · 주기 미설정');
    const due=document.createElement('span');due.className='maintenance-record-next';
    const task=officialTask(currentRegistration(),e.id);
-   due.textContent=(e.action||'replace')==='replace'&&task?.replaceMonths
-    ?'날짜 기준 다음 교체 '+addCalendarMonths(e.date,task.replaceMonths)
-    :Number(e.interval)>0?'다음 '+actionText(e.action||'replace')+' 예정 '+fmt(Number(e.at)+Number(e.interval))+'km':'날짜 기준 정비기록';card.append(title,detail,due);wrap.append(actions,card);(i<5?box:older).appendChild(wrap);
+   const actualAction=e.action||'replace';
+   const sameAction=Array.isArray(all[e.id])?all[e.id].filter(v=>v&&(v.action||'replace')===actualAction&&valid(v.at)).sort((a,b)=>a.at-b.at||String(a.date).localeCompare(String(b.date))):[];
+   const latest=sameAction.at(-1),isLatest=latest===all[e.id]?.[e.seq];
+   const settings=partSettings(currentBike().id,e.id);
+   const field=actualAction==='inspect'?'inspectInterval':actualAction==='clean'?'cleanInterval':'interval';
+   const userOrOfficial=Number.isSafeInteger(settings[field])&&['user','official'].includes(settings[field+'Source']);
+   const cycle=userOrOfficial?settings[field]:Number(e.interval)>0?Number(e.interval):actionInterval(currentRegistration(),e.id,actualAction);
+   const next=cycle>0?nextServiceDistance(currentRegistration(),task,actualAction,settings,cycle,latest).due:null;
+   due.textContent=!isLatest?'이후 정비기록 있음 · 과거 이력':
+    actualAction==='replace'&&task?.replaceMonths?'날짜 기준 다음 교체 '+addCalendarMonths(e.date,task.replaceMonths):
+    next!==null?'다음 '+actionText(actualAction)+' 예정 '+fmt(next)+'km':'다음 정비 주기 미설정';card.append(title,detail,due);wrap.append(actions,card);(i<5?box:older).appendChild(wrap);
    actions.querySelector('.maintenance-history-edit').addEventListener('click',()=>openMaintenanceEdit(e.id,e.seq));
    actions.querySelector('.maintenance-history-delete').addEventListener('click',()=>deleteMaintenanceRecord(e.id,e.seq));
    let startX=0,startY=0;
@@ -780,7 +788,7 @@ function showHistory(){
 const maintenanceEditMask=document.createElement('div');
 maintenanceEditMask.className='maintenance-edit-mask';maintenanceEditMask.hidden=true;
 maintenanceEditMask.setAttribute('role','dialog');maintenanceEditMask.setAttribute('aria-modal','true');
-maintenanceEditMask.innerHTML='<form class="maintenance-edit-sheet"><div class="maintenance-edit-head"><strong>정비기록 수정</strong><button type="button" class="maintenance-edit-close" aria-label="닫기">×</button></div><div class="maintenance-edit-part"></div><label>정비 날짜<input name="date" type="date" required></label><label>정비 당시 주행거리 (km)<input name="at" type="number" min="0" max="9999999" step="1" required></label><label>교체 주기 (km)<input name="interval" type="number" min="1" max="1000000" step="1" required></label><p class="maintenance-edit-error" aria-live="polite"></p><button type="submit" class="maintenance-edit-save">변경사항 저장</button></form>';
+maintenanceEditMask.innerHTML='<form class="maintenance-edit-sheet"><div class="maintenance-edit-head"><strong>정비기록 수정</strong><button type="button" class="maintenance-edit-close" aria-label="닫기">×</button></div><div class="maintenance-edit-part"></div><label>정비 날짜<input name="date" type="date" required></label><label>정비 당시 주행거리 (km)<input name="at" type="number" min="0" max="9999999" step="1" required></label><label>작업 주기 (km · 미설정 시 0)<input name="interval" type="number" min="0" max="1000000" step="1" required></label><p class="maintenance-edit-error" aria-live="polite"></p><button type="submit" class="maintenance-edit-save">변경사항 저장</button></form>';
 document.body.appendChild(maintenanceEditMask);
 const maintenanceEditForm=maintenanceEditMask.querySelector('form');
 let editingRecordRef=null;
@@ -795,6 +803,8 @@ function openMaintenanceEdit(id,seq){
  const intervalLabel=maintenanceEditForm.elements.interval.closest('label');
  if(intervalLabel)intervalLabel.hidden=timeOnly;
  maintenanceEditForm.elements.interval.required=!timeOnly;
+ maintenanceEditForm.elements.interval.min='0';
+ if(intervalLabel)intervalLabel.firstChild.textContent=actionText(item.action||'replace')+' 주기 (km · 미설정 시 0)';
  maintenanceEditMask.querySelector('.maintenance-edit-part').textContent=currentPartName(id)+' · '+actionText(item.action||'replace');
  maintenanceEditForm.elements.date.max=todayLocal();
  maintenanceEditMask.querySelector('.maintenance-edit-error').textContent='';
@@ -807,7 +817,7 @@ maintenanceEditForm.addEventListener('submit',e=>{
  const date=maintenanceEditForm.elements.date.value,at=Number(maintenanceEditForm.elements.at.value),interval=Number(maintenanceEditForm.elements.interval.value);
  const reg=registered[ref.bikeId],vehicle=database[ref.bikeId],maximum=vehicle?.odometer;
  const err=maintenanceEditMask.querySelector('.maintenance-edit-error');
- if(!reg||!validMaintenanceDate(date)||date>todayLocal()||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at>maximum||maintenanceEditForm.elements.interval.required&&maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||(maintenanceEditForm.elements.interval.required?interval<1:interval<0)||interval>1000000){
+ if(!reg||!validMaintenanceDate(date)||date>todayLocal()||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at>maximum||maintenanceEditForm.elements.interval.required&&maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||interval<0||interval>1000000){
   err.textContent='날짜·정비 주행거리·작업 주기를 확인해. 과거 정비기록은 등록 이전 주행거리도 가능하지만 현재 주행거리를 넘길 수 없어.';return;
  }
  const source=getVehicleData(ref.bikeId),arr=source.records?.[ref.id]||[];
