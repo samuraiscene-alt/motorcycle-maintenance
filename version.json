@@ -1,6 +1,6 @@
 {
-  "version": "2.9.42",
-  "cache": "motorcycle-maintenance-v2.9.42",
+  "version": "2.9.43",
+  "cache": "motorcycle-maintenance-v2.9.43",
   "released": "2026-11-06",
-  "note": "정비 알림·소모품 카드·점검 청소 이력 계산의 사용자 주기 우선순위 통일 및 주기 0 비활성화 유지"
+  "note": "중고차 등록 이전의 실제 정비기록 입력·수정 허용, 현재 주행거리 및 미래 날짜 제한 유지"
 }
