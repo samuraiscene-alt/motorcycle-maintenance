@@ -268,13 +268,16 @@ document.addEventListener('motorcycle:appearance-changed',updateMaintenanceNotic
 const garageSign=document.createElement('div');
 garageSign.className='garage-sign';garageSign.setAttribute('aria-label','정비소 벽 간판');
 garageSign.innerHTML='<span class="garage-sign-caption">MOTORCYCLE SERVICE</span><img alt="야마하 모터 2025 공식 로고" loading="eager">';
-stage.appendChild(garageSign);
+/* Mounted into the active showroom slide, behind the motorcycle, not on top of the whole garage. */
+ garageSign.hidden=true;
 /* Yamaha Motor's real, unmodified 2025 logomark (not a newly invented logo). */
 const yamahaSignPhoto='https://commons.wikimedia.org/wiki/Special:Redirect/file/Yamaha_Motor_2025.svg';
 const yamahaSignImg=garageSign.querySelector('img');
 yamahaSignImg.addEventListener('load',()=>garageSign.classList.add('sign-photo-ready'));
 yamahaSignImg.addEventListener('error',()=>garageSign.classList.remove('sign-photo-ready'));
 function setGarageSign(maker){
+ const wall=track.children[index];
+ if(wall&&garageSign.parentElement!==wall)wall.appendChild(garageSign);
  garageSign.classList.remove('sign-photo-ready');
  garageSign.dataset.brand=maker==='HONDA'?'HONDA':maker==='YAMAHA'?'YAMAHA':'GENERAL';
  document.body.classList.toggle('garage-sign-honda',maker==='HONDA');
