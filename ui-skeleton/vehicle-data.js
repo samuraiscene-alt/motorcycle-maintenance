@@ -588,9 +588,13 @@ regForm.addEventListener('submit',e=>{e.preventDefault();const at=Number(regKm.v
  if(!previous){regError.textContent='새 차량은 제조사와 기종을 입력해서 등록해.';return}
 if(regKm.value.trim()===''||currentKm.value.trim()===''||!valid(at)||!valid(now)||now<at){regError.textContent='시작·현재 주행거리를 확인해. 현재 주행거리는 시작보다 작을 수 없어.';return}
 const old=getVehicleData(currentBike().id),all=Object.values(old.records||{}).flat().filter(x=>valid(x.at)),maxAt=all.reduce((v,x)=>Math.max(v,x.at),0);
+const previousKm=getOdometer(),correction=now<previousKm;
 if(now<maxAt){regError.textContent='이미 기록된 정비 주행거리보다 현재 주행거리를 낮출 수 없어.';return}
 if(previous&&at!==previous.km&&maxAt&&at>maxAt){regError.textContent='시작 주행거리는 기록된 정비 주행거리보다 클 수 없어.';return}
-const fresh=load(regKey),nextReg={...fresh,[currentBike().id]:{...fresh[currentBike().id],...previous,year:fresh[currentBike().id]?.year??previous?.year??null,wear:fresh[currentBike().id]?.wear??previous?.wear??'auto',km:at}},nextData={...database,[currentBike().id]:{...old,odometer:now,records:old.records||{},odometerHistory:[...(old.odometerHistory||[]),{at:now,date:new Date().toISOString()}]}};
+if(correction&&!confirm('현재 주행거리를 '+fmt(previousKm)+'km에서 '+fmt(now)+'km로 정정할까?\n정비기록은 유지되고 소모품 상태를 다시 계산해.'))return;
+const history=Array.isArray(old.odometerHistory)?old.odometerHistory:[];
+const nextHistory=now===previousKm?history:[...history,{at:now,date:new Date().toISOString(),...(correction?{type:'correction',previous:previousKm}:{})}];
+const fresh=load(regKey),nextReg={...fresh,[currentBike().id]:{...fresh[currentBike().id],...previous,year:fresh[currentBike().id]?.year??previous?.year??null,wear:fresh[currentBike().id]?.wear??previous?.wear??'auto',km:at}},nextData={...database,[currentBike().id]:{...old,odometer:now,records:old.records||{},odometerHistory:nextHistory}};
 try{write(regKey,nextReg);write(dataKey,nextData);localStorage.setItem(chosenKey,currentBike().id);registered=nextReg;database=nextData;renderInfo();closeReg();check.classList.add('visible');checkTimer=setTimeout(hideCheck,720)}catch{regError.textContent='저장할 수 없어. 브라우저 저장공간을 확인해.'}
 });
 regClose.addEventListener('click',closeReg);regMask.addEventListener('click',e=>{if(e.target===regMask)closeReg()});
