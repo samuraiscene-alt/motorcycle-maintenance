@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b111b">
+<title>오토바이 정비 · 안전 업데이트</title>
+<style>body{margin:0;background:#091320;color:#e9f4ff;font:16px -apple-system,BlinkMacSystemFont,sans-serif;min-height:100dvh;display:grid;place-items:center}.panel{width:min(420px,90vw);background:#15283b;border:1px solid #587895;border-radius:16px;padding:22px;box-sizing:border-box}h1{font-size:20px}p{line-height:1.7;font-size:14px}button{width:100%;border:0;border-radius:10px;background:#4384bf;color:white;font-size:16px;font-weight:800;min-height:50px}.status{white-space:pre-wrap;line-height:1.6;min-height:70px;font-size:13px;color:#bfdbef}small{color:#a5bed4;display:block;margin-top:14px;line-height:1.5}</style>
+</head><body><main class="panel"><h1>오토바이 정비 앱 안전 업데이트</h1>
+<p>차량 정보와 정비기록은 유지하고, 앱 화면 파일의 오래된 캐시만 갱신합니다.</p>
+<button type="button" id="run">최신 앱 불러오기</button><p class="status" id="status">준비 완료 · 기존 데이터 삭제 없음</p>
+<small>이 화면이 열리지 않으면 앱 캐시가 아닌 GitHub Pages 배포 상태를 확인해야 합니다.</small></main>
+<script>
+(function(){'use strict';
+var button=document.getElementById('run'),status=document.getElementById('status');
+button.addEventListener('click',async function(){
+ button.disabled=true;status.textContent='업데이트 정보를 확인 중…';
+ try{
+  var response=await fetch('./version.json?refresh='+Date.now(),{cache:'no-store'});
+  if(!response.ok)throw Error('버전 정보 응답 '+response.status);
+  var info=await response.json();
+  status.textContent='서버 버전: '+info.version+'\n앱 파일 캐시 갱신 중…';
+  if('serviceWorker' in navigator){
+   var regs=await navigator.serviceWorker.getRegistrations();
+   await Promise.all(regs.filter(function(reg){return reg.scope.includes('/motorcycle-maintenance/')}).map(function(reg){return reg.unregister()}));
+  }
+  if('caches' in window){
+   var keys=await caches.keys();
+   await Promise.all(keys.filter(function(k){return k.startsWith('motorcycle-maintenance-')}).map(function(k){return caches.delete(k)}));
+  }
+  status.textContent+='\n완료 · 새 화면으로 이동';
+  location.replace('./ui-skeleton/index.html?reload='+Date.now()+'&app-version='+encodeURIComponent(info.version));
+ }catch(error){status.textContent='자동 갱신 실패: '+error.message+'\n저장된 차량·정비기록은 그대로 유지됩니다.';button.disabled=false;}
+});
+})();
+</script></body></html>
