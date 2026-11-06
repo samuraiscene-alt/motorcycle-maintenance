@@ -1,6 +1,6 @@
 {
-  "version": "2.9.104",
-  "cache": "motorcycle-maintenance-v2.9.104",
-  "released": "2026-11-06",
-  "note": "공식 정비표 21개 연식 프로필의 에어필터·오일필터 ID 정규화 및 기존 사용자 기록 유지"
+  "version": "2.9.105",
+  "cache": "motorcycle-maintenance-v2.9.105",
+  "released": "2026-11-07",
+  "note": "정비기록 개별 수정·삭제 및 전체 이력 스크롤, 백업 최초운행일 검증 강화"
 }
