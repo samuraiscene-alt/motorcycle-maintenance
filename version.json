@@ -1,6 +1,6 @@
 {
-  "version": "2.9.74",
-  "cache": "motorcycle-maintenance-v2.9.74",
+  "version": "2.9.75",
+  "cache": "motorcycle-maintenance-v2.9.75",
   "released": "2026-11-06",
-  "note": "차고·오토바이 이미지 3종을 PWA 오프라인 캐시에 포함"
+  "note": "백업 파일 자체 검사 후 다운로드"
 }
