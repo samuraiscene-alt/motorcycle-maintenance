@@ -1,6 +1,6 @@
 {
-  "version": "2.9.75",
-  "cache": "motorcycle-maintenance-v2.9.75",
+  "version": "2.9.76",
+  "cache": "motorcycle-maintenance-v2.9.76",
   "released": "2026-11-06",
-  "note": "백업 파일 자체 검사 후 다운로드"
+  "note": "정비 기준 초과 상태를 다음 예정 거리와 구분해 표시"
 }
