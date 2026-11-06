@@ -221,9 +221,10 @@ function updateMaintenanceNotices(){
     ?(action==='replace'?effectiveInterval(currentBike().id,id,last.interval):last.interval)
     :defaultKm;
    if(!Number.isSafeInteger(km)||km<=0)continue;
-   const firstDue=action==='replace'&&id==='oil'&&task?.firstReplaceKm?task.firstReplaceKm:km;
+   const firstDue=action==='replace'&&task?.firstReplaceKm?task.firstReplaceKm:km;
    if(!last&&(reg.km!==0||odo>firstDue)){unknownEntries.push({id,title,action,km});continue}
-   const due=last?last.at+km:firstDue;
+   const due=last&&action==='replace'&&task?.firstReplaceKm&&last.at<=task.firstReplaceKm&&task.firstRegularOdometerKm
+    ?task.firstRegularOdometerKm:last?last.at+km:firstDue;
    const remaining=due-odo;if(remaining>500)continue;
    notices.push({id,title,action,due,remaining,kind:'distance'});
   }
@@ -334,6 +335,20 @@ function setGarageSign(maker){
   else if(yamahaSignImg.complete&&yamahaSignImg.naturalWidth>0)garageSign.classList.add('sign-photo-ready');
  }else yamahaSignImg.removeAttribute('src');
 }
+const xmaxHero=document.createElement('img');
+xmaxHero.className='xmax-model-photo';xmaxHero.alt='2025 Yamaha XMAX300 계열, 제조사 공식 이미지 (Tech MAX+ 구성 참고)';
+xmaxHero.loading='eager';xmaxHero.decoding='async';xmaxHero.hidden=true;
+xmaxHero.addEventListener('load',()=>{
+ if(xmaxHero.naturalWidth&&document.body.dataset.xmaxRequested==='true'){
+  document.body.classList.add('xmax-2025-photo-ready');
+  showroomNotice.textContent='XMAX300 계열 공식 사진 · 세부 트림 참고용';
+ }
+});
+xmaxHero.addEventListener('error',()=>{
+ document.body.classList.remove('xmax-2025-photo-ready');
+ showroomNotice.textContent='차종 전용 이미지 미등록 · 참고용 스쿠터';
+});
+const xmaxPhotoUrl='https://cdn2.yamaha-motor.eu/prod/product-assets/2025/XMAX300ASVH/2025-Yamaha-XMAX300ASVH-EU-Ceramic_Grey-Studio-006-03.jpg';
 const showroomNotice=document.createElement('span');
 showroomNotice.className='showroom-reference-note';
 showroomNotice.textContent='차종 전용 이미지 미등록 · 참고용 스쿠터';
@@ -359,6 +374,17 @@ function renderInfo(){
 const maker=String(r?.brand||b.brand||'').trim().toUpperCase(),isHonda=maker==='HONDA';
 document.body.classList.toggle('non-honda-bike',!isHonda);
 setGarageSign(maker);
+const xmaxRequested=maker==='YAMAHA'&&String(r?.model||'').trim().toUpperCase()==='XMAX300'&&Number(r?.year)===2025;
+document.body.dataset.xmaxRequested=String(xmaxRequested);
+if(xmaxRequested){
+ const slide=track.children[index];if(slide&&xmaxHero.parentElement!==slide)slide.appendChild(xmaxHero);
+ xmaxHero.hidden=false;
+ if(xmaxHero.getAttribute('src')!==xmaxPhotoUrl)xmaxHero.src=xmaxPhotoUrl;
+ else if(xmaxHero.complete&&xmaxHero.naturalWidth>0)document.body.classList.add('xmax-2025-photo-ready');
+}else{xmaxHero.hidden=true;document.body.classList.remove('xmax-2025-photo-ready')}
+showroomNotice.textContent=xmaxRequested&&document.body.classList.contains('xmax-2025-photo-ready')
+ ?'XMAX300 계열 공식 사진 · 세부 트림 참고용'
+ :'차종 전용 이미지 미등록 · 참고용 스쿠터';
 meta.replaceChildren();
 if(r){
  const yearLine=document.createElement('span');yearLine.className='bike-meta-year';yearLine.textContent=r.year?r.year+'년형':'연식 미확인';
@@ -368,6 +394,17 @@ if(r){
 const odometerReadout=$('odometer-readout');if(odometerReadout)odometerReadout.textContent=r?fmt(odo)+'km':'등록 전';
 brand.innerHTML=isHonda?hondaLogo:unknownLogo;
 if(!isHonda){const mark=brand.querySelector('strong');if(mark)mark.textContent=maker||'BRAND'}
+if(maker==='YAMAHA'){
+ const logo=document.createElement('img');
+ logo.className='yamaha-official-brand-logo';
+ logo.alt='Yamaha Motor 공식 로고 (2025)';
+ logo.src='https://commons.wikimedia.org/wiki/Special:Redirect/file/Yamaha_Motor_2025.svg';
+ logo.addEventListener('load',()=>brand.classList.add('brand-logo-loaded'),{once:true});
+ logo.addEventListener('error',()=>{logo.remove();brand.classList.remove('brand-logo-loaded')},{once:true});
+ brand.appendChild(logo);
+}
+brand.classList.toggle('brand-yamaha',maker==='YAMAHA');
+if(maker!=='YAMAHA')brand.classList.remove('brand-logo-loaded');
 brand.setAttribute('aria-label',maker||'제조사 미정');
 counter.textContent=isLocked()?'':bikes.map((_,i)=>i===index?'●':'○').join(' ');document.body.classList.toggle('vehicle-locked',isLocked());stage.setAttribute('aria-label',isLocked()?'등록된 내 오토바이 이미지':'오토바이 이미지: 좌우 스와이프로 차량 선택');document.body.dataset.activeBike=b.id;renderParts();document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:b.id}}))}
 function renderParts(){const reg=currentRegistration(),odo=getOdometer(),data=getVehicleData(currentBike().id);
@@ -388,10 +425,10 @@ else{
  const officialDefault=profile?.intervals?.[id]||0;
  const interval=effectiveInterval(currentBike().id,id,last&&valid(last.interval)&&last.interval>0?last.interval:officialDefault||fallback);
  const knownBase=last?last.at:reg.km;
- const firstOil=!!(profile?.tasks?.oil?.firstReplaceKm&&id==='oil'&&reg.km===0&&settings.intervalSource==='official');
- const initialDue=profile?.tasks?.oil?.firstReplaceKm||interval;
- const nextFirst=profile?.tasks?.oil?.firstRegularOdometerKm||interval;
- const due=firstOil&&!last?initialDue:firstOil&&last.at<=initialDue?nextFirst:last?last.at+interval:knownBase+interval;
+ const firstService=!!(task?.firstReplaceKm&&reg.km===0&&settings.intervalSource==='official');
+ const initialDue=task?.firstReplaceKm||interval;
+ const nextFirst=task?.firstRegularOdometerKm||interval;
+ const due=firstService&&!last?initialDue:firstService&&last.at<=initialDue?nextFirst:last?last.at+interval:knownBase+interval;
  const span=Math.max(1,due-knownBase);
  const calendar=dateBasedStatus(reg,id,records);
  if(sourceTag){
@@ -429,7 +466,7 @@ else{
    ?distanceLabel+' · '+(calendar.days<0?'날짜 '+Math.abs(calendar.days)+'일 초과':calendar.days<=30?'날짜 '+calendar.days+'일 남음':'날짜 '+calendar.due)
    :distanceLabel;
   text.textContent+=' · 다음 '+fmt(due)+'km'+inspectLabel;
-  if(firstOil&&!last&&due===initialDue&&initialDue>0&&interval>0&&initialDue!==interval){
+  if(firstService&&!last&&due===initialDue&&initialDue>0&&interval>0&&initialDue!==interval){
    text.textContent+=' · 최초 교체 (이후 정기 '+fmt(interval)+'km)';
   }
   bar.style.width=ratio+'%';row.classList.remove('part-unregistered');
