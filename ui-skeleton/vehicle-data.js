@@ -77,9 +77,11 @@ function actionInterval(reg,id,action){
 }
 function actionCycleStatus(reg,id,records,action,odo){
  const km=actionInterval(reg,id,action);if(!Number.isSafeInteger(km)||km<=0)return '';
- const last=records.filter(r=>r&&r.action===action&&valid(r.at)&&r.at<=odo).sort((a,b)=>a.at-b.at).at(-1);
- const due=(last?last.at:reg.km)+km;
- return actionText(action)+' '+fmt(km)+'km 주기 · 다음 '+fmt(due)+'km'+(odo>=due?' (도래)':'');
+ const last=records.filter(r=>r&&(r.action||'replace')===action&&valid(r.at)&&r.at<=odo).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
+ if(!last&&(reg.km!==0||odo>km))return actionText(action)+' '+fmt(km)+'km 주기 · 이전 이력 확인 필요';
+ const cycle=last&&Number.isSafeInteger(last.interval)&&last.interval>0?last.interval:km;
+ const due=(last?last.at:reg.km)+cycle;
+ return actionText(action)+' '+fmt(cycle)+'km 주기 · 다음 '+fmt(due)+'km'+(odo>=due?' (도래)':'');
 }
 function effectiveInterval(bikeId,partId,defaultInterval){
  const cfg=partSettings(bikeId,partId);
@@ -203,9 +205,12 @@ function updateMaintenanceNotices(){
   const task=officialTask(reg,id),profile=officialProfile(reg);
   const records=Array.isArray(vehicle.records?.[id])?vehicle.records[id]:[];
   const kmReplace=effectiveInterval(currentBike().id,id,profile?.intervals?.[id]||0);
-  for(const [action,km] of [['replace',kmReplace],['inspect',task?.inspectKm||0],['clean',task?.cleanKm||0]]){
-   if(!Number.isSafeInteger(km)||km<=0)continue;
+  for(const [action,defaultKm] of [['replace',kmReplace],['inspect',task?.inspectKm||0],['clean',task?.cleanKm||0]]){
    const last=records.filter(x=>x&&valid(x.at)&&x.at<=odo&&(x.action||'replace')===action).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
+   const km=last&&Number.isSafeInteger(last.interval)&&last.interval>0
+    ?(action==='replace'?effectiveInterval(currentBike().id,id,last.interval):last.interval)
+    :defaultKm;
+   if(!Number.isSafeInteger(km)||km<=0)continue;
    const firstDue=action==='replace'&&id==='oil'&&task?.firstReplaceKm?task.firstReplaceKm:km;
    if(!last&&(reg.km!==0||odo>firstDue)){unknownEntries.push({id,title,action,km});continue}
    const due=last?last.at+km:firstDue;
@@ -394,7 +399,7 @@ else{
   text.textContent=calendar&&!calendar.missing
    ?distanceLabel+' · '+(calendar.days<0?'날짜 '+Math.abs(calendar.days)+'일 초과':calendar.days<=30?'날짜 '+calendar.days+'일 남음':'날짜 '+calendar.due)
    :distanceLabel;
-  text.textContent+=inspectLabel;
+  text.textContent+=' · 다음 '+fmt(due)+'km'+inspectLabel;
   bar.style.width=ratio+'%';row.classList.remove('part-unregistered');
   const color=calendar&&!calendar.missing&&calendar.days<0?'red':calendar&&!calendar.missing&&calendar.days<=30?'amber':percent<=50?'blue':percent<=80?'amber':'red';
   bar.classList.remove('blue','amber','red');bar.classList.add(color);
