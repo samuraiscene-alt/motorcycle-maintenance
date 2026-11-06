@@ -1,6 +1,6 @@
 {
-  "version": "2.9.54",
-  "cache": "motorcycle-maintenance-v2.9.54",
+  "version": "2.9.55",
+  "cache": "motorcycle-maintenance-v2.9.55",
   "released": "2026-11-06",
-  "note": "백업 정비일과 주행거리 변경 이력을 비교해 거리 모순을 경고하고 중고차 과거 이력·정정은 허용"
+  "note": "백업 파일 검사 결과를 정상·주의·오류 색상과 안내문으로 구분 표시"
 }
