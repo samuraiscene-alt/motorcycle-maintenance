@@ -27,9 +27,17 @@ transferSection.querySelector('.browser-transfer-import').addEventListener('clic
 const extraStyle=document.createElement('style');
 extraStyle.textContent='.browser-transfer-section{border-color:#69a0cc!important}.browser-transfer-details{padding:10px;border-radius:8px;background:#213c56;color:#e9f5ff;font-size:12px;font-weight:850;margin:10px 0}.browser-transfer-section b{color:#ffdbb7}';
 document.head.appendChild(extraStyle);
+const checkStyle=document.createElement('style');
+checkStyle.textContent='.backup-check-result{white-space:pre-line;overflow-wrap:anywhere;border-radius:10px;padding:11px 12px;margin-top:12px!important;border:1px solid #49647c;background:#162a3d;color:#d9ebf7!important}.backup-check-result[data-state="idle"]{display:none}.backup-check-result[data-state="checking"]{border-color:#6493b8;background:#18364f;color:#cfe9ff!important}.backup-check-result[data-state="ok"]{border-color:#477f72;background:#16372f;color:#b9f5db!important}.backup-check-result[data-state="warning"]{border-color:#a98143;background:#3d311b;color:#ffe0a0!important}.backup-check-result[data-state="error"]{border-color:#b96a74;background:#40232b;color:#ffd0d5!important}';
+document.head.appendChild(checkStyle);
 
 const get=x=>overlay.querySelector(x),save=get('.backup-save'),load=get('.backup-load'),pick=get('.backup-file:not(.backup-check-file)'),check=get('.backup-check'),checkPick=get('.backup-check-file'),checkResult=get('.backup-check-result'),status=get('.backup-status');
 let busy=false;
+checkResult.dataset.state='idle';
+function showCheckResult(state,lines){
+ checkResult.dataset.state=state;
+ checkResult.textContent=lines;
+}
 function message(x){status.textContent=x}
 function lock(x){busy=x;save.disabled=x;load.disabled=x;check.disabled=x;get('.backup-close').disabled=x}
 function hide(){if(!busy)overlay.hidden=true}
@@ -270,13 +278,19 @@ async function inspectBackupFile(file){
 check.addEventListener('click',()=>{if(busy)return;checkPick.value='';checkPick.click()});
 checkPick.addEventListener('change',async()=>{
  const file=checkPick.files?.[0];if(!file||busy)return;
- lock(true);checkResult.textContent='파일을 검사 중…';
+ lock(true);showCheckResult('checking','검사 중 · 백업 파일을 확인하고 있어.');
  try{
   const info=await inspectBackupFile(file);
-  checkResult.textContent='검사 통과 · 차량 '+info.vehicles+'대 · 정비기록 '+info.records+
-   '건 · 사진 '+info.images+'개\\n백업 파일 해시 및 구조 확인 완료. 현재 데이터는 변경하지 않았어.'+
-   (info.warnings.length?'\\n주의: 주행거리·이력 일치 여부 확인 필요 '+info.warnings.length+'건 (정정 이력 포함)\\n'+info.warnings.slice(0,3).join('\\n'):'');
- }catch(err){checkResult.textContent='검사 실패: '+(err.message||'파일을 검사할 수 없어.')}
+  const summary='차량 '+info.vehicles+'대 · 정비기록 '+info.records+'건 · 사진 '+info.images+'개';
+  if(info.warnings.length){
+   showCheckResult('warning','⚠ 주의 · 백업 파일 자체는 정상\\n'+summary+
+    '\\n주행거리·정비이력 확인 필요 '+info.warnings.length+'건\\n'+info.warnings.slice(0,3).join('\\n')+
+    '\\n복원 전 내용을 확인해. 현재 데이터는 변경하지 않았어.');
+  }else{
+   showCheckResult('ok','✓ 정상 · 백업 파일 검사 통과\\n'+summary+
+    '\\n파일 구조와 해시 확인 완료. 현재 데이터는 변경하지 않았어.');
+  }
+ }catch(err){showCheckResult('error','✕ 오류 · 백업 파일 검사 실패\\n'+(err.message||'파일을 검사할 수 없어.')+'\\n현재 데이터는 변경하지 않았어.')}
  finally{lock(false);checkPick.value=''}
 });
 function filename(){const d=new Date(),p=x=>String(x).padStart(2,'0');return '오토바이정비_전체백업_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'}
