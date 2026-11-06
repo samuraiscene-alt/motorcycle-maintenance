@@ -1,6 +1,6 @@
 {
-  "version": "2.9.63",
-  "cache": "motorcycle-maintenance-v2.9.63",
+  "version": "2.9.64",
+  "cache": "motorcycle-maintenance-v2.9.64",
   "released": "2026-11-06",
-  "note": "격리된 저장소에서 복원 실패 강제 발생 및 원상복구 자동 검증"
+  "note": "실제 복원 및 가상 모의실험에 공통 원상복구 처리 적용"
 }
