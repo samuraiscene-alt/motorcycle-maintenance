@@ -2,14 +2,14 @@
 /* Vehicle-picker candidates only. This is not a manufacturer-verified model-year or service table.
  * Official maintenance profiles must be introduced separately, after documentation review.
  */
-// Candidate model names and approximate nominal displacement only.
+// Candidate model names and displacement defaults; verify the exact model year when registering.
 // These entries never imply a verified maintenance interval for any model year.
 const brands=[
- {id:'HONDA',label:'HONDA',models:[['PCX125',125],['FORZA350',350],['ADV350',350],['SUPER CUB110',110],['C125',125],['CT125',125],['CB125R',125],['CB650R',650],['CBR650R',650],['REBEL500',500]]},
+ {id:'HONDA',label:'HONDA',models:[['PCX125',125],['FORZA350',350],['ADV350',350],['SUPER CUB110',110],['C125',125],['CT125',125],['CB125R',125],['CB650R',649],['CBR650R',649],['REBEL500',471]]},
  {id:'YAMAHA',label:'YAMAHA',models:[['NMAX125',125],['XMAX300',300],['XMAX125',125],['TMAX560',560],['MT-03',321],['MT-07',689],['YZF-R3',321],['TRICITY125',125]]},
  {id:'SUZUKI',label:'SUZUKI',models:[['BURGMAN125',125],['BURGMAN400',400],['ADDRESS125',125],['AVENIS125',125],['GSX-S125',125]]},
- {id:'KAWASAKI',label:'KAWASAKI',models:[['NINJA500',500],['Z500',500],['Z900',900]]},
- {id:'BMW',label:'BMW Motorrad',models:[['G310R',310],['R1300GS',1300]]},
+ {id:'KAWASAKI',label:'KAWASAKI',models:[['NINJA500',451],['Z500',451],['Z900',948]]},
+ {id:'BMW',label:'BMW Motorrad',models:[['G310R',313],['R1300GS',1300]]},
  {id:'DUCATI',label:'DUCATI',models:[['MONSTER',937]]},
  {id:'TRIUMPH',label:'TRIUMPH',models:[['SPEED400',400]]},
  {id:'SYM',label:'SYM',models:[['JET14',125],['JOYMAX',300],['JET X 125',125]]},
