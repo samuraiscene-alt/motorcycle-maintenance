@@ -1,6 +1,6 @@
 {
-  "version": "2.9.73",
-  "cache": "motorcycle-maintenance-v2.9.73",
+  "version": "2.9.74",
+  "cache": "motorcycle-maintenance-v2.9.74",
   "released": "2026-11-06",
-  "note": "소모품 점검 주기 중복 표시 수정"
+  "note": "차고·오토바이 이미지 3종을 PWA 오프라인 캐시에 포함"
 }
