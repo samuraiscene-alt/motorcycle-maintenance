@@ -113,6 +113,15 @@ function actionInterval(reg,id,action){
  const fallback=action==='inspect'?task?.inspectKm||0:action==='clean'?task?.cleanKm||0:officialProfile(reg)?.intervals?.[id]||0;
  return Number.isSafeInteger(settings[field])&&settings[field]>=0?settings[field]:fallback;
 }
+// Keep card gauges, secondary actions and due notices on one saved-cycle rule.
+function resolveServiceCycle(settings,action,last,configured){
+ const field=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
+ const source=field+'Source';
+ if(Number.isSafeInteger(settings[field])&&settings[field]>=0&&['user','official'].includes(settings[source]))
+  return settings[field];
+ if(last&&Number.isSafeInteger(last.interval)&&last.interval>0)return last.interval;
+ return configured;
+}
 // One distance schedule for the part card and the maintenance notice.
 function nextServiceDistance(reg,task,action,settings,interval,last){
  const sourceField=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
@@ -129,14 +138,12 @@ function actionCycleStatus(reg,id,records,action,odo){
  const configured=actionInterval(reg,id,action);
  const last=records.filter(r=>r&&(r.action||'replace')===action&&valid(r.at)&&r.at<=odo).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
  const cfg=partSettings(currentBike().id,id);
- const field=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
- const source=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
- // Explicit user/official settings override snapshots from previous services.
- const selected=Number.isSafeInteger(cfg[field])&&cfg[field]>=0&&['user','official'].includes(cfg[source]);
- const cycle=selected?cfg[field]:last&&Number.isSafeInteger(last.interval)&&last.interval>0?last.interval:configured;
+ const cycle=resolveServiceCycle(cfg,action,last,configured);
  if(!Number.isSafeInteger(cycle)||cycle<=0)return '';
- if(!last&&(reg.km!==0||odo>cycle))return actionText(action)+' '+fmt(cycle)+'km 주기 · 이전 이력 확인 필요';
- const due=(last?last.at:reg.km)+cycle;
+ const schedule=nextServiceDistance(reg,officialTask(reg,id),action,cfg,cycle,last);
+ if(!last&&(reg.km!==0||odo>schedule.due))
+  return actionText(action)+' '+fmt(cycle)+'km 주기 · 이전 이력 확인 필요';
+ const due=schedule.due;
  return actionText(action)+' '+fmt(cycle)+'km 주기 · 다음 '+fmt(due)+'km'+(odo>=due?' (도래)':'');
 }
 function effectiveInterval(bikeId,partId,defaultInterval){
@@ -261,11 +268,7 @@ function updateMaintenanceNotices(){
    const defaultKm=actionInterval(reg,id,action);
    const last=records.filter(x=>x&&valid(x.at)&&x.at<=odo&&(x.action||'replace')===action).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
    const cfg=partSettings(currentBike().id,id);
-   const field=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
-   const sourceField=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
-   const selected=Number.isSafeInteger(cfg[field])&&cfg[field]>=0&&['user','official'].includes(cfg[sourceField]);
-   const km=selected?cfg[field]:last&&Number.isSafeInteger(last.interval)&&last.interval>0
-    ?last.interval:defaultKm;
+   const km=resolveServiceCycle(cfg,action,last,defaultKm);
    if(!Number.isSafeInteger(km)||km<=0)continue;
    const schedule=nextServiceDistance(reg,task,action,cfg,km,last);
    if(!last&&(reg.km!==0||odo>schedule.due)){unknownEntries.push({id,title,action,km});continue}
@@ -470,12 +473,8 @@ else{
  const profile=officialProfile(reg),task=officialTask(reg,id),settings=partSettings(currentBike().id,id);
  const fallback=reg.maintenanceProfileStatus?0:item.interval;
  const officialDefault=profile?.intervals?.[id]||0;
- const cfgKey=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
- const srcKey=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
- const selected=Number.isSafeInteger(settings[cfgKey])&&settings[cfgKey]>=0&&['user','official'].includes(settings[srcKey]);
- const previousInterval=last&&Number.isSafeInteger(last.interval)&&last.interval>0?last.interval:0;
- const defaultInterval=action==='replace'?officialDefault||fallback:actionInterval(reg,id,action);
- const interval=selected?settings[cfgKey]:previousInterval||actionInterval(reg,id,action)||defaultInterval;
+ const defaultInterval=action==='replace'?actionInterval(reg,id,action)||officialDefault||fallback:actionInterval(reg,id,action);
+ const interval=resolveServiceCycle(settings,action,last,defaultInterval);
  const schedule=nextServiceDistance(reg,task,action,settings,interval,last);
  const knownBase=schedule.base,firstService=schedule.firstEligible;
  const initialDue=firstService?task.firstReplaceKm:interval;
@@ -484,7 +483,7 @@ else{
  const calendar=dateBasedStatus(reg,id,records);
  // An existing motorcycle may have been serviced before registration.
  // Do not treat registration mileage as a confirmed service event.
- const historyUnknown=!last&&(reg.km!==0||odo>initialDue);
+ const historyUnknown=!last&&(reg.km!==0||odo>due);
  if(sourceTag){
   const cfgKey=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
   const srcKey=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
