@@ -11,6 +11,7 @@ css.textContent+='.fleet-swipe-shell{position:relative;margin-top:7px;overflow:h
 css.textContent+='.fleet-swipe-hint{font-size:10px!important;color:#a8d0ec!important}.fleet-swipe-shell.open .fleet-swipe-delete{background:#d83a4e}.fleet-item .fleet-actions{min-width:0;max-width:55%;gap:4px}.fleet-item .fleet-actions button{min-width:0}';
 css.textContent+='.fleet-edit[hidden]{display:none!important}.fleet-edit{display:grid;gap:9px;margin:10px 0;padding:12px;border:1px solid #8bb0cd;border-radius:10px;background:#142e45}.fleet-edit label{font-size:12px;font-weight:800;color:#dceeff}.fleet-edit input{width:100%;height:43px;margin-top:5px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #8eaec9;background:#f6faff;color:#132a3b}.fleet-edit-buttons{display:flex;gap:8px}.fleet-edit-buttons button{flex:1;min-height:42px;border-radius:8px;border:1px solid #8eaec9;background:#31577a;color:white;font-weight:800}.fleet-edit-feedback{font-size:12px;color:#ace0ff}.fleet-item .fleet-actions{flex-shrink:0}.fleet-item .fleet-actions button{padding:8px}';
 css.textContent+='.fleet-brand-other[hidden],.fleet-model-other[hidden]{display:none!important}.fleet-catalog-hint{font-size:12px;color:#bcd6e9;line-height:1.5;margin:3px 0}.fleet-new-overlay[hidden]{display:none!important}.fleet-new-overlay{position:fixed;inset:0;z-index:220;display:flex;align-items:flex-end;justify-content:center;padding:12px 12px max(24px,env(safe-area-inset-bottom));background:#02070ddb}.fleet-new-panel{width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;border:1px solid #91b5d1;border-radius:17px;background:linear-gradient(150deg,#344a61,#14293d 40%,#0b1b2c);padding:17px;box-shadow:0 15px 45px #000a}.fleet-new-head{display:flex;justify-content:space-between;align-items:center;color:#edf7ff}.fleet-new-head strong{font-size:18px}.fleet-new-close{width:36px;height:36px;border:1px solid #89a9c4;border-radius:9px;background:#1b344b;color:#fff;font-size:26px}.fleet-new-overlay .fleet-new-form{display:grid;margin-top:12px}.fleet-new-overlay .fleet-new-form[hidden]{display:none!important}';
+css.textContent+='.fleet-research{margin:16px 0 8px;border:1px solid #48677d;border-radius:11px;background:#10273e;color:#d8ecfa;padding:10px}.fleet-research summary{cursor:pointer;font-weight:850;font-size:13px;line-height:1.65}.fleet-research p{font-size:11px;color:#b7d0e2;line-height:1.6}.fleet-research-group{margin:8px 0;border:1px solid #3e5c75;border-radius:7px;padding:7px}.fleet-research-group summary{font-size:12px}.fleet-research-row{padding:7px 2px;border-top:1px solid #2d465b;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:11px}.fleet-research-row strong{color:#fff;min-width:100px}.fleet-research-row span{color:#bcd3e8;flex:1}.fleet-research-row a{color:#91d8ff;font-size:11px;text-decoration:underline}';
 document.head.appendChild(css);
 const section=document.createElement('section');
 section.innerHTML='<strong>차량별 기록 관리</strong><p>기존 차량 기록은 보관하고 새 오토바이를 등록할 수 있어. 차량을 선택하면 해당 차량의 정비기록과 소모품 상태를 확인할 수 있어.</p><div class="fleet-list"></div><div class="fleet-appearance"><strong>현재 차량 연식 설정</strong><p>제조 연식을 입력하면 노후 단계를 자동으로 계산해. 검증된 부품 영역이 없는 차종에는 임의의 녹·파손을 추가하지 않아.</p><form class="fleet-appearance-form"><label>제조 연식<input name="year" type="number" inputmode="numeric" min="1950" max="2100" placeholder="예: 2020"></label><p class="fleet-auto-aging" aria-live="polite">제조 연식을 입력하면 사용감 단계가 자동 계산돼.</p><button class="backup-btn secondary" type="submit">차량 외관 설정 저장</button><p class="fleet-appearance-feedback" aria-live="polite"></p></form></div><button class="backup-btn secondary fleet-add" type="button" style="margin-top:12px">새 차량으로 시작</button><form class="fleet-new-form" hidden><label>제조사<select name="brand" required></select></label><label class="fleet-brand-other" hidden>제조사 직접 입력<input name="brandOther" maxlength="40" placeholder="제조사명"></label><label>기종<select name="model" required></select></label><label class="fleet-model-other" hidden>기종 직접 입력<input name="modelOther" maxlength="55" placeholder="기종명"></label><label>배기량 (cc)<input name="cc" type="number" min="1" max="3000" step="1" inputmode="numeric" required placeholder="예: 125"></label><label>제조 연식 (필수)<select name="year" required></select></label><label>앱 사용 시작 주행거리 (km)<input name="km" type="number" inputmode="numeric" min="0" max="9999999" step="1" required value="0"></label><p>기존 차량은 삭제되지 않으며, 새 차량의 정비기록은 별도로 시작돼.</p><div class="fleet-actions"><button type="button" class="fleet-cancel">취소</button><button type="submit">새 차량 저장</button></div></form><p class="fleet-message" aria-live="polite"></p>';
@@ -27,6 +28,44 @@ const catalogHint=document.createElement('p');catalogHint.className='fleet-catal
 catalogHint.textContent='차종·연식은 등록 정보 선택용이야. 공식 정비자료가 검증되지 않은 차종은 교체주기를 자동으로 채우지 않아.';
 form.querySelector('.fleet-actions').before(catalogHint,newFeedback);
 const catalog=window.MotorcycleCatalog;
+// All listed models are accounted for, but only document-verified model/year
+// profiles generate manufacturer maintenance intervals. Research ≠ verification.
+if(Array.isArray(catalog?.researchInventory)){
+ const all=catalog.researchInventory;
+ const verified=all.filter(x=>x.status==='verified-year-profiles').length;
+ const found=all.filter(x=>x.status==='manual-found-not-verified').length;
+ const pending=all.length-verified-found;
+ const report=document.createElement('details');report.className='fleet-research';
+ const title=document.createElement('summary');
+ title.textContent='공식 정비표 적용 현황 · '+verified+'/'+all.length+'기종 연식별 확인';
+ report.appendChild(title);
+ const info=document.createElement('p');
+ info.textContent='설명서를 찾은 것과 정비 주기를 검증한 것은 달라. 정확한 기종·연식 자료만 자동 입력돼. 자료 발견 '+found+'기종 · 추가 확인 '+pending+'기종. 제조 국가/사양이 다르면 실차 설명서를 우선해.';
+ report.appendChild(info);
+ for(const brandGroup of catalog.brands){
+  const group=document.createElement('details');group.className='fleet-research-group';
+  const heading=document.createElement('summary');heading.textContent=brandGroup.label;
+  group.appendChild(heading);
+  for(const row of all.filter(x=>x.brand===brandGroup.id)){
+   const line=document.createElement('div');line.className='fleet-research-row';
+   const name=document.createElement('strong');name.textContent=row.model;line.appendChild(name);
+   const status=document.createElement('span');
+   status.textContent=row.verifiedYears.length?'검증된 연식 '+row.verifiedYears.join(', '):
+    row.manual?'제조사 자료 발견 · 주기 미확인':'공식 주기 확인 필요';
+   line.appendChild(status);
+   const newestYear=row.verifiedYears.at(-1);
+   const source=newestYear?catalog.findOfficialProfile(row.brand,row.model,newestYear)?.source:row.manual?.url;
+   if(typeof source==='string'&&/^https:\/\//.test(source)){
+    const link=document.createElement('a');link.href=source;link.target='_blank';link.rel='noopener noreferrer';
+    link.textContent='제조사 자료';line.appendChild(link);
+   }
+   group.appendChild(line);
+  }
+  report.appendChild(group);
+ }
+ section.appendChild(report);
+}
+
 const brandSelect=form.elements.brand,modelSelect=form.elements.model,yearSelect=form.elements.year;
 function setChoices(select,rows,placeholder){
  select.replaceChildren();const first=new Option(placeholder,'');select.add(first);
