@@ -1,6 +1,6 @@
 {
-  "version": "2.9.26",
-  "cache": "motorcycle-maintenance-v2.9.26",
+  "version": "2.9.27",
+  "cache": "motorcycle-maintenance-v2.9.27",
   "released": "2026-11-06",
-  "note": "정비기록 수정 중복 방지 및 수정·삭제 후 정비 알림 즉시 갱신"
+  "note": "차량별 사용자 수정 정비주기는 보존하고 공식값만 최신 주기로 갱신"
 }
