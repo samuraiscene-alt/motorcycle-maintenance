@@ -1,10 +1,10 @@
-const CACHE='motorcycle-maintenance-v2.9.29';
+const CACHE='motorcycle-maintenance-v2.9.30';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
   SHELL,
-  new URL('./ui-skeleton/vehicle-catalog.js?v=pcx-2021-2023-5',ROOT).href,
-  new URL('./ui-skeleton/vehicle-data.js?v=calendar-maintenance-49-source-clean',ROOT).href,
+  new URL('./ui-skeleton/vehicle-catalog.js?v=xmax2025-official-1',ROOT).href,
+  new URL('./ui-skeleton/vehicle-data.js?v=calendar-maintenance-50-xmax2025',ROOT).href,
   new URL('./ui-skeleton/part-customize.js?v=accordion-order-3',ROOT).href,
   new URL('./ui-skeleton/priority-parts.js?v=priority-13-2',ROOT).href,
   new URL('./ui-skeleton/priority-images.js?v=studio-icons-4',ROOT).href,
@@ -12,12 +12,13 @@ const PRECACHE=[
   new URL('./ui-skeleton/backup-restore.js?v=browser-transfer-2-backupfix-298',ROOT).href,
   new URL('./ui-skeleton/i18n.js?v=locale-scaffold-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=brand-model-picker-15-yearlink',ROOT).href,
-  new URL('./ui-skeleton/version-check.js?v=app-version-329',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=app-version-330',ROOT).href,
   new URL('./ui-skeleton/wear-library.js?v=shared-materials-1',ROOT).href,
   new URL('./ui-skeleton/bike-aging.js?v=parts-safe-2',ROOT).href,
   new URL('./icon-bike-192.jpg',ROOT).href,
   new URL('./icon-bike-512.jpg',ROOT).href,
   new URL('./ui-skeleton/yamaha-garage-scene.svg?v=scene-2',ROOT).href,
+  new URL('./ui-skeleton/yamaha-garage-empty.svg?v=1',ROOT).href,
   new URL('./version.json',ROOT).href,
   new URL('./manifest.webmanifest',ROOT).href
 ];
