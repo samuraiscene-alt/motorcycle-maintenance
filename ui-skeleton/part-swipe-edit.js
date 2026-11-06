@@ -162,8 +162,12 @@ form.addEventListener('submit',async e=>{e.preventDefault();if(!editing)return;c
  const initialCycle=Number.isSafeInteger(target.initialInterval)?target.initialInterval:0;
  const unchanged=initialCycle===cycle;
  const source=restoreOfficial&&availableOfficialKm===cycle?'official':unchanged?previous[sourceKey]:'user';
- const changes={name:n,[key]:cycle,hasImage:!!draft||!!previous.hasImage};
- if(source)changes[sourceKey]=source;
+ const changes={name:n,hasImage:!!draft||!!previous.hasImage};
+ // Editing only a name or picture must not create a new "legacy" interval override.
+ if(!unchanged||restoreOfficial||Object.prototype.hasOwnProperty.call(previous,key)){
+  changes[key]=cycle;
+  if(source)changes[sourceKey]=source;
+ }
  setPart(target.id,changes);
   document.dispatchEvent(new CustomEvent('motorcycle:custom-parts-change'));
  if(target.id.startsWith('custom-')){try{const all=JSON.parse(localStorage.getItem(addedKey)||'{}');if(Array.isArray(all[target.bike])){const entry=all[target.bike].find(x=>x.id===target.id);if(entry){entry.name=n;localStorage.setItem(addedKey,JSON.stringify(all))}}}catch(err){console.warn('Custom label sync:',err)}}
