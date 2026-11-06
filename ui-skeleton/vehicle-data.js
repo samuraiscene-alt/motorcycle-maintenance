@@ -214,7 +214,7 @@ function updateMaintenanceNotices(){
   }
   if(Number.isSafeInteger(task?.replaceMonths)&&task.replaceMonths>0){
    const calendar=dateBasedStatus(reg,id,records);
-   if(calendar?.missing){missingDates.push(title+' · '+task.replaceMonths+'개월 주기')}
+   if(calendar?.missing){missingDates.push({id,title,months:task.replaceMonths})}
    else if(calendar&&calendar.days<=30){
     notices.push({id,title,action:'replace',due:calendar.due,remaining:calendar.days,kind:'calendar'});
    }
@@ -254,7 +254,19 @@ function updateMaintenanceNotices(){
  if(!notices.length&&!missingDates.length&&!unknown&&profile){const p=document.createElement('p');p.textContent='현재 500km 또는 30일 이내의 정비 알림이 없어.';box.appendChild(p)}
  if(missingDates.length){
   const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
-  p.textContent='마지막 교체일 확인 필요 ('+missingDates.length+'건): '+missingDates.join(', ')+'. 날짜를 확인하기 전에는 교체 기한을 추정하지 않아.';box.appendChild(p);
+  p.textContent='마지막 교체일 확인 필요 ('+missingDates.length+'건). 실제 교체한 날짜와 당시 주행거리를 알고 있다면 아래 항목을 눌러 기록해.';box.appendChild(p);
+  for(const entry of missingDates){
+   const btn=document.createElement('button');btn.type='button';btn.className='maintenance-notice-item maintenance-missing-date';
+   const label=document.createElement('strong');label.textContent=entry.title+' · '+entry.months+'개월마다 교체';
+   const subtitle=document.createElement('span');subtitle.textContent='마지막 교체일 입력 필요 · 기록 추가';
+   btn.append(label,subtitle);
+   btn.addEventListener('click',()=>{
+    const row=[...document.querySelectorAll('.rows .part[data-part-id]')].find(x=>x.dataset.partId===entry.id);
+    if(!row)return;
+    openRecord(row,{historical:true,action:'replace'});
+   });
+   box.appendChild(btn);
+  }
  }
  if(unknown){const p=document.createElement('p');p.className='maintenance-notice-disclaimer';p.textContent='정비 이력 확인 필요 '+unknown+'건: 기록된 정비 기준 없이 현재 주행거리만으로는 다음 교체·점검일을 확정할 수 없어. 과거 정비기록을 확인해.';box.appendChild(p)}
  const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
@@ -468,20 +480,28 @@ function syncAction(){
  recordForm.querySelector('button[type="submit"]').textContent=actionText(action)+' 완료 저장';
 }
 actionSelect.addEventListener('change',syncAction);
-function openRecord(row){
+function openRecord(row,options={}){
  if(!currentRegistration()){alert('먼저 차량을 등록해.');return}
  const id=row.dataset.partId;editingItem=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};
- returnFocus=document.activeElement;recordAt.value=String(getOdometer()??0);
- recordDate.max=todayLocal();recordDate.value=todayLocal();actionSelect.value=partAction(currentRegistration(),id);
- recordAt.readOnly=true;recordError.textContent='';syncAction();renderHistory();
+ returnFocus=document.activeElement;
+ const historical=options.historical===true;
+ recordAt.value=historical?'':String(getOdometer()??0);
+ recordAt.readOnly=!historical;
+ recordAt.min=String(currentRegistration().km);
+ recordAt.max=String(getOdometer());
+ recordAt.placeholder=historical?'당시 주행거리 입력':'';
+ recordDate.max=todayLocal();recordDate.value=historical?'':todayLocal();
+ actionSelect.value=options.action||partAction(currentRegistration(),id);
+ recordError.textContent=historical?'과거에 실제 정비한 날짜와 당시 주행거리를 입력해. 모르면 기록을 저장하지 마.':'';
+ syncAction();renderHistory();
  recordMask.hidden=false;document.body.classList.add('registration-open');recordClose.focus();
 }
-function closeRecord(){recordMask.hidden=true;document.body.classList.remove('registration-open');if(returnFocus?.focus)returnFocus.focus()}
+function closeRecord(){recordMask.hidden=true;recordAt.readOnly=true;recordAt.placeholder='';document.body.classList.remove('registration-open');if(returnFocus?.focus)returnFocus.focus()}
 function renderHistory(){const d=getVehicleData(currentBike().id),arr=Array.isArray(d.records?.[editingItem.id])?d.records[editingItem.id]:[];recordHistory.replaceChildren();if(!arr.length){recordHistory.textContent='저장된 정비기록이 없습니다.';return}const ul=document.createElement('ul');[...arr].sort((a,b)=>Number(b.at)-Number(a.at)||String(b.date||'').localeCompare(String(a.date||''))).slice(0,8).forEach(x=>{const li=document.createElement('li');li.textContent=x.date+' · '+actionText(x.action||'replace')+' · '+fmt(x.at)+'km'+(Number(x.interval)>0?' · 주기 '+fmt(x.interval)+'km':' · 기간 기준');ul.appendChild(li)});recordHistory.appendChild(ul)}
 document.querySelector('.rows').addEventListener('click',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn)openRecord(btn.closest('.part'))});document.querySelector('.rows').addEventListener('keydown',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openRecord(btn.closest('.part'))}});
 recordForm.addEventListener('submit',e=>{e.preventDefault();if(!editingItem)return;const at=Number(recordAt.value),interval=Number(recordInterval.value),date=recordDate.value,reg=currentRegistration(),odo=getOdometer(),action=actionSelect.value;
 if(!reg){recordError.textContent='정비기록을 저장하려면 먼저 오토바이 등록이 필요해.';return}
-if(recordAt.value.trim()===''||!valid(at)||at!==odo||at<reg.km||!valid(interval)||(recordInterval.required?interval<1:interval<0)||interval>1000000||!validMaintenanceDate(date)||date>todayLocal()){recordError.textContent='정비 당시 주행거리·교체주기·날짜를 확인해. 미래 날짜는 저장할 수 없어.';return}
+if(recordAt.value.trim()===''||!valid(at)||at>odo||at<reg.km||(!recordAt.readOnly&&recordDate.value.trim()==='')||!valid(interval)||(recordInterval.required?interval<1:interval<0)||interval>1000000||!validMaintenanceDate(date)||date>todayLocal()){recordError.textContent='정비 당시 주행거리·교체주기·날짜를 확인해. 미래 날짜는 저장할 수 없어.';return}
 const d=getVehicleData(currentBike().id),records={...(d.records||{})},old=Array.isArray(records[editingItem.id])?records[editingItem.id]:[];
 if(old.some(item=>item&&item.at===at&&item.date===date&&(item.action||'replace')===action)){recordError.textContent='같은 날짜와 주행거리의 정비기록이 이미 있어. 기존 기록을 수정해.';return}
 records[editingItem.id]=[...old,{at,interval,date,action}].sort((a,b)=>a.at-b.at||a.date.localeCompare(b.date));
