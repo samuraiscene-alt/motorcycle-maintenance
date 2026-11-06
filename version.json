@@ -1,6 +1,6 @@
 {
-  "version": "2.9.60",
-  "cache": "motorcycle-maintenance-v2.9.60",
+  "version": "2.9.61",
+  "cache": "motorcycle-maintenance-v2.9.61",
   "released": "2026-11-06",
-  "note": "실제 차량 데이터와 분리된 IndexedDB 시험 저장소에서 가상 복원·재검증·정리 기능 추가"
+  "note": "복원 확인창 줄바꿈 수정 및 모의실험 시험 저장소 정리 실패 알림"
 }
