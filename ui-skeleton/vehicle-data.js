@@ -611,7 +611,7 @@ function openRecord(row,options={}){
  const historical=options.historical===true;
  recordAt.value=historical?'':String(getOdometer()??0);
  recordAt.readOnly=!historical;
- recordAt.min=String(currentRegistration().km);
+ recordAt.min=historical?'0':String(currentRegistration().km);
  recordAt.max=String(getOdometer());
  recordAt.placeholder=historical?'당시 주행거리 입력':'';
  recordDate.max=todayLocal();recordDate.value=historical?'':todayLocal();
@@ -625,7 +625,7 @@ function renderHistory(){const d=getVehicleData(currentBike().id),arr=Array.isAr
 document.querySelector('.rows').addEventListener('click',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn)openRecord(btn.closest('.part'))});document.querySelector('.rows').addEventListener('keydown',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openRecord(btn.closest('.part'))}});
 recordForm.addEventListener('submit',e=>{e.preventDefault();if(!editingItem)return;const at=Number(recordAt.value),interval=Number(recordInterval.value),date=recordDate.value,reg=currentRegistration(),odo=getOdometer(),action=actionSelect.value;
 if(!reg){recordError.textContent='정비기록을 저장하려면 먼저 오토바이 등록이 필요해.';return}
-if(recordAt.value.trim()===''||!valid(at)||at>odo||at<reg.km||(!recordAt.readOnly&&recordDate.value.trim()==='')||!valid(interval)||(recordInterval.required?interval<1:interval<0)||interval>1000000||!validMaintenanceDate(date)||date>todayLocal()){recordError.textContent='정비 당시 주행거리·교체주기·날짜를 확인해. 미래 날짜는 저장할 수 없어.';return}
+if(recordAt.value.trim()===''||!valid(at)||at>odo||(recordAt.readOnly&&at<reg.km)||(!recordAt.readOnly&&recordDate.value.trim()==='')||!valid(interval)||(recordInterval.required?interval<1:interval<0)||interval>1000000||!validMaintenanceDate(date)||date>todayLocal()){recordError.textContent='정비 당시 주행거리·교체주기·날짜를 확인해. 미래 날짜는 저장할 수 없어.';return}
 const d=getVehicleData(currentBike().id),records={...(d.records||{})},old=Array.isArray(records[editingItem.id])?records[editingItem.id]:[];
 if(old.some(item=>item&&item.at===at&&item.date===date&&(item.action||'replace')===action)){recordError.textContent='같은 날짜와 주행거리의 정비기록이 이미 있어. 기존 기록을 수정해.';return}
 records[editingItem.id]=[...old,{at,interval,date,action}].sort((a,b)=>a.at-b.at||a.date.localeCompare(b.date));
@@ -766,8 +766,8 @@ maintenanceEditForm.addEventListener('submit',e=>{
  const date=maintenanceEditForm.elements.date.value,at=Number(maintenanceEditForm.elements.at.value),interval=Number(maintenanceEditForm.elements.interval.value);
  const reg=registered[ref.bikeId],vehicle=database[ref.bikeId],maximum=vehicle?.odometer;
  const err=maintenanceEditMask.querySelector('.maintenance-edit-error');
- if(!reg||!validMaintenanceDate(date)||date>todayLocal()||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at<reg.km||at>maximum||maintenanceEditForm.elements.interval.required&&maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||(maintenanceEditForm.elements.interval.required?interval<1:interval<0)||interval>1000000){
-  err.textContent='날짜·정비 주행거리·교체 주기를 확인해. 정비 주행거리는 시작~현재 범위여야 해.';return;
+ if(!reg||!validMaintenanceDate(date)||date>todayLocal()||maintenanceEditForm.elements.at.value.trim()===''||!valid(at)||at>maximum||maintenanceEditForm.elements.interval.required&&maintenanceEditForm.elements.interval.value.trim()===''||!Number.isSafeInteger(interval)||(maintenanceEditForm.elements.interval.required?interval<1:interval<0)||interval>1000000){
+  err.textContent='날짜·정비 주행거리·작업 주기를 확인해. 과거 정비기록은 등록 이전 주행거리도 가능하지만 현재 주행거리를 넘길 수 없어.';return;
  }
  const source=getVehicleData(ref.bikeId),arr=source.records?.[ref.id]||[];
  if(!arr[ref.seq]||JSON.stringify(arr[ref.seq])!==JSON.stringify(ref.original)){err.textContent='기록이 변경되었어. 다시 열어 수정해.';return}
