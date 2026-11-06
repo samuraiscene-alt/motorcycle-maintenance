@@ -47,6 +47,23 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'HONDA|CB125R|2025':Object.freeze({
+  verified:true,coverage:'partial',region:'HMEE CBF125NA 2025',modelCode:'CBF125NA',year:2025,
+  source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CBF125NA%20%28CB125R%29/2025/CBF125NA-R_32K98B20_EN_WEB.pdf',
+  sourceType:'Honda 2025 CBF125NA (CB125R) owner manual, factory maintenance schedule',
+  sourcePages:[69,70,71],
+  intervals:Object.freeze({oil:6000,'air-filter':18000,'spark-plug':12000,'chain-sprockets':1000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:6000,firstReplaceKm:1000,firstRegularOdometerKm:6000,replaceMonths:12},
+   'air-filter':{replaceKm:18000},
+   'spark-plug':{inspectKm:6000,replaceKm:12000},
+   'chain-sprockets':{inspectKm:1000},
+   'brake-fluid':{replaceMonths:24},
+   coolant:{replaceMonths:36},brake:{replaceWhenWorn:true},tire:{replaceWhenWorn:true}
+  }),
+  notes:Object.freeze({'oil-strainer':'Clean at 6000, 18000, 30000 km. Nonuniform first occurrence is recorded as a note, not yet auto-filled.'}),
+  actionByPart:Object.freeze({'chain-sprockets':'inspect'})
+ }),
  'HONDA|CB650R|2024':Object.freeze({
   verified:true,coverage:'partial',region:'HMEE ED/KO/U type, excludes alternate 6000-km market chart',modelCode:'CB650RA',year:2024,
   source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CBR650R/2024/CB650RA_CBR650RA-R%20OM%2032MKYB20_eng_WEB.pdf',
