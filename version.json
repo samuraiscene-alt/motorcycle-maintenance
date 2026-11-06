@@ -1,6 +1,6 @@
 {
-  "version": "2.9.52",
-  "cache": "motorcycle-maintenance-v2.9.52",
+  "version": "2.9.53",
+  "cache": "motorcycle-maintenance-v2.9.53",
   "released": "2026-11-06",
-  "note": "백업 파일의 등록 차량 ID와 정비기록 연결 검사, 등록 시작 주행거리 유효성 확인"
+  "note": "백업 주행거리 변경 이력 값 검증 및 마지막 이력·현재 계기판 불일치 경고, 정정 이력 허용"
 }
