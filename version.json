@@ -1,6 +1,6 @@
 {
-  "version": "2.9.62",
-  "cache": "motorcycle-maintenance-v2.9.62",
+  "version": "2.9.63",
+  "cache": "motorcycle-maintenance-v2.9.63",
   "released": "2026-11-06",
-  "note": "구버전 백업 복원 시 오래된 카드 정렬 설정 잔류 방지"
+  "note": "격리된 저장소에서 복원 실패 강제 발생 및 원상복구 자동 검증"
 }
