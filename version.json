@@ -1,6 +1,6 @@
 {
-  "version": "2.9.61",
-  "cache": "motorcycle-maintenance-v2.9.61",
+  "version": "2.9.62",
+  "cache": "motorcycle-maintenance-v2.9.62",
   "released": "2026-11-06",
-  "note": "복원 확인창 줄바꿈 수정 및 모의실험 시험 저장소 정리 실패 알림"
+  "note": "구버전 백업 복원 시 오래된 카드 정렬 설정 잔류 방지"
 }
