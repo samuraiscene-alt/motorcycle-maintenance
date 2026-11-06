@@ -1,6 +1,6 @@
 {
-  "version": "2.9.64",
-  "cache": "motorcycle-maintenance-v2.9.64",
+  "version": "2.9.65",
+  "cache": "motorcycle-maintenance-v2.9.65",
   "released": "2026-11-06",
-  "note": "실제 복원 및 가상 모의실험에 공통 원상복구 처리 적용"
+  "note": "야마하 차고 조명·배경 효과를 선택 차량 슬라이드에만 적용"
 }
