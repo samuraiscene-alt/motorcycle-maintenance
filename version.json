@@ -1,6 +1,6 @@
 {
-  "version": "2.9.72",
-  "cache": "motorcycle-maintenance-v2.9.72",
+  "version": "2.9.73",
+  "cache": "motorcycle-maintenance-v2.9.73",
   "released": "2026-11-06",
-  "note": "과거 주행거리 수정이 현재 계기판을 초과하지 않도록 보호"
+  "note": "소모품 점검 주기 중복 표시 수정"
 }
