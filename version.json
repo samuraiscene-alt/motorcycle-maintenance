@@ -1,6 +1,6 @@
 {
-  "version": "2.9.28",
-  "cache": "motorcycle-maintenance-v2.9.28",
+  "version": "2.9.29",
+  "cache": "motorcycle-maintenance-v2.9.29",
   "released": "2026-11-06",
-  "note": "차량별 정비주기 출처를 소모품 카드에 표시: 공식·사용자 설정·기록 기준·출처 미확인"
+  "note": "정비주기 출처칩 중복 제거, 최초 엔진오일 교체 기준 명확화, 차고 이미지 안내문 분리"
 }
