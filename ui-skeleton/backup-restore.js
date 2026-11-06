@@ -215,12 +215,30 @@ function recordChronologyWarnings(payload){
      warnings.push(bikeId+': '+prev.at+'km → '+next.at+'km 감소 (정정 표시 없음)');
    }
   }
+  // Compare each dated service only with unambiguous odometer snapshots on
+  // different days. Correction entries can invalidate a simple monotonic rule.
+  const snapshots=Array.isArray(history)?history.map(h=>({
+   day:String(h.date).slice(0,10),at:h.at,correction:h.type==='correction'
+  })).filter(h=>/^\\d{4}-\\d{2}-\\d{2}$/.test(h.day)):[];
   for(const [partId,records] of Object.entries(vehicle.records||{})){
    const byAction=new Map();
    for(const item of records){
     const action=item.action||'replace';
     if(!byAction.has(action))byAction.set(action,[]);
     byAction.get(action).push(item);
+    // Older used-bike maintenance can predate all odometer history; no
+    // previous reading is required for a valid historical service entry.
+    if(!snapshots.length)continue;
+    const prior=[...snapshots].filter(h=>h.day<item.date).sort((a,b)=>b.day.localeCompare(a.day))[0];
+    const after=[...snapshots].filter(h=>h.day>item.date).sort((a,b)=>a.day.localeCompare(b.day))[0];
+    if(prior&&prior.at>item.at){
+     const correctionBetween=snapshots.some(h=>h.correction&&h.day>=prior.day&&h.day<=item.date);
+     if(!correctionBetween)warnings.push(bikeId+' / '+partId+': '+item.date+' 정비 '+item.at+'km가 이전 '+prior.day+' 계기판 '+prior.at+'km보다 작아');
+    }
+    if(after&&after.at<item.at){
+     const correctionBetween=snapshots.some(h=>h.correction&&h.day>=item.date&&h.day<=after.day);
+     if(!correctionBetween)warnings.push(bikeId+' / '+partId+': '+item.date+' 정비 '+item.at+'km가 이후 '+after.day+' 계기판 '+after.at+'km보다 커');
+    }
    }
    for(const [action,entries] of byAction){
     const ordered=[...entries].sort((a,b)=>a.date.localeCompare(b.date)||a.at-b.at);
