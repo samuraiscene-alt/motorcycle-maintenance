@@ -1,6 +1,6 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b111b"><title>오토바이 정비</title><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="오토바이 정비"><link rel="manifest" href="../manifest.webmanifest"><link rel="apple-touch-icon" sizes="192x192" href="../icon-bike-192.jpg?v=custom-1"><style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif;background:#070b10;color:#dce6f1;font-synthesis:none}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#070b10}body{display:flex;justify-content:center}.app{width:100%;max-width:540px;min-height:100dvh;background:radial-gradient(ellipse at 50% 51%,#192531,#05080e 66%);box-shadow:0 0 30px #000}
-.garage{position:relative;height:clamp(245px,52vw,325px);background:#111b25 url('./garage.svg') center center/cover no-repeat;overflow:hidden}.garage:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#080c12c7,transparent 28%,transparent 65%,#080b11a6);pointer-events:none}.title-slot{position:absolute;top:6px;left:14px;height:27px;width:55%;border-radius:3px;background:linear-gradient(135deg,#33455e55,#0b16284a);border:1px solid #8ba2b12c;box-shadow:inset 0 1px #ffffff17;z-index:1;display:flex;align-items:center;gap:4px;padding:2px 4px}.title-icon{width:20px;height:20px;border:1px solid #8fa6b771;border-radius:3px;background:linear-gradient(#52677c,#152235);flex-shrink:0}.title-lines{flex:1;display:flex;flex-direction:column;gap:3px}.placeholder{background:linear-gradient(#aebbc9,#52677e);border-radius:2px;height:8px;opacity:.82}.placeholder.short{width:63%;height:6px;opacity:.47}.notification{position:absolute;right:14px;top:7px;width:26px;height:26px;background:linear-gradient(#455a70,#0c1726);border-radius:5px;border:1px solid #aabfce70;box-shadow:inset 0 1px #ffffff27,0 1px 3px #0007;z-index:2}.bike-area{position:absolute;left:18%;top:23%;width:64%;height:65%;border:1px dashed #d3e3ef38;border-radius:42%;background:radial-gradient(ellipse,#e2e7ed10,transparent 72%);z-index:1}.motorcycle-hero{position:absolute;z-index:2;left:50%;bottom:-1%;width:86%;height:87%;object-fit:contain;object-position:center bottom;transform:translateX(-50%);pointer-events:none;filter:drop-shadow(0 7px 6px #0008)}
+.garage{position:relative;height:clamp(245px,52vw,325px);background:#111b25 url('./garage-clean.png?v=5') center center/cover no-repeat;overflow:hidden}.garage:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#080c12c7,transparent 28%,transparent 65%,#080b11a6);pointer-events:none}.title-slot{position:absolute;top:6px;left:14px;height:27px;width:55%;border-radius:3px;background:linear-gradient(135deg,#33455e55,#0b16284a);border:1px solid #8ba2b12c;box-shadow:inset 0 1px #ffffff17;z-index:1;display:flex;align-items:center;gap:4px;padding:2px 4px}.title-icon{width:20px;height:20px;border:1px solid #8fa6b771;border-radius:3px;background:linear-gradient(#52677c,#152235);flex-shrink:0}.title-lines{flex:1;display:flex;flex-direction:column;gap:3px}.placeholder{background:linear-gradient(#aebbc9,#52677e);border-radius:2px;height:8px;opacity:.82}.placeholder.short{width:63%;height:6px;opacity:.47}.notification{position:absolute;right:14px;top:7px;width:26px;height:26px;background:linear-gradient(#455a70,#0c1726);border-radius:5px;border:1px solid #aabfce70;box-shadow:inset 0 1px #ffffff27,0 1px 3px #0007;z-index:2}.bike-area{position:absolute;left:18%;top:23%;width:64%;height:65%;border:1px dashed #d3e3ef38;border-radius:42%;background:radial-gradient(ellipse,#e2e7ed10,transparent 72%);z-index:1}.motorcycle-hero{position:absolute;z-index:2;left:50%;bottom:-1%;width:86%;height:87%;object-fit:contain;object-position:center bottom;transform:translateX(-50%);pointer-events:none;filter:drop-shadow(0 7px 6px #0008)}
 .ground-shadow{position:absolute;left:24%;width:52%;bottom:8%;height:19px;background:#0009;filter:blur(12px);border-radius:50%}
 .vehicle{margin:0 15px 13px;min-height:77px;display:grid;grid-template-columns:76px 1fr 118px;gap:10px;align-items:center;padding:8px 11px;background:linear-gradient(110deg,#f5f8fc,#7c8fa3 12%,#f6f8fb 24%,#adbfd1 49%,#f5f7fa 65%,#778a9d 90%,#e9eef3);border:2px solid #e1e7ee;border-radius:17px;box-shadow:inset 0 2px #fff,0 5px 6px #000a,0 0 0 1px #34485a;color:#1b2b3c}.brand-slot{height:56px;border-right:1px solid #344e64a8;display:grid;place-items:center;padding-right:10px}.brand-slot:before{content:"";display:block;width:51px;height:33px;border-radius:6px;background:linear-gradient(#cbd5df,#63758a);border:1px solid #8493a2}.vehicle-lines{display:flex;flex-direction:column;gap:9px;min-width:0}.vehicle-lines .placeholder{height:12px;width:84%;background:#30475d}.vehicle-lines .placeholder.short{height:8px;width:68%;background:#788b9a;opacity:.8}.vehicle-button{height:43px;border-radius:11px;border:2px solid #364b64;background:linear-gradient(#f7faff,#a6b9ce 52%,#e9f0fa);box-shadow:inset 0 2px #fff,0 3px 4px #2532459c}
 .tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 15px 18px;position:sticky;top:0;z-index:40;background:#0a111c;padding:5px 0;border-radius:12px}
@@ -53,7 +53,7 @@
 .garage{background:#111b25;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
 .garage:active{cursor:grabbing}
 .showroom-track{position:absolute;inset:0;z-index:0;display:flex;width:200%;height:100%;transform:translate3d(0,0,0);will-change:transform;touch-action:pan-y}
-.showroom-slide{position:relative;flex:0 0 50%;height:100%;background:#111b25 url('./garage.svg') center center/cover no-repeat;overflow:hidden}
+.showroom-slide{position:relative;flex:0 0 50%;height:100%;background:#111b25 url('./garage-clean.png?v=5') center center/cover no-repeat;overflow:hidden}
 .showroom-slide .motorcycle-hero{width:86%;height:87%;left:50%;bottom:-1%;pointer-events:none}
 .showroom-slide .ground-shadow{z-index:1}
 .showroom-count{position:absolute;z-index:5;bottom:9px;left:50%;transform:translateX(-50%);font-size:13px;letter-spacing:5px;color:#e8f3fc;background:#06111b9e;padding:3px 7px 3px 12px;border-radius:20px;pointer-events:none;text-shadow:0 0 4px #2a9bfa}
@@ -208,22 +208,9 @@ body.non-honda-bike .showroom-slide .motorcycle-hero{filter:drop-shadow(0 12px 8
 body.non-honda-bike .showroom-reference-note{display:block}
 body.non-honda-bike .brand-slot strong{font-size:13px;overflow-wrap:anywhere;white-space:normal;text-align:center;line-height:1.2}
 /* v2.9.17: retain the existing garage. Only the wall sign changes by brand. */
-body.non-honda-bike .showroom-slide{background:#111b25 url('./garage.svg') center center/cover no-repeat!important}
-.garage-sign{position:absolute;z-index:3;left:23%;top:26%;width:19%;height:23%;max-height:125px;overflow:hidden;border-radius:5px;background:#111018;border:1px solid #39252b;box-shadow:0 0 9px #08070b,0 0 21px #000b;pointer-events:none;display:flex;align-items:center;justify-content:center}
-.garage-sign[hidden]{display:none!important}
-.garage-sign-caption{font-weight:900;color:#f6d4d4;font-size:clamp(7px,1.8vw,13px);line-height:1.15;text-align:center;letter-spacing:.02em;text-shadow:0 0 2px #fff,0 0 6px #f73636,0 0 15px #c91324,0 0 22px #ea1a2f;padding:3px}
-.garage-sign[data-brand="GENERAL"] .garage-sign-caption{font-size:clamp(7px,1.5vw,12px)}
-.garage-sign img{display:none;width:100%;height:100%;object-fit:cover;object-position:center}
-.garage-sign.sign-photo-ready img{display:block}
-.garage-sign.sign-photo-ready .garage-sign-caption{display:none}
+body.non-honda-bike .showroom-slide{background:#111b25 url('./garage-clean.png?v=5') center center/cover no-repeat!important}
 .maintenance-notice-item{width:100%;border-top:0;border-right:0;border-bottom:0;text-align:left;color:#eff8ff;cursor:pointer;font:inherit}
 .maintenance-notice-target{outline:2px solid #8ad6ff;outline-offset:2px;box-shadow:0 0 17px #3a9bff77!important}
-/* v2.9.18: authentic Yamaha Motor logo, mounted flush on unchanged workshop wall */
-.garage-sign{left:23.3%;top:25.5%;width:19%;height:21%;max-height:118px;overflow:visible;border:0!important;border-radius:0!important;box-shadow:none!important;background:radial-gradient(ellipse at center,#16131c 36%,#19151c 65%,transparent 78%)!important;-webkit-mask-image:radial-gradient(ellipse 77% 73% at center,#000 65%,transparent 100%);mask-image:radial-gradient(ellipse 77% 73% at center,#000 65%,transparent 100%)}
-.garage-sign img{display:none;width:94%;height:80%;margin:auto;object-fit:contain;object-position:center;filter:brightness(1.4) drop-shadow(0 0 4px #ff6666) drop-shadow(0 0 10px #f21e33) drop-shadow(0 0 17px #d80028)}
-.garage-sign.sign-photo-ready img{display:block}
-.garage-sign.sign-photo-ready .garage-sign-caption{display:none}
-.garage-sign-caption{color:#f7f1ed;font-size:clamp(7px,1.5vw,12px);font-family:Arial,sans-serif;text-shadow:0 0 3px #fff,0 0 9px #f25555,0 0 17px #bd2030}
 .bike-meta{width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;white-space:nowrap;line-height:1.1}
 .bike-meta-year,.bike-meta-km{display:block;white-space:nowrap}
 .bike-meta-km{font-size:clamp(9px,2.18vw,11px);letter-spacing:-.55px;font-variant-numeric:tabular-nums}
@@ -257,7 +244,7 @@ body.garage-sign-yamaha .showroom-reference-note{display:block!important;z-index
 .brand-slot.brand-yamaha.brand-logo-loaded .generic-bike-mark{display:none!important}
 .brand-slot.brand-yamaha.brand-logo-loaded strong{font-size:11px}
 body.xmax-2025-photo-ready .showroom-slide{
- background:#101722 url('./yamaha-garage-empty.svg?v=1') center center/cover no-repeat!important;
+ background:#101722 url('./garage-clean.png?v=5') center center/cover no-repeat!important;
 }
 .showroom-slide>.xmax-model-photo{display:none}
 body.xmax-2025-photo-ready .showroom-slide>.xmax-model-photo:not([hidden]){
@@ -289,22 +276,12 @@ body.xmax-2025-photo-ready .showroom-slide>.xmax-model-photo:not([hidden]){
  filter:drop-shadow(0 14px 9px rgba(0,0,0,.55))!important;
  -webkit-mask-image:none!important;mask-image:none!important;
 }
-/* Only the selected motorcycle receives Yamaha-specific workshop lighting.
-   Keep other slides on their original garage background during swipes. */
-body.garage-sign-yamaha .showroom-slide:not(.current-bike-slide){
- background:#111b25 url('./garage.svg') center center/cover no-repeat!important;
- animation:none!important;
-}
-body.garage-sign-yamaha .showroom-slide:not(.current-bike-slide)::before,
-body.garage-sign-yamaha .showroom-slide:not(.current-bike-slide)::after{display:none!important}
-body.garage-sign-yamaha .showroom-slide:not(.current-bike-slide)>.motorcycle-hero,
-body.garage-sign-yamaha .showroom-slide:not(.current-bike-slide)>.ground-shadow{display:block!important}
 </style><style id="independent-garage-signs-v1">
 /* One permanent common background; signs and fluorescent are separate movable elements. */
 body.garage-rebuilt .showroom-slide,
 body.garage-rebuilt.garage-sign-yamaha .showroom-slide,
 body.garage-rebuilt.xmax-2025-photo-ready .showroom-slide{
- background:#111820 url('./garage-clean.png?v=4') center center/cover no-repeat!important;
+ background:#111820 url('./garage-clean.png?v=5') center center/cover no-repeat!important;
  animation:none!important;filter:none!important
 }
 body.garage-rebuilt .showroom-slide::before,body.garage-rebuilt .showroom-slide::after{
@@ -406,7 +383,7 @@ body.garage-rebuilt .garage-fluorescent{
 <article class="part"><div class="part-img"><img src="../assets/coolant.webp" alt="냉각수"></div><div class="part-body"><div class="part-line"><strong>냉각수</strong><span>12,300 / 20,000km</span></div><div class="gauge"><div class="gauge-fill blue" style="width:62%"></div></div></div><div class="service blue" aria-label="냉각수 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
 <article class="part"><div class="part-img"><img src="../assets/air-filter.webp" alt="에어필터"></div><div class="part-body"><div class="part-line"><strong>에어필터</strong><span>9,100 / 12,000km</span></div><div class="gauge"><div class="gauge-fill amber" style="width:76%"></div></div></div><div class="service amber" aria-label="에어필터 정비 버튼 디자인"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 7.2a5.3 5.3 0 0 1-7 6.8l-7.3 7.3-3.5-3.5 7.3-7.3a5.3 5.3 0 0 1 6.8-7l-3.3 3.3 3.7 3.7z"/></svg></div></article>
 </main><div class="note"><strong>오토바이 정비 · 차량별 정비기록 시제품</strong> | 오토바이별 독립 저장</div></div><script src="./vehicle-catalog.js?v=model-display-86" defer></script><script src="./vehicle-data.js?v=garage-legacy-pcx-90" defer></script>
-<script src="./part-customize.js?v=accordion-order-3" defer></script><script src="./priority-parts.js?v=priority-13-2" defer></script><script src="./priority-images.js?v=studio-icons-4" defer></script><script src="./part-swipe-edit.js?v=preview-height-20" defer></script><script src="./backup-restore.js?v=backup-export-75" defer></script><script src="./wear-library.js?v=shared-materials-1" defer></script><script src="./i18n.js?v=locale-scaffold-1" defer></script><script src="./vehicle-management.js?v=model-year-86" defer></script><script src="./version-check.js?v=app-version-390" defer></script><script src="./bike-aging.js?v=parts-safe-2" defer></script><div id="registration-mask" class="registration-mask" role="dialog" aria-modal="true" aria-labelledby="registration-title" hidden>
+<script src="./part-customize.js?v=accordion-order-3" defer></script><script src="./priority-parts.js?v=priority-13-2" defer></script><script src="./priority-images.js?v=studio-icons-4" defer></script><script src="./part-swipe-edit.js?v=preview-height-20" defer></script><script src="./backup-restore.js?v=backup-export-75" defer></script><script src="./wear-library.js?v=shared-materials-1" defer></script><script src="./i18n.js?v=locale-scaffold-1" defer></script><script src="./vehicle-management.js?v=model-year-86" defer></script><script src="./version-check.js?v=app-version-391" defer></script><script src="./bike-aging.js?v=parts-safe-2" defer></script><div id="registration-mask" class="registration-mask" role="dialog" aria-modal="true" aria-labelledby="registration-title" hidden>
  <form id="registration-form" class="registration-panel" autocomplete="off">
   <div class="registration-heading"><div><strong id="registration-title">오토바이 등록</strong><p id="registration-model">등록된 차량</p></div><button type="button" id="registration-close" aria-label="닫기">×</button></div>
   
