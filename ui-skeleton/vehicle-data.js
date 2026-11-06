@@ -217,7 +217,11 @@ function updateMaintenanceNotices(){
   for(const action of ['replace','inspect','clean']){
    const defaultKm=actionInterval(reg,id,action);
    const last=records.filter(x=>x&&valid(x.at)&&x.at<=odo&&(x.action||'replace')===action).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
-   const km=last&&Number.isSafeInteger(last.interval)&&last.interval>0
+   const cfg=partSettings(currentBike().id,id);
+   const field=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
+   const sourceField=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
+   const customized=cfg[sourceField]==='user'&&Number.isSafeInteger(cfg[field]);
+   const km=customized?cfg[field]:last&&Number.isSafeInteger(last.interval)&&last.interval>0
     ?(action==='replace'?effectiveInterval(currentBike().id,id,last.interval):last.interval)
     :defaultKm;
    if(!Number.isSafeInteger(km)||km<=0)continue;
