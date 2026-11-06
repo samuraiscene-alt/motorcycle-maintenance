@@ -1,6 +1,6 @@
 {
-  "version": "2.9.55",
-  "cache": "motorcycle-maintenance-v2.9.55",
+  "version": "2.9.56",
+  "cache": "motorcycle-maintenance-v2.9.56",
   "released": "2026-11-06",
-  "note": "백업 파일 검사 결과를 정상·주의·오류 색상과 안내문으로 구분 표시"
+  "note": "백업 파일 검사 정상·주의·오류 결과의 줄바꿈 표시 오류 수정"
 }
