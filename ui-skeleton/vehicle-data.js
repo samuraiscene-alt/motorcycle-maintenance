@@ -120,10 +120,19 @@ function partAction(reg,partId){
  return officialProfile(reg)?.actionByPart?.[partId]||'replace';
 }
 function actionText(action){return action==='inspect'?'점검':action==='clean'?'청소':'교체'}
+function officialActionInterval(profile,id,action){
+ if(!profile)return 0;
+ const task=profile.tasks?.[id]||{},declared=profile.actionByPart?.[id]||'replace';
+ const taskField=action==='inspect'?'inspectKm':action==='clean'?'cleanKm':'replaceKm';
+ const taskKm=task[taskField];
+ if(Number.isSafeInteger(taskKm)&&taskKm>0)return taskKm;
+ // Profile intervals are for the declared task only; inspection is not replacement.
+ return declared===action&&Number.isSafeInteger(profile.intervals?.[id])?profile.intervals[id]:0;
+}
 function actionInterval(reg,id,action){
- const task=officialTask(reg,id),settings=partSettings(currentBike().id,id);
+ const settings=partSettings(currentBike().id,id);
  const field=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
- const fallback=action==='inspect'?task?.inspectKm||0:action==='clean'?task?.cleanKm||0:officialProfile(reg)?.intervals?.[id]||0;
+ const fallback=officialActionInterval(officialProfile(reg),id,action);
  return Number.isSafeInteger(settings[field])&&settings[field]>=0?settings[field]:fallback;
 }
 // Keep card gauges, secondary actions and due notices on one saved-cycle rule.
@@ -485,7 +494,7 @@ if(!reg){text.textContent='차량 등록 후 확인';if(sourceTag)sourceTag.text
 else{
  const profile=officialProfile(reg),task=officialTask(reg,id),settings=partSettings(currentBike().id,id);
  const fallback=reg.maintenanceProfileStatus?0:item.interval;
- const officialDefault=profile?.intervals?.[id]||0;
+ const officialDefault=officialActionInterval(profile,id,action);
  const defaultInterval=action==='replace'?actionInterval(reg,id,action)||officialDefault||fallback:actionInterval(reg,id,action);
  const interval=resolveServiceCycle(settings,action,last,defaultInterval);
  const schedule=nextServiceDistance(reg,task,action,settings,interval,last);
@@ -761,8 +770,7 @@ function showHistory(){
    const latest=sameAction.at(-1),isLatest=latest===all[e.id]?.[e.seq];
    const settings=partSettings(currentBike().id,e.id);
    const field=actualAction==='inspect'?'inspectInterval':actualAction==='clean'?'cleanInterval':'interval';
-   const userOrOfficial=Number.isSafeInteger(settings[field])&&['user','official'].includes(settings[field+'Source']);
-   const cycle=userOrOfficial?settings[field]:Number(e.interval)>0?Number(e.interval):actionInterval(currentRegistration(),e.id,actualAction);
+   const cycle=resolveServiceCycle(settings,actualAction,latest,actionInterval(currentRegistration(),e.id,actualAction));
    const next=cycle>0?nextServiceDistance(currentRegistration(),task,actualAction,settings,cycle,latest).due:null;
    due.textContent=!isLatest?'이후 정비기록 있음 · 과거 이력':
     actualAction==='replace'&&task?.replaceMonths?'날짜 기준 다음 교체 '+addCalendarMonths(e.date,task.replaceMonths):
