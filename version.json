@@ -1,6 +1,6 @@
 {
-  "version": "2.9.67",
-  "cache": "motorcycle-maintenance-v2.9.67",
+  "version": "2.9.68",
+  "cache": "motorcycle-maintenance-v2.9.68",
   "released": "2026-11-06",
-  "note": "최초 교체 및 이후 정비 시점 계산을 소모품 카드와 알림에 동일 적용"
+  "note": "정비기록 수정·삭제 후 최신 기록 기준 재계산 및 0km 주기 수정 지원"
 }
