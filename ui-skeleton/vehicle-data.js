@@ -336,7 +336,7 @@ function setGarageSign(maker){
  }else yamahaSignImg.removeAttribute('src');
 }
 const xmaxHero=document.createElement('img');
-xmaxHero.className='xmax-model-photo';xmaxHero.alt='2025 Yamaha XMAX300 계열, 제조사 공식 이미지 (Tech MAX+ 구성 참고)';
+xmaxHero.className='xmax-model-photo';xmaxHero.alt='2025 Yamaha XMAX300 계열 공식 이미지에서 배경을 제거한 참고용 사진';
 xmaxHero.loading='eager';xmaxHero.decoding='async';xmaxHero.hidden=true;
 xmaxHero.addEventListener('load',()=>{
  if(xmaxHero.naturalWidth&&document.body.dataset.xmaxRequested==='true'){
@@ -348,7 +348,7 @@ xmaxHero.addEventListener('error',()=>{
  document.body.classList.remove('xmax-2025-photo-ready');
  showroomNotice.textContent='차종 전용 이미지 미등록 · 참고용 스쿠터';
 });
-const xmaxPhotoUrl='https://cdn2.yamaha-motor.eu/prod/product-assets/2025/XMAX300ASVH/2025-Yamaha-XMAX300ASVH-EU-Ceramic_Grey-Studio-006-03.jpg';
+const xmaxPhotoUrl='./xmax300-transparent.svg?v=cutout-1';
 const showroomNotice=document.createElement('span');
 showroomNotice.className='showroom-reference-note';
 showroomNotice.textContent='차종 전용 이미지 미등록 · 참고용 스쿠터';
