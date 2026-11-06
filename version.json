@@ -1,6 +1,6 @@
 {
-  "version": "2.9.70",
-  "cache": "motorcycle-maintenance-v2.9.70",
+  "version": "2.9.71",
+  "cache": "motorcycle-maintenance-v2.9.71",
   "released": "2026-11-06",
-  "note": "최신 주행거리 이력 하향 수정 시 확인 및 정정 기록 보존"
+  "note": "주행거리 정정 재수정 시 이력 상태 정리 및 삭제 확인창 줄바꿈 수정"
 }
