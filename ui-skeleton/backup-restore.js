@@ -42,12 +42,19 @@ for(const el of [...document.querySelectorAll('.tabs .tab'),...document.querySel
  el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();overlay.hidden=false;message('');refreshTransferInfo()}});
 }
 function locals(){const result={};for(const k of KEYS)result[k]=localStorage.getItem(k);return result}
-function setLocals(result){for(const k of KEYS){
- // Version-1 backups did not contain the optional priority-migration marker.
- // Never turn an absent key into the literal string 'undefined'.
- if(!Object.prototype.hasOwnProperty.call(result,k))continue;
- if(result[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,result[k]);
-}}
+function setLocals(result){
+ for(const k of KEYS){
+  // Older backups may legitimately omit the optional migration marker.
+  if(!Object.prototype.hasOwnProperty.call(result,k))continue;
+  if(result[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,result[k]);
+ }
+}
+function verifyLocals(expected){
+ for(const k of KEYS){
+  if(!Object.prototype.hasOwnProperty.call(expected,k))continue;
+  if(localStorage.getItem(k)!==expected[k])throw new Error('복원한 설정을 다시 확인할 수 없어: '+k);
+ }
+}
 function openDb(){return new Promise((resolve,reject)=>{
  const req=indexedDB.open(DB,1);
  req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('images'))req.result.createObjectStore('images')};
@@ -139,11 +146,34 @@ pick.addEventListener('change',async()=>{
   const existingRecords=recordCount(localStorage.getItem('motorcycle-skeleton-maintenance-v1'));
   const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건\\n\\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
   if(!confirm(summary)){message('복원 취소: 기존 데이터 유지');return}
+  // Keep an untouched in-memory snapshot before the first destructive write.
   const oldLocal=locals(),oldImages=await getImages();message('전체 데이터를 복원 중…');
-  try{await setImages(incoming);setLocals(doc.payload.local)}
-  catch(err){
-   try{await setImages(oldImages);setLocals(oldLocal)}catch(other){throw new Error('복원과 자동 복구 모두 실패했어. 기존 백업 파일을 보관해. '+other.message)}
-   throw err;
+  let imagesChanged=false,localsChanged=false;
+  try{
+   await setImages(incoming);imagesChanged=true;
+   localsChanged=true;setLocals(doc.payload.local);
+   verifyLocals(doc.payload.local);
+   // IndexedDB writes are atomic per transaction; check the restored count
+   // before showing success and reloading.
+   const restoredImages=await getImages();
+   if(restoredImages.length!==incoming.length)throw new Error('복원 사진 개수가 일치하지 않아.');
+  }catch(err){
+   // Restore localStorage independently: an IndexedDB failure must not
+   // prevent recovering vehicle registrations and maintenance records.
+   const recoveryErrors=[];
+   if(localsChanged){
+    try{setLocals(oldLocal);verifyLocals(oldLocal)}
+    catch(rollbackError){recoveryErrors.push('차량·기록 설정: '+(rollbackError.message||rollbackError))}
+   }
+   if(imagesChanged){
+    try{await setImages(oldImages)}
+    catch(rollbackError){recoveryErrors.push('사용자 사진: '+(rollbackError.message||rollbackError))}
+   }
+   if(recoveryErrors.length){
+    // A failed rollback is never represented as a successful restore.
+    throw new Error('복원 실패, 자동 원상복구도 일부 실패했어. 이 화면을 닫거나 새로고침하지 말고 보관한 백업 파일로 복구해. ('+recoveryErrors.join(' / ')+')');
+   }
+   throw new Error('복원이 완료되지 않아 기존 데이터로 되돌렸어. 원인: '+(err.message||err));
   }
   alert('전체 복원이 완료됐어. 앱을 새로고침할게.');location.reload();
  }catch(err){message('복원 실패: '+(err.message||'파일을 확인해.'))}finally{lock(false);pick.value=''}
