@@ -1,6 +1,6 @@
 {
-  "version": "2.9.35",
-  "cache": "motorcycle-maintenance-v2.9.35",
+  "version": "2.9.36",
+  "cache": "motorcycle-maintenance-v2.9.36",
   "released": "2026-11-06",
-  "note": "부품 수정창에서 차종·연식별 제조사 설명서 출처와 링크 제공, 공식 주기 복원 및 사용자 기록 유지"
+  "note": "부품 수정창 공식 정비자료를 교체·점검·청소 주기로 구분 표시, 기존 사용자 설정과 정비기록 유지"
 }
