@@ -1,6 +1,6 @@
 {
-  "version": "2.9.43",
-  "cache": "motorcycle-maintenance-v2.9.43",
+  "version": "2.9.44",
+  "cache": "motorcycle-maintenance-v2.9.44",
   "released": "2026-11-06",
-  "note": "중고차 등록 이전의 실제 정비기록 입력·수정 허용, 현재 주행거리 및 미래 날짜 제한 유지"
+  "note": "공식 거리주기가 없는 점검·청소 작업을 주기 미설정 상태로 기록 가능하도록 수정"
 }
