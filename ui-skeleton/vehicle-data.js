@@ -476,17 +476,27 @@ setGarageSign(maker);
 const normalizedModel=String(r?.model||'').trim().toUpperCase()||
  String(r?.name||b.name||'').trim().toUpperCase().replace(new RegExp('^'+maker+'\\s*'),'').trim();
 const xmaxRequested=maker==='YAMAHA'&&normalizedModel==='XMAX300'&&Number(r?.year)===2025;
-const cb125rIllustration=maker==='HONDA'&&normalizedModel==='CB125R'&&Number(r?.year)===2025;
-const cb650rIllustration=maker==='HONDA'&&normalizedModel==='CB650R'&&Number(r?.year)===2024;
-const referenceImageAllowed=maker==='HONDA'&&normalizedModel==='PCX125';
-const garageModelImage=cb650rIllustration?'./cb650r-2024.svg?v=1':cb125rIllustration?'./cb125r-2025.svg?v=1':referenceImageAllowed?'./motorcycle.svg':null;
+// Exact-model art only: never display another model's body as the active vehicle.
+const vehicleArtwork=Object.freeze({
+ 'HONDA|PCX125':{src:'./motorcycle.svg',alt:'HONDA PCX125 참고용 일러스트'},
+ 'HONDA|CB125R|2025':{src:'./cb125r-2025.svg?v=1',alt:'Honda CB125R 2025 전용 참고 일러스트'},
+ 'HONDA|CB650R|2024':{src:'./cb650r-2024.svg?v=1',alt:'Honda CB650R 2024 4기통 전용 참고 일러스트'}
+});
+const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
+const activeArt=vehicleArtwork[artKey]||vehicleArtwork[maker+'|'+normalizedModel]||null;
+const cb125rIllustration=artKey==='HONDA|CB125R|2025';
+const cb650rIllustration=artKey==='HONDA|CB650R|2024';
+const referenceImageAllowed=!!activeArt&&maker==='HONDA'&&normalizedModel==='PCX125';
+const garageModelImage=activeArt?.src||null;
 const activeSlide=track.children[index];
 if(activeSlide){
  const fallbackHero=activeSlide.querySelector('.motorcycle-hero');
  if(fallbackHero){
   fallbackHero.hidden=!garageModelImage;
   if(garageModelImage&&fallbackHero.getAttribute('src')!==garageModelImage)fallbackHero.src=garageModelImage;
-  if(garageModelImage)fallbackHero.alt=cb650rIllustration?'Honda CB650R 2024 4기통 네오 스포츠 카페 전용 일러스트':cb125rIllustration?'Honda CB125R 2025 외형 참고용 오리지널 일러스트':'HONDA PCX125 참고용 일러스트';
+  if(garageModelImage)fallbackHero.alt=activeArt.alt;
+  fallbackHero.onerror=()=>{fallbackHero.hidden=true;if(shadow)shadow.hidden=true;showroomNotice.textContent='차량 전용 이미지를 불러오지 못했어.';};
+  if(garageModelImage&&fallbackHero.complete&&fallbackHero.naturalWidth===0)fallbackHero.hidden=true;
  }
  const shadow=activeSlide.querySelector('.ground-shadow');
  if(shadow)shadow.hidden=!garageModelImage&&!xmaxRequested;
