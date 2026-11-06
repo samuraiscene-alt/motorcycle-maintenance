@@ -47,6 +47,50 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'HONDA|REBEL500|2025':Object.freeze({
+  verified:true,coverage:'partial',region:'HMEE CMX500A/A2',modelCode:'CMX500A',year:2025,
+  source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CMX500/2025/CMX500A_OM_32MLHB10_ENG_web.pdf',
+  sourceType:'Honda CMX500A/A2 2025 owner manual maintenance schedule',sourcePages:[49,50,51],
+  intervals:Object.freeze({oil:12000,filter:24000,'oil-filter':24000,'air-filter':24000,'spark-plug':24000,'valve-clearance':24000,'chain-sprockets':1000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
+   filter:{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
+   'oil-filter':{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
+   'air-filter':{replaceKm:24000},'spark-plug':{replaceKm:24000},
+   'valve-clearance':{inspectKm:24000},'chain-sprockets':{inspectKm:1000},
+   'brake-fluid':{replaceMonths:24},coolant:{replaceMonths:36},
+   brake:{inspectKm:12000,replaceWhenWorn:true},tire:{inspectKm:12000,replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','chain-sprockets':'inspect'})
+ }),
+ 'BMW|G310R|2020':Object.freeze({
+  verified:true,coverage:'partial',region:'BMW international 03/2020 rider manual',modelCode:'0G41',year:2020,
+  source:'https://manuals.bmw-motorrad.com/manuals/BA-Extern/IN/BA-INTERNET-COM/PDF/G_0G41_RM_0320_01.pdf',
+  sourceType:'BMW G 310 R riders manual revision 03/2020: service schedule',sourcePages:[136,137,138],
+  intervals:Object.freeze({oil:10000,filter:10000,'oil-filter':10000,'air-filter':20000,'spark-plug':20000,'valve-clearance':20000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:10000},filter:{replaceKm:10000},'oil-filter':{replaceKm:10000},
+   'air-filter':{replaceKm:20000},'spark-plug':{replaceKm:20000},
+   'valve-clearance':{inspectKm:20000},'brake-fluid':{replaceMonths:24}
+  }),
+  specs:Object.freeze({runningInServiceKmRange:[500,1200]}),
+  notes:Object.freeze({initialService:'500~1200km 최초 길들이기 정비, 오일 포함; 정비시점 범위로 자동 단일 교체값 미설정',initialBrakeFluid:'first after one year, then every two years; first-year calendar not auto calculated'}),
+  actionByPart:Object.freeze({'valve-clearance':'inspect'})
+ }),
+ 'BMW|R1300GS|2024':Object.freeze({
+  verified:true,coverage:'partial',region:'BMW international 02/2023 manual for launch generation',modelCode:'0M21',year:2024,
+  source:'https://manuals.bmw-motorrad.com/manuals/BA-Extern/IN/BA-INTERNET-COM/PDF/R_0M21_RM_0223_01.pdf',
+  sourceType:'BMW R 1300 GS riders manual revision 02/2023: maintenance schedule',sourcePages:[280,281,282],
+  intervals:Object.freeze({oil:10000,filter:10000,'oil-filter':10000,'air-filter':20000,'spark-plug':20000,'valve-clearance':20000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:10000},filter:{replaceKm:10000},'oil-filter':{replaceKm:10000},
+   'air-filter':{replaceKm:20000},'spark-plug':{replaceKm:20000},
+   'valve-clearance':{inspectKm:20000},'brake-fluid':{replaceMonths:24}
+  }),
+  specs:Object.freeze({runningInServiceKmRange:[500,1250]}),
+  notes:Object.freeze({initialService:'First running-in service 500~1250km, including oil and filter',initialBrakeFluid:'first at one year, then every two years; first-year calendar not auto calculated'}),
+  actionByPart:Object.freeze({'valve-clearance':'inspect'})
+ }),
  'HONDA|CT125|2026':Object.freeze({
   verified:true,coverage:'partial',region:'JP 8BJ-JA65 (frame JA65-1200001+)',modelCode:'JA65',year:2026,
   source:'https://www.honda.co.jp/customer/motor/ct125/faq/qa009/',
@@ -306,10 +350,37 @@ const expandedOfficialProfiles=Object.freeze({
   coverage:'partial'
  })
 });
+
+// Model-by-model source audit. These references establish that a manufacturer document
+// or manufacturer statement exists, NOT that its replacement/inspection chart has
+// been validated. Only exact brand|model|year keys in officialProfiles are automatable.
+const sourceAudit=Object.freeze({
+ 'HONDA|CB125R':Object.freeze({year:2025,url:'https://www.hondamotopub.com/om/HMEE/CBF125NA%20%28CB125R%29/2025',type:'Honda owner manual listing'}),
+ 'HONDA|CB650R':Object.freeze({year:2025,url:'https://www.hondamotopub.com/model/THM/MKY251',type:'Honda 2025 CB650R/CBR650R manual catalog'}),
+ 'HONDA|CBR650R':Object.freeze({year:2025,url:'https://www.hondamotopub.com/model/THM/MKY251',type:'Honda 2025 CB650R/CBR650R manual catalog'}),
+ 'YAMAHA|MT-03':Object.freeze({year:2021,url:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&offset=20&sk=&sw=',type:'Yamaha Korea 2021 manual listing'}),
+ 'YAMAHA|YZF-R3':Object.freeze({year:2021,url:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&idx=48&mode=view&offset=20&sk=&sw=',type:'Yamaha Korea 2021 owner manual'}),
+ 'YAMAHA|MT-07':Object.freeze({year:2021,url:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&idx=44&mode=view&offset=20&sk=&sw=',type:'Yamaha Korea 2021 owner manual'}),
+ 'YAMAHA|TMAX560':Object.freeze({year:2022,url:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&offset=20&sk=&sw=',type:'Yamaha Korea 2022–2024 owner manual listing'}),
+ 'KAWASAKI|NINJA500':Object.freeze({year:2025,url:'https://www.kawasaki.com/en-us/owner-center/service-manuals/2025/EX500HSFNL',type:'Kawasaki US 2025 owner manual listing'}),
+ 'KAWASAKI|Z500':Object.freeze({year:2024,url:'https://www.kawasaki.com/en-us/owner-center/service-manuals/2024/ER500ERFNL',type:'Kawasaki US 2024 owner manual listing'}),
+ 'KAWASAKI|Z900':Object.freeze({year:2025,url:'https://www.kawasaki.com/en-us/owner-center/service-manuals/2025/ZR900SSFAL',type:'Kawasaki US 2025 owner manual listing'}),
+ 'TRIUMPH|SPEED400':Object.freeze({year:2024,url:'https://www.triumphmotorcycles.com/for-the-ride/news/motorcycles/t-series-q-and-a-2024-03-28',type:'Triumph T-Series official general service interval 16000 km or 12 months; not a part schedule'})
+});
+const researchInventory=Object.freeze(brands.flatMap(brand=>brand.models.map(([model])=>{
+ const key=brand.id+'|'+model;
+ const years=Object.keys(expandedOfficialProfiles).filter(x=>x.startsWith(key+'|'))
+  .map(x=>Number(x.slice(key.length+1))).filter(Number.isFinite).sort((a,b)=>a-b);
+ const manual=sourceAudit[key]||null;
+ return Object.freeze({brand:brand.id,model,verifiedYears:Object.freeze(years),manual,
+  status:years.length?'verified-year-profiles':manual?'manual-found-not-verified':'verification-pending'});
+})));
 const profileKey=(brand,model,year)=>[String(brand).trim().toUpperCase(),String(model).trim().toUpperCase(),String(year)].join('|');
 window.MotorcycleCatalog=Object.freeze({
  brands,
  officialProfiles:expandedOfficialProfiles,
+ researchInventory,
+ findResearchStatus(brand,model){return researchInventory.find(x=>x.brand===String(brand).trim().toUpperCase()&&x.model===String(model).trim().toUpperCase())||null},
  profileKey,
  brandLogos,
  knownFirstModelYears,
