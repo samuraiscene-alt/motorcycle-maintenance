@@ -1,6 +1,6 @@
 {
-  "version": "2.9.80",
-  "cache": "motorcycle-maintenance-v2.9.80",
+  "version": "2.9.81",
+  "cache": "motorcycle-maintenance-v2.9.81",
   "released": "2026-11-06",
-  "note": "정비기록 화면에 날짜·주행거리 이력 불일치 읽기 전용 안내"
+  "note": "차량정보 주행거리 정정 확인·정정 표시와 중복 이력 방지"
 }
