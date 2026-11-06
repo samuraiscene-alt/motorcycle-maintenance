@@ -445,10 +445,42 @@ const researchInventory=Object.freeze(brands.flatMap(brand=>brand.models.map(([m
  return Object.freeze({brand:brand.id,model,verifiedYears:Object.freeze(years),manual,
   status:years.length?'verified-year-profiles':manual?'manual-found-not-verified':'verification-pending'});
 })));
+// Canonical app part IDs: 'filter' is the visible AIR filter card and
+// 'oil-filter' is the independent engine-oil filter card. Earlier profiles
+// sometimes used 'filter' for an oil filter; normalize without moving user records.
+const oilFilterAliasKeys=new Set([
+ 'HONDA|ADV350|2025','HONDA|FORZA350|2025','HONDA|CT125|2026',
+ 'HONDA|C125|2022','HONDA|C125|2026','HONDA|SUPER CUB110|2022',
+ 'YAMAHA|XMAX300|2025'
+]);
+const canonicalOfficialProfiles=Object.freeze(Object.fromEntries(
+ Object.entries(expandedOfficialProfiles).map(([key,profile])=>{
+  const tasks={...(profile.tasks||{})},intervals={...(profile.intervals||{})};
+  const actionByPart={...(profile.actionByPart||{})};
+  const previousFilter=tasks.filter,previousInterval=intervals.filter;
+  const oilAlias=oilFilterAliasKeys.has(key)||!!tasks['oil-filter'];
+  if(oilAlias){
+   if(previousFilter&&!tasks['oil-filter'])tasks['oil-filter']=previousFilter;
+   if(Number.isSafeInteger(previousInterval)&&!intervals['oil-filter'])intervals['oil-filter']=previousInterval;
+   delete tasks.filter;delete intervals.filter;
+   delete actionByPart.filter;
+  }
+  // The display's air-filter card uses 'filter' even when a source profile
+  // originally labelled it 'air-filter'. Do not create duplicate alerts.
+  if(tasks['air-filter']){
+   tasks.filter=tasks['air-filter'];delete tasks['air-filter'];
+   if(Number.isSafeInteger(intervals['air-filter']))intervals.filter=intervals['air-filter'];
+   delete intervals['air-filter'];delete actionByPart['air-filter'];
+  }
+  return [key,Object.freeze({...profile,
+   tasks:Object.freeze(tasks),intervals:Object.freeze(intervals),
+   actionByPart:Object.freeze(actionByPart)})];
+ })
+));
 const profileKey=(brand,model,year)=>[String(brand).trim().toUpperCase(),String(model).trim().toUpperCase(),String(year)].join('|');
 window.MotorcycleCatalog=Object.freeze({
  brands,
- officialProfiles:expandedOfficialProfiles,
+ officialProfiles:canonicalOfficialProfiles,
  researchInventory,
  findResearchStatus(brand,model){return researchInventory.find(x=>x.brand===String(brand).trim().toUpperCase()&&x.model===String(model).trim().toUpperCase())||null},
  profileKey,
@@ -467,7 +499,7 @@ window.MotorcycleCatalog=Object.freeze({
   return verifiedDimensions[profileKey(brand,model,year)]||null;
  },
  findOfficialProfile(brand,model,year){
-  const value=expandedOfficialProfiles[profileKey(brand,model,year)];
+  const value=canonicalOfficialProfiles[profileKey(brand,model,year)];
   return value&&value.verified===true&&value.source?value:null;
  }
 });
