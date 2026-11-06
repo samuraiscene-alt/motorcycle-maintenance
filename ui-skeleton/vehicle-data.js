@@ -136,13 +136,21 @@ function actionInterval(reg,id,action){
  return Number.isSafeInteger(settings[field])&&settings[field]>=0?settings[field]:fallback;
 }
 // Keep card gauges, secondary actions and due notices on one saved-cycle rule.
-function resolveServiceCycle(settings,action,last,configured){
+function resolveServiceCycleDetails(settings,action,last,configured,officialDefault=0){
  const field=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
  const source=field+'Source';
  if(Number.isSafeInteger(settings[field])&&settings[field]>=0&&['user','official'].includes(settings[source]))
-  return settings[field];
- if(last&&Number.isSafeInteger(last.interval)&&last.interval>0)return last.interval;
- return configured;
+  return {km:settings[field],origin:settings[source]};
+ if(last&&Number.isSafeInteger(last.interval)&&last.interval>0)
+  return {km:last.interval,origin:'record'};
+ if(Number.isSafeInteger(settings[field])&&settings[field]>=0)
+  return {km:settings[field],origin:'legacy'};
+ if(Number.isSafeInteger(officialDefault)&&officialDefault>0&&configured===officialDefault)
+  return {km:configured,origin:'official'};
+ return {km:configured,origin:'default'};
+}
+function resolveServiceCycle(settings,action,last,configured){
+ return resolveServiceCycleDetails(settings,action,last,configured).km;
 }
 // One distance schedule for the part card and the maintenance notice.
 function nextServiceDistance(reg,task,action,settings,interval,last){
@@ -509,16 +517,9 @@ else{
  if(sourceTag){
   const cfgKey=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
   const srcKey=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
-  const hasSetting=Object.prototype.hasOwnProperty.call(settings,cfgKey);
-  const officialTaskKm=action==='inspect'?task?.inspectKm:action==='clean'?task?.cleanKm:officialDefault;
-  let origin='unknown',label='주기 미확인';
-  if(hasSetting&&settings[srcKey]==='user'){origin='user';label='사용자 설정'}
-  else if(hasSetting&&settings[srcKey]==='official'){origin='official';label='제조사 공식'}
-  else if(hasSetting){origin='legacy';label='기존 설정 · 출처 미확인'}
-  else if(last){origin='record';label='정비기록 기준'}
-  else if(officialTaskKm>0){origin='official';label='제조사 공식'}
-  else if(action==='replace'&&fallback>0){origin='default';label='앱 기본값'}
-  else if(calendar){origin='official';label='제조사 공식 · 기간 기준'}
+  const calculated=resolveServiceCycleDetails(settings,action,last,defaultInterval,officialDefault);
+  let origin=calculated.origin,label={user:'사용자 설정',official:'제조사 공식',record:'정비기록 기준',legacy:'기존 설정 · 출처 미확인',default:'앱 기본값'}[origin];
+  if(interval<=0&&!last&&calendar){origin='official';label='제조사 공식 · 기간 기준'}
   sourceTag.dataset.source=origin;
   const hasKnownCycle=interval>0||!!calendar;
   sourceTag.hidden=!hasKnownCycle||origin==='unknown';
@@ -772,9 +773,13 @@ function showHistory(){
    const field=actualAction==='inspect'?'inspectInterval':actualAction==='clean'?'cleanInterval':'interval';
    const cycle=resolveServiceCycle(settings,actualAction,latest,actionInterval(currentRegistration(),e.id,actualAction));
    const next=cycle>0?nextServiceDistance(currentRegistration(),task,actualAction,settings,cycle,latest).due:null;
+   const currentOdometer=getOdometer();
+   const nextDescription=next!==null&&currentOdometer>next
+    ?actionText(actualAction)+' 기준 '+fmt(next)+'km 초과 · 이력 확인 필요'
+    :next!==null?'다음 '+actionText(actualAction)+' 예정 '+fmt(next)+'km':'다음 정비 주기 미설정';
    due.textContent=!isLatest?'이후 정비기록 있음 · 과거 이력':
     actualAction==='replace'&&task?.replaceMonths?'날짜 기준 다음 교체 '+addCalendarMonths(e.date,task.replaceMonths):
-    next!==null?'다음 '+actionText(actualAction)+' 예정 '+fmt(next)+'km':'다음 정비 주기 미설정';card.append(title,detail,due);wrap.append(actions,card);(i<5?box:older).appendChild(wrap);
+    nextDescription;card.append(title,detail,due);wrap.append(actions,card);(i<5?box:older).appendChild(wrap);
    actions.querySelector('.maintenance-history-edit').addEventListener('click',()=>openMaintenanceEdit(e.id,e.seq));
    actions.querySelector('.maintenance-history-delete').addEventListener('click',()=>deleteMaintenanceRecord(e.id,e.seq));
    let startX=0,startY=0;
