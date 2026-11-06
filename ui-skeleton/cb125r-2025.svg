@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" role="img" aria-label="혼다 CB125R 2025년형 특징을 바탕으로 제작한 오리지널 벡터 일러스트">
+<defs>
+ <linearGradient id="tank" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#ff6762"/><stop offset=".26" stop-color="#d6282d"/><stop offset=".7" stop-color="#a50f1d"/><stop offset="1" stop-color="#50111a"/></linearGradient>
+ <linearGradient id="silver" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#f5f7f9"/><stop offset=".28" stop-color="#aab1bb"/><stop offset=".6" stop-color="#525c67"/><stop offset="1" stop-color="#dae1e8"/></linearGradient>
+ <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#343e48"/><stop offset=".42" stop-color="#11161e"/><stop offset=".75" stop-color="#626a73"/><stop offset="1" stop-color="#0a0e15"/></linearGradient>
+ <radialGradient id="rubber"><stop offset=".45" stop-color="#27292e"/><stop offset=".75" stop-color="#0d1015"/><stop offset=".91" stop-color="#08090d"/><stop offset=".95" stop-color="#33363d"/><stop offset="1" stop-color="#080a0e"/></radialGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="5"/></filter>
+ <filter id="shadow"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<ellipse cx="486" cy="445" rx="397" ry="27" fill="#050b12" opacity=".6" filter="url(#shadow)"/>
+<!-- Wheels and machined spokes -->
+<g transform="translate(208 352)"><circle r="114" fill="url(#rubber)" stroke="#1c2025" stroke-width="8"/><circle r="83" fill="#171b21" stroke="#88919a" stroke-width="4"/><circle r="72" fill="#0d1117" stroke="#313a44" stroke-width="9"/>
+<g stroke="#a4adb5" stroke-width="9" stroke-linecap="round" opacity=".85"><path d="M0 -70V70M-70 0H70M-48 -48 48 48M48 -48 -48 48"/></g><circle r="56" fill="none" stroke="#bac3cc" stroke-width="9" stroke-dasharray="13 8"/><circle r="19" fill="#4a545d" stroke="#c7cbd1" stroke-width="7"/><circle r="9" fill="#161d26"/></g>
+<g transform="translate(751 352)"><circle r="114" fill="url(#rubber)" stroke="#1c2025" stroke-width="8"/><circle r="83" fill="#171b21" stroke="#88919a" stroke-width="4"/><circle r="72" fill="#0d1117" stroke="#313a44" stroke-width="9"/>
+<g stroke="#a4adb5" stroke-width="9" stroke-linecap="round" opacity=".85"><path d="M0 -70V70M-70 0H70M-48 -48 48 48M48 -48 -48 48"/></g><circle r="62" fill="none" stroke="#e4e6e4" stroke-width="10" stroke-dasharray="15 9"/><circle r="38" fill="none" stroke="#6c7479" stroke-width="7"/><circle r="19" fill="#414951" stroke="#b5c0cc" stroke-width="6"/><circle r="9" fill="#161d26"/></g>
+<!-- Rear fender, swingarm and exhaust -->
+<path d="M119 234 79 231 48 242 54 257 117 262 161 281" fill="#121820" stroke="#5d626a" stroke-width="7" stroke-linejoin="round"/>
+<path d="M152 325 431 357 496 336" fill="none" stroke="#39424b" stroke-width="32" stroke-linecap="round"/><path d="M158 320 430 353" fill="none" stroke="#939ba4" stroke-width="6"/>
+<path d="M320 370 Q368 368 406 394 L485 398 Q530 389 558 366 L568 351 488 354 412 370Z" fill="url(#metal)" stroke="#7e8790" stroke-width="6"/>
+<path d="M368 396 480 395 499 388" fill="none" stroke="#acb6be" stroke-width="7" stroke-linecap="round"/>
+<path d="M370 402 Q468 411 531 389" fill="none" stroke="#11191f" stroke-width="15"/>
+<!-- Sculpted subframe and fuel tank -->
+<path d="M136 213 227 213 328 256 461 264 541 320" fill="none" stroke="#252e36" stroke-width="20" stroke-linecap="round"/>
+<path d="M193 239 303 332 466 321 382 236" fill="none" stroke="#929da7" stroke-width="10" stroke-linecap="round"/>
+<path d="M251 238 332 327 471 319 392 244Z" fill="#191f27" stroke="#404d57" stroke-width="10"/>
+<path d="M273 232 423 262 519 268 584 315" fill="none" stroke="#1b232a" stroke-width="13"/>
+<path d="M146 200 Q177 191 216 190 L336 196 Q354 204 349 216 L286 231 216 221 172 225 143 218Z" fill="#11161d" stroke="#46525c" stroke-width="6"/>
+<path d="M213 191 Q252 171 314 172 L354 184 372 209 Q353 217 327 218 L265 213 233 206Z" fill="#222932" stroke="#3f4951" stroke-width="4"/>
+<path d="M300 168 Q342 127 423 127 L472 136 Q516 157 543 188 L529 216 463 229 419 217 386 199 339 192Z" fill="url(#tank)" stroke="#360f19" stroke-width="7"/>
+<path d="M325 163 Q372 134 419 137 L463 149" fill="none" stroke="#ffb0a4" stroke-width="7" opacity=".65"/>
+<path d="M375 195 458 214 501 206 519 225 492 260 454 256 412 219Z" fill="#171e27" stroke="#3c4651" stroke-width="5"/>
+<text x="405" y="184" fill="#f5d8d3" opacity=".88" font-family="Arial,sans-serif" font-weight="900" font-size="23" transform="rotate(-3 405 184)">HONDA</text>
+<path d="M449 230 536 223 571 261 547 289 478 285Z" fill="#1a232c" stroke="#5d6974" stroke-width="5"/><path d="M485 239 542 236" stroke="#c12b31" stroke-width="9"/>
+<text x="479" y="264" fill="#cbd2dc" font-family="Arial,sans-serif" font-weight="700" font-size="15">CB125R</text>
+<!-- detailed single cylinder engine -->
+<path d="M374 279 465 270 510 319 481 371 407 389 349 357 346 311Z" fill="url(#metal)" stroke="#7a838c" stroke-width="7"/>
+<path d="M381 279 455 276 481 313 454 341 390 334 364 311Z" fill="#242c34" stroke="#929da7" stroke-width="5"/>
+<path d="M383 287 445 281 M375 297 458 292 M373 308 463 301 M380 319 465 311" stroke="#c2cad1" stroke-width="6" opacity=".65"/>
+<circle cx="422" cy="344" r="37" fill="#191e26" stroke="#8b939c" stroke-width="10"/><circle cx="422" cy="344" r="18" fill="#303b45" stroke="#10151b" stroke-width="5"/>
+<path d="M327 335 308 365 356 374 371 352" fill="#333a43" stroke="#747c84" stroke-width="5"/>
+<path d="M503 339 561 346 587 328" fill="none" stroke="#707b86" stroke-width="10"/><path d="M457 377 509 408" stroke="#8e989f" stroke-width="7"/>
+<!-- Fork / handlebars / headlamp -->
+<path d="M577 171 716 339" fill="none" stroke="#111820" stroke-width="31" stroke-linecap="round"/>
+<path d="M602 183 739 342" fill="none" stroke="#b3a879" stroke-width="19" stroke-linecap="round"/>
+<path d="M598 177 720 327" fill="none" stroke="#dbd2a6" stroke-width="5" stroke-linecap="round"/>
+<path d="M596 139 638 169 674 166" fill="none" stroke="#121923" stroke-width="15" stroke-linecap="round"/>
+<path d="M626 143 598 99 567 93" fill="none" stroke="#262f38" stroke-width="11" stroke-linecap="round"/>
+<path d="M568 93 542 97" fill="none" stroke="#141a21" stroke-width="13" stroke-linecap="round"/>
+<path d="M613 140 622 89 641 77" fill="none" stroke="#202730" stroke-width="8"/><path d="M630 75 661 77 659 90 630 89Z" fill="#0e151c" stroke="#88939e" stroke-width="5"/>
+<path d="M622 169 667 190" fill="none" stroke="#353d47" stroke-width="14"/>
+<circle cx="660" cy="201" r="48" fill="#0c1118" stroke="#78838e" stroke-width="8"/><circle cx="660" cy="201" r="36" fill="#d6e8eb" stroke="#8c9da7" stroke-width="8"/><circle cx="660" cy="201" r="26" fill="#f4fdff" opacity=".83"/><circle cx="660" cy="201" r="42" fill="none" stroke="#e2faff" stroke-width="6" opacity=".45" filter="url(#glow)"/>
+<path d="M679 256 704 259 758 285 788 320" fill="none" stroke="#181f26" stroke-width="14" stroke-linecap="round"/>
+<path d="M663 290 Q742 263 813 303 L815 319 Q749 287 685 307" fill="#2b333d" stroke="#7d8b99" stroke-width="6"/>
+<path d="M702 325 Q731 302 766 308" fill="none" stroke="#4a555f" stroke-width="7"/>
+<!-- Indicators, pedals, and small hardware -->
+<path d="M682 191 707 181" stroke="#626c74" stroke-width="7" stroke-linecap="round"/><ellipse cx="710" cy="178" rx="12" ry="7" fill="#f3a83a" stroke="#38291b" stroke-width="3"/>
+<path d="M388 363 365 387 342 388" stroke="#9da7b0" stroke-width="9" stroke-linecap="round"/><path d="M465 344 519 372" stroke="#b8c1c8" stroke-width="7"/><circle cx="516" cy="371" r="8" fill="#252c34" stroke="#b1b9c1" stroke-width="3"/>
+<path d="M133 210 107 198 93 202 97 211 139 223" fill="#b62930" stroke="#70171e" stroke-width="4"/>
+</svg>
