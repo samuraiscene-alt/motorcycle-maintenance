@@ -398,23 +398,26 @@ function hideGarageSigns(){signToken++;makerSign.hidden=true;serviceSign.hidden=
 function setGarageSign(maker){
  const wall=track.children[index];if(!wall)return;
  for(const element of [makerSign,serviceSign,tubeGlow])if(element.parentElement!==wall)wall.appendChild(element);
- const current=++signToken;
+ const token=++signToken;
  makerSign.replaceChildren();makerSign.hidden=true;serviceSign.hidden=true;
- const logo=maker==='YAMAHA'?'https://commons.wikimedia.org/wiki/Special:Redirect/file/Yamaha_Motor_2025.svg':window.MotorcycleCatalog?.brandLogos?.[maker];
- if(maker==='HONDA'){
-  const mark=document.createElement('span');mark.className='neon-maker-text';mark.textContent='HONDA';
-  makerSign.appendChild(mark);makerSign.hidden=false;
- }else if(typeof logo==='string'&&logo){
-  const img=document.createElement('img');img.alt=maker+' 제조사 로고';
-  img.addEventListener('load',()=>{
-   if(current!==signToken||!img.isConnected)return;
-   if(img.naturalWidth>0){makerSign.hidden=false;serviceSign.hidden=true}
-  },{once:true});
-  img.addEventListener('error',()=>{
-   if(current===signToken){makerSign.hidden=true;serviceSign.hidden=false}
-  },{once:true});
-  makerSign.appendChild(img);serviceSign.hidden=false;img.src=logo;
-  if(img.complete&&img.naturalWidth>0){makerSign.hidden=false;serviceSign.hidden=true}
+ const logo=maker==='YAMAHA'
+  ?'https://commons.wikimedia.org/wiki/Special:Redirect/file/Yamaha_Motor_2025.svg'
+  :window.MotorcycleCatalog?.brandLogos?.[maker];
+ // A prepared brand uses LEFT neon throughout image loading.
+ const supported=maker==='HONDA'||maker==='YAMAHA'||typeof logo==='string'&&!!logo;
+ if(supported){
+  const fallback=document.createElement('span');fallback.className='neon-maker-text';fallback.textContent=maker;
+  makerSign.appendChild(fallback);makerSign.hidden=false;
+  if(typeof logo==='string'&&logo){
+   const img=document.createElement('img');img.alt=maker+' 제조사 로고';img.hidden=true;
+   img.addEventListener('load',()=>{
+    if(token!==signToken||!img.isConnected)return;
+    if(img.naturalWidth>0){img.hidden=false;fallback.hidden=true}
+   },{once:true});
+   img.addEventListener('error',()=>{if(token===signToken){img.remove();fallback.hidden=false}},{once:true});
+   makerSign.appendChild(img);img.src=logo;
+   if(img.complete&&img.naturalWidth>0){img.hidden=false;fallback.hidden=true}
+  }
  }else serviceSign.hidden=false;
  document.body.classList.remove('garage-sign-honda','garage-sign-yamaha','garage-sign-general');
 }
