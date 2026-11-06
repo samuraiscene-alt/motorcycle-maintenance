@@ -125,6 +125,17 @@ function validate(payload){
  }
  const registrations=JSON.parse(payload.local['motorcycle-skeleton-registrations-v1']||'{}');
  const maintenance=JSON.parse(payload.local['motorcycle-skeleton-maintenance-v1']||'{}');
+ // Registrations may exist before the first maintenance log, but saved
+ // maintenance data must always belong to a registered motorcycle.
+ for(const [bikeId,registration] of Object.entries(registrations)){
+  if(!obj(registration))throw new Error('차량 등록정보 형식이 잘못됐어: '+bikeId);
+  if(!Number.isSafeInteger(registration.km)||registration.km<0||registration.km>9999999)
+   throw new Error('차량 등록 시 주행거리를 확인해: '+bikeId);
+ }
+ for(const bikeId of Object.keys(maintenance)){
+  if(!Object.prototype.hasOwnProperty.call(registrations,bikeId))
+   throw new Error('등록되지 않은 차량의 정비기록이 있어: '+bikeId);
+ }
  const now=new Date();
  const today=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
  const validDate=(date)=>{
