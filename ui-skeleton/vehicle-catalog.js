@@ -39,11 +39,13 @@ const verifiedDimensions=Object.freeze({
 });
 // Linked manufacturer marks; preserve readable names when image loading fails.
 const brandLogos=Object.freeze({
- SUZUKI:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Suzuki_logo_2025.svg',
+ SUZUKI:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Suzuki_logo_2025_(vertical).svg',
  KAWASAKI:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Kawasaki_Motors_logo.svg',
  BMW:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_BMW_Motorrad_2021.svg',
  VESPA:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Vespa-logo.svg'
 });
+// Known release-year restrictions: do not infer model years from the model name.
+const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
  'YAMAHA|NMAX125|2022':Object.freeze({
   verified:true,coverage:'partial',region:'GPD125 / Yamaha Korea 2022',modelCode:'GPD125',year:2022,
@@ -202,6 +204,11 @@ window.MotorcycleCatalog=Object.freeze({
  officialProfiles:expandedOfficialProfiles,
  profileKey,
  brandLogos,
+ knownFirstModelYears,
+ validateModelYear(brand,model,year){
+  const first=knownFirstModelYears[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()];
+  return !first||!Number.isSafeInteger(year)||year>=first?null:{first,description:model+' '+year+'년형은 확인된 출시 연식보다 이전이야 ('+first+'년형부터).'};
+ },
  modelStyles,
  verifiedDimensions,
  findBodyStyle(brand,model){
