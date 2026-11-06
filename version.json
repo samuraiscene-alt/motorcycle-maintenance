@@ -1,6 +1,6 @@
 {
-  "version": "2.9.22",
-  "cache": "motorcycle-maintenance-v2.9.22",
+  "version": "2.9.23",
+  "cache": "motorcycle-maintenance-v2.9.23",
   "released": "2026-11-06",
-  "note": "승인된 야마하 정비소 시안의 상단 장면 실제 적용, 기존 UI와 차량·정비기록 유지"
+  "note": "야마하 네온간판·천장 형광등 위치별 깜빡임 복원 및 정비 알림 바로 열기 동작 개선"
 }
