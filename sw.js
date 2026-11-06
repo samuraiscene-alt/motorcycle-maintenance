@@ -1,8 +1,11 @@
-const CACHE='motorcycle-maintenance-v2.9.73';
+const CACHE='motorcycle-maintenance-v2.9.74';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
   SHELL,
+  new URL('./ui-skeleton/garage.svg',ROOT).href,
+  new URL('./ui-skeleton/motorcycle.svg',ROOT).href,
+  new URL('./ui-skeleton/alternate-scooter.svg',ROOT).href,
   new URL('./ui-skeleton/vehicle-catalog.js?v=xmax2025-official-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-data.js?v=notice-de-duplicate-73',ROOT).href,
   new URL('./ui-skeleton/part-customize.js?v=accordion-order-3',ROOT).href,
@@ -12,7 +15,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/backup-restore.js?v=backup-sandbox-64',ROOT).href,
   new URL('./ui-skeleton/i18n.js?v=locale-scaffold-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=brand-model-picker-15-yearlink',ROOT).href,
-  new URL('./ui-skeleton/version-check.js?v=app-version-373',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=app-version-374',ROOT).href,
   new URL('./ui-skeleton/wear-library.js?v=shared-materials-1',ROOT).href,
   new URL('./ui-skeleton/bike-aging.js?v=parts-safe-2',ROOT).href,
   new URL('./icon-bike-192.jpg',ROOT).href,
