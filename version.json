@@ -1,6 +1,6 @@
 {
-  "version": "2.9.103",
-  "cache": "motorcycle-maintenance-v2.9.103",
+  "version": "2.9.104",
+  "cache": "motorcycle-maintenance-v2.9.104",
   "released": "2026-11-06",
-  "note": "신차 실제 최초 운행일 선택 입력 및 공식 최초 1개월 정비 알림, 기존 차량 기록 유지"
+  "note": "공식 정비표 21개 연식 프로필의 에어필터·오일필터 ID 정규화 및 기존 사용자 기록 유지"
 }
