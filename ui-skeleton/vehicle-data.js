@@ -483,23 +483,30 @@ const vehicleArtwork=Object.freeze({
  'HONDA|CB650R|2024':{src:'./cb650r-2024.svg?v=1',alt:'Honda CB650R 2024 4기통 전용 참고 일러스트'}
 });
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
-const activeArt=vehicleArtwork[artKey]||vehicleArtwork[maker+'|'+normalizedModel]||null;
+// Match the same body generation for nearby years; unknown models use a neutral silhouette.
+const modelYear=Number(r?.year);
+const generationArt=maker==='HONDA'&&normalizedModel==='CB125R'&&modelYear>=2021&&modelYear<=2025
+ ?vehicleArtwork['HONDA|CB125R|2025']
+ :maker==='HONDA'&&normalizedModel==='CB650R'&&modelYear>=2024&&modelYear<=2026
+ ?vehicleArtwork['HONDA|CB650R|2024']:null;
+const activeArt=vehicleArtwork[artKey]||generationArt||vehicleArtwork[maker+'|'+normalizedModel]||{src:'./bike-placeholder.svg?v=109',alt:'기종 전용 이미지 준비 중 · 일반 오토바이 실루엣'};
 const cb125rIllustration=artKey==='HONDA|CB125R|2025';
 const cb650rIllustration=artKey==='HONDA|CB650R|2024';
 const referenceImageAllowed=!!activeArt&&maker==='HONDA'&&normalizedModel==='PCX125';
-const garageModelImage=activeArt?.src||null;
+const garageModelImage=activeArt.src;
 const activeSlide=track.children[index];
 if(activeSlide){
  const fallbackHero=activeSlide.querySelector('.motorcycle-hero');
  if(fallbackHero){
-  fallbackHero.hidden=!garageModelImage;
+  fallbackHero.hidden=false;
   if(garageModelImage&&fallbackHero.getAttribute('src')!==garageModelImage)fallbackHero.src=garageModelImage;
   if(garageModelImage)fallbackHero.alt=activeArt.alt;
-  fallbackHero.onerror=()=>{fallbackHero.hidden=true;if(shadow)shadow.hidden=true;showroomNotice.textContent='차량 전용 이미지를 불러오지 못했어.';};
-  if(garageModelImage&&fallbackHero.complete&&fallbackHero.naturalWidth===0)fallbackHero.hidden=true;
+  fallbackHero.onerror=()=>{if(fallbackHero.dataset.fallback==='1'){fallbackHero.hidden=true;return;}fallbackHero.dataset.fallback='1';fallbackHero.src='./bike-placeholder.svg?v=109';showroomNotice.textContent='전용 이미지 준비 중 · 일반 오토바이 실루엣';};
+  fallbackHero.dataset.fallback='0';
+
  }
  const shadow=activeSlide.querySelector('.ground-shadow');
- if(shadow)shadow.hidden=!garageModelImage&&!xmaxRequested;
+ if(shadow)shadow.hidden=false;
 }
 document.body.dataset.xmaxRequested=String(xmaxRequested);
 if(xmaxRequested){
@@ -512,9 +519,11 @@ const yearWarning=window.MotorcycleCatalog?.validateModelYear(maker,r?.model,Num
 showroomNotice.textContent=yearWarning?yearWarning.description
  :xmaxRequested&&document.body.classList.contains('xmax-2025-photo-ready')?'XMAX300 계열 공식 사진 · 세부 트림 참고용'
  :cb650rIllustration?'CB650R 2024 · 4기통 전용 참고 일러스트'
+ :generationArt&&normalizedModel==='CB125R'?'CB125R 동일 외형 계열 · 연식별 세부 차이 있음'
+ :generationArt&&normalizedModel==='CB650R'?'CB650R 동일 외형 계열 · 연식별 세부 차이 있음'
  :cb125rIllustration?'CB125R 2025 · 기종 전용 참고 일러스트'
  :referenceImageAllowed?'차종 전용 이미지 미등록 · 참고용 스쿠터'
- :'차종 전용 이미지 준비 중';
+ :'전용 이미지 준비 중 · 일반 오토바이 실루엣';
 meta.replaceChildren();
 if(r){
  const yearLine=document.createElement('span');yearLine.className='bike-meta-year';yearLine.textContent=r.year?r.year+'년형':'연식 미확인';
