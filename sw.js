@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v2.9.103';
+const CACHE='motorcycle-maintenance-v2.9.104';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
@@ -6,7 +6,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/garage-clean.png?v=5',ROOT).href,
   new URL('./ui-skeleton/motorcycle.svg',ROOT).href,
   new URL('./ui-skeleton/alternate-scooter.svg',ROOT).href,
-  new URL('./ui-skeleton/vehicle-catalog.js?v=first-use-103',ROOT).href,
+  new URL('./ui-skeleton/vehicle-catalog.js?v=filter-map-104',ROOT).href,
   new URL('./ui-skeleton/vehicle-data.js?v=first-use-103',ROOT).href,
   new URL('./ui-skeleton/part-customize.js?v=accordion-order-3',ROOT).href,
   new URL('./ui-skeleton/priority-parts.js?v=priority-13-2',ROOT).href,
@@ -15,7 +15,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/backup-restore.js?v=backup-export-75',ROOT).href,
   new URL('./ui-skeleton/i18n.js?v=locale-scaffold-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=first-use-103',ROOT).href,
-  new URL('./ui-skeleton/version-check.js?v=app-version-403',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=app-version-404',ROOT).href,
   new URL('./ui-skeleton/wear-library.js?v=shared-materials-1',ROOT).href,
   new URL('./ui-skeleton/bike-aging.js?v=parts-safe-2',ROOT).href,
   new URL('./icon-bike-192.jpg',ROOT).href,
