@@ -47,6 +47,31 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'HONDA|FORZA350|2025':Object.freeze({
+  verified:true,coverage:'partial',region:'HMEE European NSS350A, IV ED / VI ED',modelCode:'NSS350A',year:2025,
+  source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/NSS250A_350A/2025/FORZA%20250350%20%28NSS250A-350A%29_32K1BF300_web.pdf',
+  sourceType:'Honda MotoPub 2025 Forza 250/350 NSS350A European owner manual; maintenance schedule',
+  sourcePages:[107,108],
+  // Confirmed R/I/C symbols: do not confuse periodic inspection or cleaning with replacement.
+  intervals:Object.freeze({oil:12000,filter:24000,'air-filter':24000,'spark-plug':12000,'drive-belt':24000,
+   'valve-clearance':24000,'belt-case-air-filter':12000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
+   filter:{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
+   'air-filter':{replaceKm:24000},
+   'spark-plug':{replaceKm:12000},
+   'drive-belt':{inspectKm:12000,replaceKm:24000},
+   'belt-case-air-filter':{cleanKm:12000},
+   'valve-clearance':{inspectKm:24000},
+   'gear-oil':{replaceMonths:24},
+   'brake-fluid':{replaceMonths:24},
+   coolant:{replaceMonths:36},
+   'clutch-shoe':{inspectKm:12000},
+   brake:{inspectKm:12000,replaceWhenWorn:true},
+   tire:{inspectKm:12000,replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','belt-case-air-filter':'clean'})
+ }),
  'HONDA|ADV350|2025':Object.freeze({
   verified:true,coverage:'partial',region:'HMEE ADV350A (English owner manual)',modelCode:'ADV350A',year:2025,
   source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/ADV350A/2025/ADV350A_32K2LA10_eng_WEB.pdf',
