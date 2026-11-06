@@ -123,10 +123,44 @@ function validate(payload){
    if(!obj(parsed))throw new Error('카드 순서 변환 설정 구조가 맞지 않아.');
   }
  }
+ const registrations=JSON.parse(payload.local['motorcycle-skeleton-registrations-v1']||'{}');
  const maintenance=JSON.parse(payload.local['motorcycle-skeleton-maintenance-v1']||'{}');
- for(const vehicle of Object.values(maintenance)){
+ const now=new Date();
+ const today=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+ const validDate=(date)=>{
+  if(typeof date!=='string'||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date))return false;
+  const [y,m,d]=date.split('-').map(Number);
+  const parsed=new Date(y,m-1,d);
+  return parsed.getFullYear()===y&&parsed.getMonth()===m-1&&parsed.getDate()===d;
+ };
+ for(const [bikeId,vehicle] of Object.entries(maintenance)){
   if(!obj(vehicle)||!obj(vehicle.records))throw new Error('정비 데이터 구조가 올바르지 않아.');
-  for(const records of Object.values(vehicle.records))if(!Array.isArray(records)||records.some(x=>!obj(x)||!Number.isSafeInteger(x.at)||x.at<0||!Number.isSafeInteger(x.interval)||x.interval<0||typeof x.date!=='string'))throw new Error('정비기록 형식이 맞지 않아.');
+  const registration=registrations[bikeId];
+  const odo=vehicle.odometer;
+  // A saved odometer must never be below the motorcycle's registration reading.
+  if(odo!==undefined&&(!Number.isSafeInteger(odo)||odo<0||odo>9999999))
+   throw new Error('계기판 주행거리 형식이 잘못됐어: '+bikeId);
+  if(obj(registration)&&Number.isSafeInteger(registration.km)&&Number.isSafeInteger(odo)&&odo<registration.km)
+   throw new Error('현재 주행거리가 등록 시 주행거리보다 작아: '+bikeId);
+  for(const [partId,records] of Object.entries(vehicle.records)){
+   if(!Array.isArray(records))throw new Error('정비기록 목록 형식이 잘못됐어: '+partId);
+   const seen=new Set();
+   for(const item of records){
+    if(!obj(item)||!Number.isSafeInteger(item.at)||item.at<0||item.at>9999999||
+       !Number.isSafeInteger(item.interval)||item.interval<0||item.interval>1000000||
+       !validDate(item.date)||item.date>today)
+     throw new Error('정비 날짜·거리·주기가 유효하지 않아: '+partId);
+    // Older records without an action represent replacement, not an error.
+    const action=item.action||'replace';
+    if(!['replace','inspect','clean'].includes(action))
+     throw new Error('정비 작업 종류를 확인해: '+partId);
+    if(Number.isSafeInteger(odo)&&item.at>odo)
+     throw new Error('정비 당시 주행거리가 현재 주행거리를 초과해: '+partId);
+    const identity=item.date+'|'+item.at+'|'+action;
+    if(seen.has(identity))throw new Error('중복된 정비기록이 있어: '+partId);
+    seen.add(identity);
+   }
+  }
  }
  if(payload.images.length>2000)throw new Error('사진이 너무 많아.');
  const keys=new Set();
