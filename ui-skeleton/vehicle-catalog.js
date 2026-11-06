@@ -47,6 +47,42 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'HONDA|CB650R|2024':Object.freeze({
+  verified:true,coverage:'partial',region:'HMEE ED/KO/U type, excludes alternate 6000-km market chart',modelCode:'CB650RA',year:2024,
+  source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CBR650R/2024/CB650RA_CBR650RA-R%20OM%2032MKYB20_eng_WEB.pdf',
+  sourceType:'Honda 2024 CB650RA/CBR650RA combined owner manual: KO/ED maintenance chart',
+  sourcePages:[103,104],
+  intervals:Object.freeze({oil:12000,filter:24000,'oil-filter':24000,'air-filter':24000,'spark-plug':24000,'valve-clearance':24000,'chain-sprockets':1000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
+   filter:{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
+   'oil-filter':{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
+   'air-filter':{replaceKm:24000},'spark-plug':{replaceKm:24000},
+   'valve-clearance':{inspectKm:36000},
+   'chain-sprockets':{inspectKm:1000},
+   'brake-fluid':{replaceMonths:24},coolant:{replaceMonths:36},
+   brake:{replaceWhenWorn:true},tire:{replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','chain-sprockets':'inspect'})
+ }),
+ 'HONDA|CBR650R|2024':Object.freeze({
+  verified:true,coverage:'partial',region:'HMEE ED/KO/U type, excludes alternate 6000-km market chart',modelCode:'CBR650RA',year:2024,
+  source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CBR650R/2024/CB650RA_CBR650RA-R%20OM%2032MKYB20_eng_WEB.pdf',
+  sourceType:'Honda 2024 CB650RA/CBR650RA combined owner manual: KO/ED maintenance chart',
+  sourcePages:[103,104],
+  intervals:Object.freeze({oil:12000,filter:24000,'oil-filter':24000,'air-filter':24000,'spark-plug':24000,'valve-clearance':24000,'chain-sprockets':1000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
+   filter:{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
+   'oil-filter':{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
+   'air-filter':{replaceKm:24000},'spark-plug':{replaceKm:24000},
+   'valve-clearance':{inspectKm:36000},
+   'chain-sprockets':{inspectKm:1000},
+   'brake-fluid':{replaceMonths:24},coolant:{replaceMonths:36},
+   brake:{replaceWhenWorn:true},tire:{replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','chain-sprockets':'inspect'})
+ }),
  'YAMAHA|MT-07|2021':Object.freeze({
   verified:true,coverage:'partial',region:'US MT07M/MT07MC Yamaha 2021',modelCode:'MT07M',year:2021,
   source:'https://library.ymcapps.net/library/om/contents/html/10/BAT-28199-10_02/7-4.html',
