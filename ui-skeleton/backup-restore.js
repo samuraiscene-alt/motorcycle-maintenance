@@ -177,6 +177,29 @@ function validate(payload){
   keys.add(image.key);
  }
 }
+function recordChronologyWarnings(payload){
+ const maintenance=JSON.parse(payload.local['motorcycle-skeleton-maintenance-v1']||'{}'),warnings=[];
+ for(const [bikeId,vehicle] of Object.entries(maintenance)){
+  for(const [partId,records] of Object.entries(vehicle.records||{})){
+   const byAction=new Map();
+   for(const item of records){
+    const action=item.action||'replace';
+    if(!byAction.has(action))byAction.set(action,[]);
+    byAction.get(action).push(item);
+   }
+   for(const [action,entries] of byAction){
+    const ordered=[...entries].sort((a,b)=>a.date.localeCompare(b.date)||a.at-b.at);
+    for(let i=1;i<ordered.length;i++){
+     if(ordered[i].date!==ordered[i-1].date&&ordered[i].at<ordered[i-1].at){
+      warnings.push(bikeId+' / '+partId+' / '+action+': '+ordered[i-1].date+' '+ordered[i-1].at+'km → '+ordered[i].date+' '+ordered[i].at+'km');
+      break;
+     }
+    }
+   }
+  }
+ }
+ return warnings;
+}
 async function checksum(payload){const input=new TextEncoder().encode(JSON.stringify(payload)),bytes=new Uint8Array(await crypto.subtle.digest('SHA-256',input));return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('')}
 async function inspectBackupFile(file){
  if(file.size>160*1024*1024)throw new Error('160MB 이하 백업 파일만 지원해.');
@@ -189,7 +212,7 @@ async function inspectBackupFile(file){
  // Only calculate the summary here; never open a writable database or update localStorage.
  return {doc,vehicles:vehicleCount(doc.payload.local['motorcycle-skeleton-registrations-v1']),
   records:recordCount(doc.payload.local['motorcycle-skeleton-maintenance-v1']),
-  images:doc.payload.images.length};
+  images:doc.payload.images.length,warnings:recordChronologyWarnings(doc.payload)};
 }
 check.addEventListener('click',()=>{if(busy)return;checkPick.value='';checkPick.click()});
 checkPick.addEventListener('change',async()=>{
@@ -198,7 +221,8 @@ checkPick.addEventListener('change',async()=>{
  try{
   const info=await inspectBackupFile(file);
   checkResult.textContent='검사 통과 · 차량 '+info.vehicles+'대 · 정비기록 '+info.records+
-   '건 · 사진 '+info.images+'개\n백업 파일 해시 및 구조 확인 완료. 현재 데이터는 변경하지 않았어.';
+   '건 · 사진 '+info.images+'개\\n백업 파일 해시 및 구조 확인 완료. 현재 데이터는 변경하지 않았어.'+
+   (info.warnings.length?'\\n주의: 날짜순 주행거리 감소 의심 '+info.warnings.length+'건 (계기판 정정 이력일 수 있어)\\n'+info.warnings.slice(0,3).join('\\n'):'');
  }catch(err){checkResult.textContent='검사 실패: '+(err.message||'파일을 검사할 수 없어.')}
  finally{lock(false);checkPick.value=''}
 });
@@ -223,7 +247,7 @@ pick.addEventListener('change',async()=>{
   const incomingRecords=inspection.records;
   const existingRegs=vehicleCount(localStorage.getItem('motorcycle-skeleton-registrations-v1'));
   const existingRecords=recordCount(localStorage.getItem('motorcycle-skeleton-maintenance-v1'));
-  const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건\\n\\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
+  const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건'+(inspection.warnings.length?'\\n\\n주의: 날짜순 주행거리 감소 의심 '+inspection.warnings.length+'건. 계기판 오입력 정정인지 확인해.':'')+'\\n\\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
   if(!confirm(summary)){message('복원 취소: 기존 데이터 유지');return}
   // Keep an untouched in-memory snapshot before the first destructive write.
   const oldLocal=locals(),oldImages=await getImages();message('전체 데이터를 복원 중…');
