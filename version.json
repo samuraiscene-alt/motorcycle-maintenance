@@ -1,6 +1,6 @@
 {
-  "version": "2.9.46",
-  "cache": "motorcycle-maintenance-v2.9.46",
+  "version": "2.9.47",
+  "cache": "motorcycle-maintenance-v2.9.47",
   "released": "2026-11-06",
-  "note": "백업 복원 오류 시 차량·정비기록과 사진을 독립적으로 원상복구하고 복원 완료 검증 후 새로고침"
+  "note": "백업 복원 후 사용자 사진별 키·크기·형식·SHA-256 내용까지 비교, 불일치 시 원상복구"
 }
