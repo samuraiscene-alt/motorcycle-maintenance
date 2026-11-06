@@ -1,6 +1,6 @@
 {
-  "version": "2.9.66",
-  "cache": "motorcycle-maintenance-v2.9.66",
+  "version": "2.9.67",
+  "cache": "motorcycle-maintenance-v2.9.67",
   "released": "2026-11-06",
-  "note": "제조사 정비주기를 교체·점검·청소로 분리 저장하고 사용자 설정 보호"
+  "note": "최초 교체 및 이후 정비 시점 계산을 소모품 카드와 알림에 동일 적용"
 }
