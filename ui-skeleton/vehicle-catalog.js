@@ -52,7 +52,7 @@ const officialProfiles=Object.freeze({
   source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CBR650R/2024/CB650RA_CBR650RA-R%20OM%2032MKYB20_eng_WEB.pdf',
   sourceType:'Honda 2024 CB650RA/CBR650RA combined owner manual: KO/ED maintenance chart',
   sourcePages:[103,104],
-  intervals:Object.freeze({oil:12000,filter:24000,'oil-filter':24000,'air-filter':24000,'spark-plug':24000,'valve-clearance':24000,'chain-sprockets':1000}),
+  intervals:Object.freeze({oil:12000,filter:24000,'oil-filter':24000,'air-filter':24000,'spark-plug':24000,'valve-clearance':36000,'chain-sprockets':1000}),
   tasks:Object.freeze({
    oil:{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
    filter:{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
@@ -70,7 +70,7 @@ const officialProfiles=Object.freeze({
   source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CBR650R/2024/CB650RA_CBR650RA-R%20OM%2032MKYB20_eng_WEB.pdf',
   sourceType:'Honda 2024 CB650RA/CBR650RA combined owner manual: KO/ED maintenance chart',
   sourcePages:[103,104],
-  intervals:Object.freeze({oil:12000,filter:24000,'oil-filter':24000,'air-filter':24000,'spark-plug':24000,'valve-clearance':24000,'chain-sprockets':1000}),
+  intervals:Object.freeze({oil:12000,filter:24000,'oil-filter':24000,'air-filter':24000,'spark-plug':24000,'valve-clearance':36000,'chain-sprockets':1000}),
   tasks:Object.freeze({
    oil:{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
    filter:{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
@@ -104,7 +104,7 @@ const officialProfiles=Object.freeze({
   verified:true,coverage:'partial',region:'HMEE CMX500A/A2',modelCode:'CMX500A',year:2025,
   source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CMX500/2025/CMX500A_OM_32MLHB10_ENG_web.pdf',
   sourceType:'Honda CMX500A/A2 2025 owner manual maintenance schedule',sourcePages:[49,50,51],
-  intervals:Object.freeze({oil:12000,filter:24000,'oil-filter':24000,'air-filter':24000,'spark-plug':24000,'valve-clearance':24000,'chain-sprockets':1000}),
+  intervals:Object.freeze({oil:12000,filter:24000,'oil-filter':24000,'air-filter':24000,'spark-plug':24000,'valve-clearance':36000,'chain-sprockets':1000}),
   tasks:Object.freeze({
    oil:{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
    filter:{replaceKm:24000,firstReplaceKm:1000,firstRegularOdometerKm:24000},
