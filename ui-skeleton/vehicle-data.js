@@ -449,6 +449,21 @@ const showroomNotice=document.createElement('span');
 showroomNotice.className='showroom-reference-note';
 showroomNotice.textContent='차종 전용 이미지 미등록 · 참고용 스쿠터';
 stage.appendChild(showroomNotice);
+// Keep the selected bike independent of the horizontally translated garage slides.
+const centeredBike=document.createElement('img');
+centeredBike.className='centered-showroom-bike';
+centeredBike.alt='선택한 오토바이';
+centeredBike.decoding='async';
+centeredBike.draggable=false;
+centeredBike.hidden=true;
+centeredBike.addEventListener('error',()=>{
+ if(centeredBike.dataset.fallback==='1'){centeredBike.hidden=true;return;}
+ centeredBike.dataset.fallback='1';
+ centeredBike.src='./bike-placeholder.svg?v=109';
+ showroomNotice.textContent='전용 이미지 로드 실패 · 일반 오토바이 실루엣 표시';
+});
+stage.appendChild(centeredBike);
+document.body.classList.add('centered-bike-layer');
 function renderInfo(){
  // Each motorcycle keeps its own garage scene when the active brand changes.
  [...track.children].forEach((slide,i)=>slide.classList.toggle('current-bike-slide',i===index));
@@ -459,6 +474,7 @@ function renderInfo(){
  const odometerButton=$('odometer-button');
  if(odometerButton){odometerButton.hidden=empty;odometerButton.disabled=empty}
  if(empty){
+  centeredBike.hidden=true;
   name.textContent='등록된 차량 없음';meta.textContent='설정에서 새 차량을 등록해.';
   document.body.classList.remove('vehicle-locked','non-honda-bike','garage-sign-honda','garage-sign-yamaha','garage-sign-general');
  hideGarageSigns();
@@ -494,6 +510,17 @@ const cb125rIllustration=artKey==='HONDA|CB125R|2025';
 const cb650rIllustration=artKey==='HONDA|CB650R|2024';
 const referenceImageAllowed=!!activeArt&&maker==='HONDA'&&normalizedModel==='PCX125';
 const garageModelImage=activeArt.src;
+// Always position artwork over the visible garage, not inside an offscreen carousel panel.
+centeredBike.hidden=!!xmaxRequested;
+if(!xmaxRequested){
+ centeredBike.alt=activeArt.alt;
+ centeredBike.dataset.fallback='0';
+ if(centeredBike.getAttribute('src')!==garageModelImage)centeredBike.src=garageModelImage;
+ if(centeredBike.complete&&centeredBike.naturalWidth===0){
+  // A failed load is handled by the error callback; never show an unrelated model.
+  centeredBike.hidden=false;
+ }
+}
 const activeSlide=track.children[index];
 if(activeSlide){
  const fallbackHero=activeSlide.querySelector('.motorcycle-hero');
