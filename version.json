@@ -1,6 +1,6 @@
 {
-  "version": "2.9.51",
-  "cache": "motorcycle-maintenance-v2.9.51",
+  "version": "2.9.52",
+  "cache": "motorcycle-maintenance-v2.9.52",
   "released": "2026-11-06",
-  "note": "백업 파일의 날짜 역순 주행거리 감소 의심 기록을 경고로 표시하며 계기판 정정 이력은 복원 차단하지 않음"
+  "note": "백업 파일의 등록 차량 ID와 정비기록 연결 검사, 등록 시작 주행거리 유효성 확인"
 }
