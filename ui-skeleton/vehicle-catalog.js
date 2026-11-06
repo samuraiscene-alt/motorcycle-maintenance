@@ -169,7 +169,7 @@ const officialProfiles=Object.freeze({
   sourcePages:['Honda JP qa009','Honda JP qa010'],
   intervals:Object.freeze({oil:3000,filter:12000,'oil-filter':12000}),
   tasks:Object.freeze({
-   oil:{replaceKm:3000,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12},
+   oil:{replaceKm:3000,firstReplaceMonths:1,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12},
    filter:{replaceKm:12000,firstReplaceKm:13000,firstRegularOdometerKm:25000},
    'oil-filter':{replaceKm:12000,firstReplaceKm:13000,firstRegularOdometerKm:25000}
   }),
@@ -202,7 +202,7 @@ const officialProfiles=Object.freeze({
   // Filter first at 13,000 km and subsequently 25,000 km, 37,000 km ...
   intervals:Object.freeze({oil:3000,filter:12000}),
   tasks:Object.freeze({
-   oil:{replaceKm:3000,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12},
+   oil:{replaceKm:3000,firstReplaceMonths:1,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12},
    filter:{replaceKm:12000,firstReplaceKm:13000,firstRegularOdometerKm:25000}
   }),
   specs:Object.freeze({
@@ -223,7 +223,7 @@ const officialProfiles=Object.freeze({
   // The app records 12-month replacement guidance; initial 1-month time limit is in source metadata.
   intervals:Object.freeze({oil:3000,filter:12000}),
   tasks:Object.freeze({
-   oil:{replaceKm:3000,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12},
+   oil:{replaceKm:3000,firstReplaceMonths:1,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12},
    filter:{replaceKm:12000,firstReplaceKm:13000,firstRegularOdometerKm:25000}
   }),
   specs:Object.freeze({chainSlackMm:[20,30],chainSlackSource:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa013/'}),
