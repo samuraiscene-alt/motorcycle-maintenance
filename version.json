@@ -1,6 +1,6 @@
 {
-  "version": "2.9.27",
-  "cache": "motorcycle-maintenance-v2.9.27",
+  "version": "2.9.28",
+  "cache": "motorcycle-maintenance-v2.9.28",
   "released": "2026-11-06",
-  "note": "차량별 사용자 수정 정비주기는 보존하고 공식값만 최신 주기로 갱신"
+  "note": "차량별 정비주기 출처를 소모품 카드에 표시: 공식·사용자 설정·기록 기준·출처 미확인"
 }
