@@ -376,8 +376,12 @@ const action=partAction(reg,id);
 const usable=records.filter(record=>record&&valid(record.at)&&valid(record.interval)&&record.interval>0&&record.at<=odo&&(record.action||'replace')===action);
 const last=usable.length?[...usable].sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||'')))[usable.length-1]:null;
 const text=row.querySelector('.part-line span'),bar=row.querySelector('.gauge-fill'),btn=row.querySelector('.service');
+const body=row.querySelector('.part-body');
+let sourceTag=body?.querySelector('.part-interval-source');
+if(body&&!sourceTag){sourceTag=document.createElement('small');sourceTag.className='part-interval-source';const gauge=body.querySelector('.gauge');if(gauge)body.insertBefore(sourceTag,gauge);else body.appendChild(sourceTag)}
+if(sourceTag){sourceTag.textContent='';sourceTag.dataset.source='unknown'}
 bar.classList.remove('blue','amber','red');bar.classList.add('blue');btn.classList.remove('blue','amber','red');btn.classList.add('blue');delete row.dataset.maintenancePercent;
-if(!reg){text.textContent='차량 등록 후 확인';bar.style.width='0%';row.classList.add('part-unregistered');}
+if(!reg){text.textContent='차량 등록 후 확인';if(sourceTag)sourceTag.textContent='차량 등록 후 확인';bar.style.width='0%';row.classList.add('part-unregistered');}
 else{
  const profile=officialProfile(reg),task=officialTask(reg,id),settings=partSettings(currentBike().id,id);
  const fallback=reg.maintenanceProfileStatus?0:item.interval;
@@ -390,6 +394,19 @@ else{
  const due=firstOil&&!last?initialDue:firstOil&&last.at<=initialDue?nextFirst:last?last.at+interval:knownBase+interval;
  const span=Math.max(1,due-knownBase);
  const calendar=dateBasedStatus(reg,id,records);
+ if(sourceTag){
+  const hasSetting=Object.prototype.hasOwnProperty.call(settings,'interval');
+  let origin='unknown',label='주기 미확인';
+  if(hasSetting&&settings.intervalSource==='user'){origin='user';label='사용자 설정'}
+  else if(hasSetting&&settings.intervalSource==='official'){origin='official';label='제조사 공식'}
+  else if(hasSetting){origin='legacy';label='기존 설정 · 출처 미확인'}
+  else if(last){origin='record';label='정비기록 기준'}
+  else if(officialDefault>0){origin='official';label='제조사 공식'}
+  else if(fallback>0){origin='default';label='앱 기본값'}
+  else if(calendar){origin='official';label='제조사 공식 · 기간 기준'}
+  sourceTag.dataset.source=origin;
+  sourceTag.textContent=label+(interval>0?' · '+fmt(interval)+'km':calendar?' · '+calendar.months+'개월':'');
+ }
  if(!valid(knownBase)||!Number.isSafeInteger(interval)||interval<=0){
   text.textContent=calendar?(calendar.missing?'마지막 교체일 입력 필요 · '+calendar.months+'개월 주기':calendar.days<0?'교체기한 '+Math.abs(calendar.days)+'일 초과 · '+calendar.due:calendar.days<=30?'교체까지 '+calendar.days+'일 · '+calendar.due:'다음 교체 '+calendar.due)
   :interval>0?'교체기록 없음 / 주기 '+fmt(interval)+'km'
