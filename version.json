@@ -1,6 +1,6 @@
 {
-  "version": "2.9.44",
-  "cache": "motorcycle-maintenance-v2.9.44",
+  "version": "2.9.45",
+  "cache": "motorcycle-maintenance-v2.9.45",
   "released": "2026-11-06",
-  "note": "공식 거리주기가 없는 점검·청소 작업을 주기 미설정 상태로 기록 가능하도록 수정"
+  "note": "전체 백업에 소모품 카드 순서 변환 상태를 포함하고 기존 6항목 백업 복원 호환성 유지"
 }
