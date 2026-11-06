@@ -476,16 +476,19 @@ setGarageSign(maker);
 const normalizedModel=String(r?.model||'').trim().toUpperCase()||
  String(r?.name||b.name||'').trim().toUpperCase().replace(new RegExp('^'+maker+'\\s*'),'').trim();
 const xmaxRequested=maker==='YAMAHA'&&normalizedModel==='XMAX300'&&Number(r?.year)===2025;
+const cb125rIllustration=maker==='HONDA'&&normalizedModel==='CB125R'&&Number(r?.year)===2025;
 const referenceImageAllowed=maker==='HONDA'&&normalizedModel==='PCX125';
+const garageModelImage=cb125rIllustration?'./cb125r-2025.svg?v=1':referenceImageAllowed?'./motorcycle.svg':null;
 const activeSlide=track.children[index];
 if(activeSlide){
  const fallbackHero=activeSlide.querySelector('.motorcycle-hero');
  if(fallbackHero){
-  fallbackHero.hidden=!referenceImageAllowed;
-  if(referenceImageAllowed&&fallbackHero.getAttribute('src')!=='./motorcycle.svg')fallbackHero.src='./motorcycle.svg';
+  fallbackHero.hidden=!garageModelImage;
+  if(garageModelImage&&fallbackHero.getAttribute('src')!==garageModelImage)fallbackHero.src=garageModelImage;
+  if(garageModelImage)fallbackHero.alt=cb125rIllustration?'Honda CB125R 2025 외형 참고용 오리지널 일러스트':'HONDA PCX125 참고용 일러스트';
  }
  const shadow=activeSlide.querySelector('.ground-shadow');
- if(shadow)shadow.hidden=!referenceImageAllowed&&!xmaxRequested;
+ if(shadow)shadow.hidden=!garageModelImage&&!xmaxRequested;
 }
 document.body.dataset.xmaxRequested=String(xmaxRequested);
 if(xmaxRequested){
@@ -497,6 +500,7 @@ if(xmaxRequested){
 const yearWarning=window.MotorcycleCatalog?.validateModelYear(maker,r?.model,Number(r?.year));
 showroomNotice.textContent=yearWarning?yearWarning.description
  :xmaxRequested&&document.body.classList.contains('xmax-2025-photo-ready')?'XMAX300 계열 공식 사진 · 세부 트림 참고용'
+ :cb125rIllustration?'CB125R 2025 · 기종 전용 참고 일러스트'
  :referenceImageAllowed?'차종 전용 이미지 미등록 · 참고용 스쿠터'
  :'차종 전용 이미지 준비 중';
 meta.replaceChildren();
