@@ -1,6 +1,6 @@
 {
-  "version": "2.9.99",
-  "cache": "motorcycle-maintenance-v2.9.99",
+  "version": "2.9.100",
+  "cache": "motorcycle-maintenance-v2.9.100",
   "released": "2026-11-06",
-  "note": "40기종 공식 정비자료 현황 통합 점검, 2025 REBEL500 / BMW G310R 2020 / R1300GS 2024 검증 프로필 추가, 간판 작업 보류"
+  "note": "40기종 정비자료 현황 전수 대조, REBEL500/BMW G310R/R1300GS 및 MT-07 일부 공식 주기 추가; 미검증 기종 자동값 제한"
 }
