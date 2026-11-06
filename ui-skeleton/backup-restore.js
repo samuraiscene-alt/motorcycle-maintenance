@@ -7,7 +7,7 @@ const style=document.createElement('style');
 style.textContent='.backup-overlay[hidden]{display:none!important}.backup-overlay{position:fixed;inset:0;z-index:180;background:#02070dd9;display:flex;align-items:flex-end;justify-content:center;padding:12px 12px max(24px,env(safe-area-inset-bottom))}.backup-panel{width:100%;max-width:540px;max-height:88dvh;overflow:auto;border:1px solid #92afc8;border-radius:17px;padding:18px;background:linear-gradient(150deg,#344c65,#13263a 34%,#09121e);color:#edf8ff}.backup-panel-header{display:flex;align-items:center;justify-content:space-between}.backup-panel-header strong{font-size:19px}.backup-panel-header button{border:1px solid #8ca8c1;border-radius:8px;background:#172e43;color:white;width:36px;height:36px;font-size:24px}.backup-panel p{font-size:12px;color:#c4d9ea;line-height:1.7}.backup-panel section{border:1px solid #58738c;border-radius:12px;background:#091c2e;padding:13px;margin:14px 0}.backup-panel section strong{font-size:15px}.backup-btn{width:100%;height:48px;border:1px solid #a2d8fc;border-radius:10px;background:linear-gradient(#4bb2fa,#0860ad);color:white;font-size:15px;font-weight:850}.backup-btn.secondary{background:linear-gradient(#465d73,#21344c);border-color:#92a9bf}.backup-btn:disabled{opacity:.5}.backup-status{min-height:18px;color:#aadfff!important;white-space:pre-line}.backup-file{position:absolute;opacity:0;width:1px;height:1px}';
 document.head.appendChild(style);
 const overlay=document.createElement('div');overlay.className='backup-overlay';overlay.hidden=true;
-overlay.innerHTML='<div class="backup-panel" role="dialog" aria-modal="true" aria-label="백업 및 복원"><div class="backup-panel-header"><strong>설정 · 백업 및 복원</strong><button type="button" class="backup-close" aria-label="닫기">×</button></div><p>차량 정보, 정비기록, 주행거리, 소모품 설정과 순서, 직접 추가한 항목 및 사용자 사진까지 백업해.</p><section><strong>전체 백업</strong><p>현재 기기 데이터를 파일 앱이나 iCloud Drive에 보관해.</p><button type="button" class="backup-btn backup-save">전체 백업 파일 저장</button></section><section><strong>전체 복원</strong><p>백업 파일을 선택하면 해당 앱 데이터가 백업 시점으로 변경돼.</p><button type="button" class="backup-btn secondary backup-load">백업 파일 선택하여 복원</button><input type="file" class="backup-file" accept=".json,application/json"></section><p>복원 전에는 현재 데이터도 백업해. Safari 웹사이트 데이터를 삭제하면 기록이 사라질 수 있어.</p><p class="backup-status" role="status" aria-live="polite"></p></div>';
+overlay.innerHTML='<div class="backup-panel" role="dialog" aria-modal="true" aria-label="백업 및 복원"><div class="backup-panel-header"><strong>설정 · 백업 및 복원</strong><button type="button" class="backup-close" aria-label="닫기">×</button></div><p>차량 정보, 정비기록, 주행거리, 소모품 설정과 순서, 직접 추가한 항목 및 사용자 사진까지 백업해.</p><section><strong>전체 백업</strong><p>현재 기기 데이터를 파일 앱이나 iCloud Drive에 보관해.</p><button type="button" class="backup-btn backup-save">전체 백업 파일 저장</button></section><section><strong>백업 파일 검사 (읽기 전용)</strong><p>현재 기록을 바꾸지 않고 백업 파일의 손상 여부와 차량·정비기록·사진 개수를 확인해.</p><button type="button" class="backup-btn secondary backup-check">백업 파일 검사</button><input type="file" class="backup-file backup-check-file" accept=".json,application/json"><p class="backup-check-result" role="status" aria-live="polite"></p></section><section><strong>전체 복원</strong><p>백업 파일을 선택하면 해당 앱 데이터가 백업 시점으로 변경돼.</p><button type="button" class="backup-btn secondary backup-load">백업 파일 선택하여 복원</button><input type="file" class="backup-file" accept=".json,application/json"></section><p>복원 전에는 현재 데이터도 백업해. Safari 웹사이트 데이터를 삭제하면 기록이 사라질 수 있어.</p><p class="backup-status" role="status" aria-live="polite"></p></div>';
 document.body.appendChild(overlay);
 const transferSection=document.createElement('section');
 transferSection.className='browser-transfer-section';
@@ -28,10 +28,10 @@ const extraStyle=document.createElement('style');
 extraStyle.textContent='.browser-transfer-section{border-color:#69a0cc!important}.browser-transfer-details{padding:10px;border-radius:8px;background:#213c56;color:#e9f5ff;font-size:12px;font-weight:850;margin:10px 0}.browser-transfer-section b{color:#ffdbb7}';
 document.head.appendChild(extraStyle);
 
-const get=x=>overlay.querySelector(x),save=get('.backup-save'),load=get('.backup-load'),pick=get('.backup-file'),status=get('.backup-status');
+const get=x=>overlay.querySelector(x),save=get('.backup-save'),load=get('.backup-load'),pick=get('.backup-file:not(.backup-check-file)'),check=get('.backup-check'),checkPick=get('.backup-check-file'),checkResult=get('.backup-check-result'),status=get('.backup-status');
 let busy=false;
 function message(x){status.textContent=x}
-function lock(x){busy=x;save.disabled=x;load.disabled=x;get('.backup-close').disabled=x}
+function lock(x){busy=x;save.disabled=x;load.disabled=x;check.disabled=x;get('.backup-close').disabled=x}
 function hide(){if(!busy)overlay.hidden=true}
 get('.backup-close').addEventListener('click',hide);
 overlay.addEventListener('click',e=>{if(e.target===overlay)hide()});
@@ -136,6 +136,30 @@ function validate(payload){
  }
 }
 async function checksum(payload){const input=new TextEncoder().encode(JSON.stringify(payload)),bytes=new Uint8Array(await crypto.subtle.digest('SHA-256',input));return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('')}
+async function inspectBackupFile(file){
+ if(file.size>160*1024*1024)throw new Error('160MB 이하 백업 파일만 지원해.');
+ let doc;try{doc=JSON.parse(await file.text())}catch{throw new Error('JSON 파일을 읽을 수 없어.')}
+ if(!obj(doc)||doc.format!==MAGIC||doc.version!==1||!obj(doc.payload)||typeof doc.sha256!=='string')
+  throw new Error('이 앱에서 만든 백업 파일이 아니야.');
+ validate(doc.payload);
+ if(await checksum(doc.payload)!==doc.sha256)throw new Error('백업 파일이 손상되었거나 수정됐어.');
+ // The hash covers the complete payload, including every encoded photo.
+ // Only calculate the summary here; never open a writable database or update localStorage.
+ return {doc,vehicles:vehicleCount(doc.payload.local['motorcycle-skeleton-registrations-v1']),
+  records:recordCount(doc.payload.local['motorcycle-skeleton-maintenance-v1']),
+  images:doc.payload.images.length};
+}
+check.addEventListener('click',()=>{if(busy)return;checkPick.value='';checkPick.click()});
+checkPick.addEventListener('change',async()=>{
+ const file=checkPick.files?.[0];if(!file||busy)return;
+ lock(true);checkResult.textContent='파일을 검사 중…';
+ try{
+  const info=await inspectBackupFile(file);
+  checkResult.textContent='검사 통과 · 차량 '+info.vehicles+'대 · 정비기록 '+info.records+
+   '건 · 사진 '+info.images+'개\n백업 파일 해시 및 구조 확인 완료. 현재 데이터는 변경하지 않았어.';
+ }catch(err){checkResult.textContent='검사 실패: '+(err.message||'파일을 검사할 수 없어.')}
+ finally{lock(false);checkPick.value=''}
+});
 function filename(){const d=new Date(),p=x=>String(x).padStart(2,'0');return '오토바이정비_전체백업_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'}
 save.addEventListener('click',async()=>{
  if(busy)return;lock(true);message('전체 데이터를 수집하는 중…');
@@ -151,14 +175,10 @@ load.addEventListener('click',()=>{if(!busy){pick.value='';pick.click()}});
 pick.addEventListener('change',async()=>{
  const file=pick.files&&pick.files[0];if(!file||busy)return;lock(true);message('백업 파일 검사 중…');
  try{
-  if(file.size>160*1024*1024)throw new Error('160MB 이하 백업 파일만 지원해.');
-  let doc;try{doc=JSON.parse(await file.text())}catch{throw new Error('JSON 파일을 읽을 수 없어.')}
-  if(!obj(doc)||doc.format!==MAGIC||doc.version!==1||!obj(doc.payload)||typeof doc.sha256!=='string')throw new Error('이 앱에서 만든 백업 파일이 아니야.');
-  validate(doc.payload);
-  if(await checksum(doc.payload)!==doc.sha256)throw new Error('백업 파일이 손상되었거나 수정됐어.');
+  const inspection=await inspectBackupFile(file),doc=inspection.doc;
   const incoming=unpackImages(doc.payload.images);
-  const incomingRegs=vehicleCount(doc.payload.local['motorcycle-skeleton-registrations-v1']);
-  const incomingRecords=recordCount(doc.payload.local['motorcycle-skeleton-maintenance-v1']);
+  const incomingRegs=inspection.vehicles;
+  const incomingRecords=inspection.records;
   const existingRegs=vehicleCount(localStorage.getItem('motorcycle-skeleton-registrations-v1'));
   const existingRecords=recordCount(localStorage.getItem('motorcycle-skeleton-maintenance-v1'));
   const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건\\n\\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
