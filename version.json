@@ -1,6 +1,6 @@
 {
-  "version": "2.9.81",
-  "cache": "motorcycle-maintenance-v2.9.81",
+  "version": "2.9.82",
+  "cache": "motorcycle-maintenance-v2.9.82",
   "released": "2026-11-06",
-  "note": "차량정보 주행거리 정정 확인·정정 표시와 중복 이력 방지"
+  "note": "1차 제조사·차량 선택 목록 10개사 40기종 확장 (검증된 공식 정비주기 유지)"
 }
