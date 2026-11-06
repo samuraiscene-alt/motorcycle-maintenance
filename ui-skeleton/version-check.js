@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const CURRENT='2.9.80';
+const CURRENT='2.9.81';
 const SCRIPT=document.currentScript;
 const ROOT=new URL('../',SCRIPT?.src||location.href);
 let remote=CURRENT,checking=false;
