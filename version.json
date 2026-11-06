@@ -1,6 +1,6 @@
 {
-  "version": "2.9.69",
-  "cache": "motorcycle-maintenance-v2.9.69",
+  "version": "2.9.70",
+  "cache": "motorcycle-maintenance-v2.9.70",
   "released": "2026-11-06",
-  "note": "정비기록 수정·삭제 시 카드 게이지·점검·청소 알림 계산 통일"
+  "note": "최신 주행거리 이력 하향 수정 시 확인 및 정정 기록 보존"
 }
