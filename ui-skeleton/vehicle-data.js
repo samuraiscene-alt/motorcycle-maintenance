@@ -854,13 +854,22 @@ function editOdometerEntry(seq){
  if(!answer.trim()||!valid(value)||value<reg.km){alert('시작 주행거리 이상인 올바른 숫자를 입력해.');return}
  const isLatest=seq===arr.length-1,minService=maxServiceOdometer(bikeId);
  if(isLatest&&value<minService){alert('현재 주행거리는 저장된 정비기록보다 낮을 수 없어.');return}
+ // A lower latest reading is an odometer correction, not ordinary mileage progress.
+ // Ask before changing the displayed reading and preserve correction provenance.
+ const correction=isLatest&&value<Number(entry.at);
+ if(correction&&!confirm('최신 주행거리 기록을 '+fmt(entry.at)+'km에서 '+fmt(value)+'km로 낮출까?\n계기판과 소모품 게이지를 다시 계산하고 정정 이력을 남겨.'))return;
  const oldDate=new Date(entry.date);
  const storedDate=Number.isFinite(oldDate.getTime())?[oldDate.getFullYear(),String(oldDate.getMonth()+1).padStart(2,'0'),String(oldDate.getDate()).padStart(2,'0')].join('-'):todayLocal();
  const dateAnswer=prompt('주행거리 이력 날짜 (YYYY-MM-DD)',storedDate);
  if(dateAnswer===null)return;
  const newDate=dateAnswer.trim();
  if(!validMaintenanceDate(newDate)||newDate>todayLocal()){alert('올바른 과거 또는 오늘 날짜를 입력해.');return}
- const nextArr=arr.map((item,i)=>i===seq?{...item,at:value,date:new Date(newDate+'T12:00:00').toISOString(),editedAt:new Date().toISOString()}:item);
+ const nextArr=arr.map((item,i)=>{
+  if(i!==seq)return item;
+  const edited={...item,at:value,date:new Date(newDate+'T12:00:00').toISOString(),editedAt:new Date().toISOString()};
+  if(correction){edited.type='correction';edited.previous=Number(entry.at)}
+  return edited;
+ });
  const next={...database,[bikeId]:{...source,odometer:isLatest?value:source.odometer,odometerHistory:nextArr}};
  try{write(dataKey,next);database=next;renderInfo();showHistory()}
  catch{alert('주행거리 이력 수정에 실패했어.')}
