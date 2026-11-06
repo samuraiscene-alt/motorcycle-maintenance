@@ -293,8 +293,23 @@ selfTestButton.addEventListener('click',async()=>{
   const result=await inspectBackupFile(file);
   const bytes=unpackImages(result.doc.payload.images);
   if(result.vehicles!==1||result.records!==1||result.images!==1||bytes.length!==1||await bytes[0].blob.text()!=='test')
-   throw new Error('가상 데이터 검증 결과 불일치');
-  showCheckResult('ok','✓ 자가진단 통과 · 가상 백업·검사·사진 복원 확인\n실제 사용자 데이터는 변경하지 않았어.');
+   throw new Error('① 정상 백업·사진 복원 확인 실패');
+  const validSha=await checksum(payload);
+  const damagedFile=new Blob([JSON.stringify({format:MAGIC,version:1,payload,sha256:'0'.repeat(64)})],{type:'application/json'});
+  let blocked=false;
+  try{await inspectBackupFile(damagedFile)}catch{blocked=true}
+  if(!blocked)throw new Error('② 손상된 백업 파일 차단 실패');
+  const badRecords={...payload,local:{...local}};
+  badRecords.local['motorcycle-skeleton-maintenance-v1']=JSON.stringify({'bike-test':{
+   odometer:1500,records:{oil:[{at:1800,interval:5000,date:'2025-01-10',action:'replace'}]}
+  }});
+  blocked=false;try{validate(badRecords)}catch{blocked=true}
+  if(!blocked)throw new Error('③ 현재 주행거리를 초과한 정비기록 차단 실패');
+  const badPhoto={...payload,images:[{...payload.images[0],data:'!!!!'}]};
+  blocked=false;try{validate(badPhoto)}catch{blocked=true}
+  if(!blocked)throw new Error('④ 손상된 사진 데이터 차단 실패');
+  if(validSha!==result.doc.sha256)throw new Error('검증값이 일치하지 않아.');
+  showCheckResult('ok','✓ 자가진단 4/4 통과\n① 정상 백업·사진 확인\n② 손상된 파일 차단\n③ 잘못된 정비기록 차단\n④ 손상된 사진 차단\n실제 사용자 데이터는 변경하지 않았어.');
  }catch(e){showCheckResult('error','✕ 자가진단 실패 · '+(e.message||e))}
  finally{lock(false)}
 });
