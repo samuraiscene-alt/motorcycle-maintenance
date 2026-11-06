@@ -16,6 +16,27 @@ const brands=[
  {id:'KYMCO',label:'KYMCO',models:[['DOWNTOWN',350],['AK550',550],['LIKE125',125]]},
  {id:'VESPA',label:'VESPA',models:[['PRIMAVERA125',125],['GTS300',300],['SPRINT125',125],['GTV300',300]]}
 ];
+
+// A classification is not a physical dimension or an image scaling instruction.
+// Keep the standard garage asset unchanged until a model-specific graphic is available.
+const modelStyles=Object.freeze({
+ HONDA:Object.freeze({'PCX125':'scooter-compact','FORZA350':'scooter-mid','ADV350':'scooter-adventure','SUPER CUB110':'underbone','C125':'underbone','CT125':'underbone-trail','CB125R':'naked-light','CB650R':'naked-mid','CBR650R':'sport-mid','REBEL500':'cruiser'}),
+ YAMAHA:Object.freeze({'NMAX125':'scooter-compact','XMAX300':'scooter-mid','XMAX125':'scooter-mid','TMAX560':'scooter-large','MT-03':'naked-light','MT-07':'naked-mid','YZF-R3':'sport-light','TRICITY125':'scooter-three-wheel'}),
+ SUZUKI:Object.freeze({'BURGMAN125':'scooter-compact','BURGMAN400':'scooter-large','ADDRESS125':'scooter-compact','AVENIS125':'scooter-compact','GSX-S125':'naked-light'}),
+ KAWASAKI:Object.freeze({'NINJA500':'sport-mid','Z500':'naked-mid','Z900':'naked-large'}),
+ BMW:Object.freeze({'G310R':'naked-light','R1300GS':'adventure-large'}),
+ DUCATI:Object.freeze({'MONSTER':'naked-large'}),
+ TRIUMPH:Object.freeze({'SPEED400':'modern-classic'}),
+ SYM:Object.freeze({'JET14':'scooter-compact','JOYMAX':'scooter-mid','JET X 125':'scooter-compact'}),
+ KYMCO:Object.freeze({'DOWNTOWN':'scooter-mid','AK550':'scooter-large','LIKE125':'scooter-compact'}),
+ VESPA:Object.freeze({'PRIMAVERA125':'scooter-classic','GTS300':'scooter-classic-large','SPRINT125':'scooter-classic','GTV300':'scooter-classic-large'})
+});
+// Verified dimensions are tied to region and model year, never extrapolated to all years.
+// Values measure the real vehicle's envelope (mm), not its drawn asset bounding box.
+const verifiedDimensions=Object.freeze({
+ 'HONDA|PCX125|2025':Object.freeze({lengthMm:1935,widthMm:740,heightMm:1125,region:'EU',source:'https://hondanews.eu/eu/en/motorcycles/media/pressreleases/503766/25ym-honda-pcx125-press-kit'}),
+ 'YAMAHA|XMAX300|2025':Object.freeze({lengthMm:2184,widthMm:775,heightMm:1410,region:'US',heightRangeMm:[1410,1506],source:'https://www.yamahamotorsports.com/models/25-xmax/specs'})
+});
 const officialProfiles=Object.freeze({
  'YAMAHA|NMAX125|2022':Object.freeze({
   verified:true,coverage:'partial',region:'GPD125 / Yamaha Korea 2022',modelCode:'GPD125',year:2022,
@@ -173,6 +194,14 @@ window.MotorcycleCatalog=Object.freeze({
  brands,
  officialProfiles:expandedOfficialProfiles,
  profileKey,
+ modelStyles,
+ verifiedDimensions,
+ findBodyStyle(brand,model){
+  return modelStyles[String(brand).trim().toUpperCase()]?.[String(model).trim().toUpperCase()]||'unclassified';
+ },
+ findVerifiedDimensions(brand,model,year){
+  return verifiedDimensions[profileKey(brand,model,year)]||null;
+ },
  findOfficialProfile(brand,model,year){
   const value=expandedOfficialProfiles[profileKey(brand,model,year)];
   return value&&value.verified===true&&value.source?value:null;
