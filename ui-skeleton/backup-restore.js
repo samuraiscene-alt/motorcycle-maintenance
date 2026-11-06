@@ -328,6 +328,66 @@ selfTestButton.addEventListener('click',async()=>{
  }catch(e){showCheckResult('error','✕ 자가진단 실패 · '+(e.message||e))}
  finally{lock(false)}
 });
+// An isolated database is used for simulated restore; the production DB is never opened.
+const simulationButton=document.createElement('button');
+simulationButton.type='button';simulationButton.className='backup-btn secondary';
+simulationButton.style.marginTop='9px';simulationButton.textContent='복원 모의실험 (별도 저장소)';
+selfTestButton.after(simulationButton);
+async function simulateRestore(){
+ const databaseName='motorcycle-maintenance-restore-simulation-v1';
+ let db;
+ try{
+  db=await new Promise((resolve,reject)=>{
+   const request=indexedDB.open(databaseName,1);
+   request.onupgradeneeded=()=>{
+    const created=request.result;
+    if(!created.objectStoreNames.contains('data'))created.createObjectStore('data');
+   };
+   request.onsuccess=()=>resolve(request.result);
+   request.onerror=()=>reject(request.error||new Error('시험 저장소 생성 실패'));
+   request.onblocked=()=>reject(new Error('이전 자가진단 창을 닫고 다시 시도해.'));
+  });
+  const fixture={bike:'simulation-only',km:1700,service:{at:1200,interval:5000},photo:new Blob(['photo-test'],{type:'image/png'})};
+  await new Promise((resolve,reject)=>{
+   const tx=db.transaction('data','readwrite'),store=tx.objectStore('data');
+   store.clear();store.put(fixture.bike,'bike');store.put(fixture.km,'km');
+   store.put(fixture.service,'service');store.put(fixture.photo,'photo');
+   tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error||new Error('가상 기록 저장 실패'));
+   tx.onabort=()=>reject(tx.error||new Error('가상 기록 저장 중단'));
+  });
+  const values=await new Promise((resolve,reject)=>{
+   const tx=db.transaction('data','readonly'),store=tx.objectStore('data');
+   const keys=['bike','km','service','photo'],result={};
+   for(const key of keys)store.get(key).onsuccess=e=>result[key]=e.target.result;
+   tx.oncomplete=()=>resolve(result);
+   tx.onerror=()=>reject(tx.error||new Error('가상 기록 읽기 실패'));
+  });
+  if(values.bike!==fixture.bike||values.km!==fixture.km||
+     JSON.stringify(values.service)!==JSON.stringify(fixture.service)||
+     !(values.photo instanceof Blob)||
+     await blobDigest(values.photo)!==await blobDigest(fixture.photo))
+   throw new Error('가상 복원 후 데이터가 일치하지 않아.');
+  return '✓ 복원 모의실험 통과\\n별도 저장소에 가상 차량·정비기록·사진 쓰기와 재읽기 확인 완료.\\n실제 차량·정비기록·사진은 변경하지 않았어.';
+ }finally{
+  if(db)db.close();
+  // Delete only our dedicated simulation database, never the user's production DB.
+  try{
+   await new Promise((resolve,reject)=>{
+    const req=indexedDB.deleteDatabase(databaseName);
+    req.onsuccess=resolve;req.onerror=()=>reject(req.error);
+    req.onblocked=()=>reject(new Error('시험 저장소 정리가 지연됐어.'));
+   });
+  }catch{/* Cleanup can be retried on the next simulation. */}
+ }
+}
+simulationButton.addEventListener('click',async()=>{
+ if(busy)return;
+ lock(true);simulationButton.disabled=true;
+ showCheckResult('checking','별도 저장소에서 복원 모의실험 중…');
+ try{showCheckResult('ok',await simulateRestore())}
+ catch(e){showCheckResult('error','✕ 복원 모의실험 실패\\n'+(e.message||e))}
+ finally{lock(false);simulationButton.disabled=false}
+});
 check.addEventListener('click',()=>{if(busy)return;checkPick.value='';checkPick.click()});
 checkPick.addEventListener('change',async()=>{
  const file=checkPick.files?.[0];if(!file||busy)return;
