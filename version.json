@@ -1,6 +1,6 @@
 {
-  "version": "2.9.77",
-  "cache": "motorcycle-maintenance-v2.9.77",
+  "version": "2.9.78",
+  "cache": "motorcycle-maintenance-v2.9.78",
   "released": "2026-11-06",
-  "note": "연식 미확인 및 변경 시 오래된 공식 정비주기 정리하고 사용자 설정 보존"
+  "note": "구버전 정비기록 및 공식 점검·청소·교체 주기 구분과 목록 계산 통일"
 }
