@@ -195,7 +195,7 @@ function updateMaintenanceNotices(){
  box.replaceChildren();const reg=currentRegistration(),odo=getOdometer();
  if(!reg||!valid(odo)){noticePanel.hidden=true;return}
  noticePanel.hidden=false;
- const vehicle=getVehicleData(currentBike().id),notices=[];let unknown=0,missingDates=[];
+ const vehicle=getVehicleData(currentBike().id),notices=[],unknownEntries=[],missingDates=[];
  const rows=[...document.querySelectorAll('.rows .part[data-part-id]')];
  for(const row of rows){
   if(row.closest('.part-swipe-wrap')?.hidden||row.hidden)continue;
@@ -207,7 +207,7 @@ function updateMaintenanceNotices(){
    if(!Number.isSafeInteger(km)||km<=0)continue;
    const last=records.filter(x=>x&&valid(x.at)&&x.at<=odo&&(x.action||'replace')===action).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
    const firstDue=action==='replace'&&id==='oil'&&task?.firstReplaceKm?task.firstReplaceKm:km;
-   if(!last&&(reg.km!==0||odo>firstDue)){unknown++;continue}
+   if(!last&&(reg.km!==0||odo>firstDue)){unknownEntries.push({id,title,action,km});continue}
    const due=last?last.at+km:firstDue;
    const remaining=due-odo;if(remaining>500)continue;
    notices.push({id,title,action,due,remaining,kind:'distance'});
@@ -227,7 +227,7 @@ function updateMaintenanceNotices(){
  if(dueCount)parts.push('도래 '+dueCount+'건');
  if(soon)parts.push('임박 '+soon+'건');
  if(missingDates.length)parts.push('날짜 확인 '+missingDates.length+'건');
- if(unknown)parts.push('이력 확인 '+unknown+'건');
+ if(unknownEntries.length)parts.push('이력 확인 '+unknownEntries.length+'건');
  count.textContent=parts.join(' · ')||'도래·임박 없음';
  for(const n of notices){
   const item=document.createElement('button');item.type='button';item.className='maintenance-notice-item';item.dataset.level=n.remaining<=0?'due':'soon';
@@ -250,7 +250,7 @@ function updateMaintenanceNotices(){
   const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
   p.textContent=(reg.year?reg.year+'년형':'연식 미입력')+' '+String(reg.brand||'')+' '+String(reg.model||'')+'의 공식 정비주기가 연결되지 않았어. 차량정보에서 제조사·기종·연식을 확인해.';box.appendChild(p);
  }
- if(!notices.length&&!missingDates.length&&!unknown&&profile){const p=document.createElement('p');p.textContent='현재 500km 또는 30일 이내의 정비 알림이 없어.';box.appendChild(p)}
+ if(!notices.length&&!missingDates.length&&!unknownEntries.length&&profile){const p=document.createElement('p');p.textContent='현재 500km 또는 30일 이내의 정비 알림이 없어.';box.appendChild(p)}
  if(missingDates.length){
   const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
   p.textContent='마지막 교체일 확인 필요 ('+missingDates.length+'건). 실제 교체한 날짜와 당시 주행거리를 알고 있다면 아래 항목을 눌러 기록해.';box.appendChild(p);
@@ -267,7 +267,25 @@ function updateMaintenanceNotices(){
    box.appendChild(btn);
   }
  }
- if(unknown){const p=document.createElement('p');p.className='maintenance-notice-disclaimer';p.textContent='정비 이력 확인 필요 '+unknown+'건: 기록된 정비 기준 없이 현재 주행거리만으로는 다음 교체·점검일을 확정할 수 없어. 과거 정비기록을 확인해.';box.appendChild(p)}
+ if(unknownEntries.length){
+  const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
+  p.textContent='정비 이력 확인 필요 '+unknownEntries.length+'건. 이전 작업의 실제 날짜와 당시 주행거리를 아는 항목만 등록해.';
+  box.appendChild(p);
+  for(const entry of unknownEntries){
+   const btn=document.createElement('button');
+   btn.type='button';btn.className='maintenance-notice-item maintenance-unknown-history';
+   const label=document.createElement('strong');
+   label.textContent=entry.title+' · '+actionText(entry.action);
+   const detail=document.createElement('span');
+   detail.textContent='기준 '+fmt(entry.km)+'km · 이전 정비 이력 확인 필요';
+   btn.append(label,detail);
+   btn.addEventListener('click',()=>{
+    const row=[...document.querySelectorAll('.rows .part[data-part-id]')].find(x=>x.dataset.partId===entry.id);
+    if(row)openRecord(row,{historical:true,action:entry.action});
+   });
+   box.appendChild(btn);
+  }
+ }
  const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
  p.textContent='거리·날짜 기준 앱 내부 참고 알림이야. 정비 이력과 제조사 설명서의 운행 조건도 확인해.';box.appendChild(p);
 }
