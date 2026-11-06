@@ -1,6 +1,6 @@
 {
-  "version": "2.9.45",
-  "cache": "motorcycle-maintenance-v2.9.45",
+  "version": "2.9.46",
+  "cache": "motorcycle-maintenance-v2.9.46",
   "released": "2026-11-06",
-  "note": "전체 백업에 소모품 카드 순서 변환 상태를 포함하고 기존 6항목 백업 복원 호환성 유지"
+  "note": "백업 복원 오류 시 차량·정비기록과 사진을 독립적으로 원상복구하고 복원 완료 검증 후 새로고침"
 }
