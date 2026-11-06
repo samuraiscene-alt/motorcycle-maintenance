@@ -131,7 +131,15 @@ function validate(payload){
  if(payload.images.length>2000)throw new Error('사진이 너무 많아.');
  const keys=new Set();
  for(const image of payload.images){
-  if(!obj(image)||typeof image.key!=='string'||image.key.length>300||keys.has(image.key)||typeof image.mime!=='string'||!image.mime.startsWith('image/')||typeof image.data!=='string'||image.data.length>30000000||image.data.length%4!==0)throw new Error('이미지 데이터가 올바르지 않아.');
+  if(!obj(image)||typeof image.key!=='string'||!image.key.length||image.key.length>300||keys.has(image.key)||typeof image.mime!=='string'||!/^image\/[a-z0-9.+-]+$/i.test(image.mime)||typeof image.data!=='string'||!image.data.length||image.data.length>30000000||image.data.length%4!==0)
+   throw new Error('이미지 데이터가 올바르지 않아.');
+  // A valid SHA-256 proves the backup was not accidentally altered, but it
+  // cannot prove an image payload can actually be restored from Base64.
+  // Validate its alphabet, padding and decodability before reporting success.
+  if(!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(image.data))
+   throw new Error('사진 데이터가 손상됐어: '+image.key);
+  try{if(!atob(image.data).length)throw new Error('empty')}
+  catch{throw new Error('사진을 복원할 수 없는 파일이야: '+image.key)}
   keys.add(image.key);
  }
 }
