@@ -1,6 +1,6 @@
 {
-  "version": "2.9.83",
-  "cache": "motorcycle-maintenance-v2.9.83",
+  "version": "2.9.84",
+  "cache": "motorcycle-maintenance-v2.9.84",
   "released": "2026-11-06",
-  "note": "1차 40기종 목록의 확인된 실제 배기량 기본값 보정"
+  "note": "40개 기종 차체 유형 분류 및 검증된 연식별 실측 제원 별도 저장, 일괄 이미지 배율 적용 금지"
 }
