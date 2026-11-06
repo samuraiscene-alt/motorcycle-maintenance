@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 550" role="img" aria-label="2024 HONDA CB650R 네오 스포츠 카페 오리지널 벡터 일러스트">
+<defs>
+<linearGradient id="red" x2=".5" y2="1"><stop stop-color="#ff6f66"/><stop offset=".2" stop-color="#d53132"/><stop offset=".55" stop-color="#b51d28"/><stop offset="1" stop-color="#5a1320"/></linearGradient>
+<linearGradient id="bronze" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d6b895"/><stop offset=".3" stop-color="#a17d5d"/><stop offset=".65" stop-color="#554334"/><stop offset="1" stop-color="#e1c6a2"/></linearGradient>
+<linearGradient id="alu" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#f0f3f5"/><stop offset=".36" stop-color="#8b969f"/><stop offset=".7" stop-color="#333b43"/><stop offset="1" stop-color="#bcc7cc"/></linearGradient>
+<linearGradient id="carbon" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#4e5660"/><stop offset=".5" stop-color="#171e27"/><stop offset="1" stop-color="#070b11"/></linearGradient>
+<filter id="floor"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<ellipse cx="505" cy="469" rx="417" ry="20" fill="#07111c" opacity=".67" filter="url(#floor)"/>
+<g transform="translate(209 354)"><circle r="113" fill="#0c0f13" stroke="#34373a" stroke-width="6"/><circle r="97" fill="#161c22" stroke="#666b6e" stroke-width="5"/><circle r="80" fill="#10151c" stroke="#8d7770" stroke-width="8"/><circle r="65" fill="#252c32" stroke="#abb0af" stroke-width="5"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(0)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(36)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(72)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(108)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(144)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(180)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(216)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(252)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(288)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(324)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><circle r="46" fill="none" stroke="#d5d2cb" stroke-width="9" stroke-dasharray="17 8" opacity=".8"/><circle r="19" fill="#555e65" stroke="#c8c9c7" stroke-width="7"/><circle r="8" fill="#1a2229"/></g><g transform="translate(784 354)"><circle r="113" fill="#0c0f13" stroke="#34373a" stroke-width="6"/><circle r="97" fill="#161c22" stroke="#666b6e" stroke-width="5"/><circle r="80" fill="#10151c" stroke="#8d7770" stroke-width="8"/><circle r="65" fill="#252c32" stroke="#abb0af" stroke-width="5"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(0)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(36)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(72)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(108)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(144)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(180)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(216)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(252)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(288)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><path d="M-5 -60 L5 -60 9 -16 -9 -16Z" transform="rotate(324)" fill="#6f777f" stroke="#1d252d" stroke-width="3"/><circle r="57" fill="none" stroke="#d5d2cb" stroke-width="12" stroke-dasharray="17 8" opacity=".8"/><circle r="19" fill="#555e65" stroke="#c8c9c7" stroke-width="7"/><circle r="8" fill="#1a2229"/></g>
+<!-- tail assembly, license plate holder -->
+<path d="M139 225 98 215 73 244 87 253 131 245" fill="#202731" stroke="#70777c" stroke-width="5"/>
+<path d="M144 245 82 275 95 306 124 303 160 269" fill="#252c33" stroke="#616a71" stroke-width="6"/>
+<path d="M116 281 89 281 87 297 113 300" fill="#161c21" stroke="#9aa3aa" stroke-width="3"/>
+<!-- aluminum rear swingarm and drive chain -->
+<path d="M218 359 397 373 502 351" fill="none" stroke="#0d141b" stroke-width="40" stroke-linecap="round"/>
+<path d="M219 346 402 352 497 334" fill="none" stroke="url(#alu)" stroke-width="20" stroke-linecap="round"/>
+<path d="M220 372 398 386 501 351" fill="none" stroke="#b0b1a5" stroke-width="6"/>
+<circle cx="209" cy="354" r="28" fill="#b9c0c6" stroke="#202b34" stroke-width="6"/>
+<!-- short sport tail and stepped seat -->
+<path d="M115 211 Q188 193 256 191 L317 204 340 227 279 244 201 244 155 228Z" fill="url(#carbon)" stroke="#667079" stroke-width="6"/>
+<path d="M196 201 Q251 184 311 196 L338 212 312 226 242 221 217 218Z" fill="#1a1e24" stroke="#323940" stroke-width="4"/>
+<path d="M278 232 355 274 423 280 460 249" stroke="#303c46" stroke-width="20" fill="none" stroke-linecap="round"/>
+<path d="M277 241 355 311 467 318 508 280" fill="none" stroke="#68727c" stroke-width="10"/>
+<path d="M320 248 370 342 482 334 440 249Z" fill="#1a252c" stroke="#59636b" stroke-width="6"/>
+<!-- Neo Sports Cafe chunky tank -->
+<path d="M340 199 Q371 146 424 140 L500 148 Q562 165 597 213 L570 245 502 261 438 246 397 216Z" fill="url(#red)" stroke="#54121d" stroke-width="9"/>
+<path d="M356 194 Q403 151 441 154 L494 162" fill="none" stroke="#ffc4b6" stroke-width="9" opacity=".5"/>
+<path d="M456 239 538 257 574 238 572 267 525 298 470 289Z" fill="#28323b" stroke="#707b85" stroke-width="6"/>
+<path d="M505 265 555 260" stroke="#deced0" stroke-width="6"/>
+<text x="422" y="194" font-family="Arial,sans-serif" font-size="24" font-weight="900" fill="#f9d6d5" letter-spacing="2">HONDA</text>
+<!-- radiator shroud -->
+<path d="M559 218 632 240 630 283 598 298 546 283Z" fill="#9ca6aa" stroke="#424c55" stroke-width="7"/>
+<path d="M579 239 623 253 620 273 583 278Z" fill="#26313a"/><text x="579" y="268" font-family="Arial" font-size="16" fill="#e7f0f5">650</text>
+<path d="M568 286 616 291 610 342 559 347Z" fill="#0c1318" stroke="#495662" stroke-width="5"/>
+<path d="M570 295 H607" stroke="#87949b" stroke-width="3" opacity=".75"/><path d="M570 300 H607" stroke="#87949b" stroke-width="3" opacity=".75"/><path d="M570 305 H607" stroke="#87949b" stroke-width="3" opacity=".75"/><path d="M570 310 H607" stroke="#87949b" stroke-width="3" opacity=".75"/><path d="M570 315 H607" stroke="#87949b" stroke-width="3" opacity=".75"/><path d="M570 320 H607" stroke="#87949b" stroke-width="3" opacity=".75"/><path d="M570 325 H607" stroke="#87949b" stroke-width="3" opacity=".75"/><path d="M570 330 H607" stroke="#87949b" stroke-width="3" opacity=".75"/>
+<!-- prominent inline four engine, separate four bronze cylinder heads -->
+<path d="M389 285 520 269 570 304 551 381 487 411 392 392 371 330Z" fill="url(#carbon)" stroke="#87949b" stroke-width="8"/>
+<g transform="translate(393 284) rotate(-11)"><rect width="32" height="71" rx="7" fill="url(#bronze)" stroke="#514e45" stroke-width="5"/><path d="M3 12 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 20 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 28 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 36 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 44 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 52 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 60 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/></g><g transform="translate(428 281) rotate(-11)"><rect width="32" height="71" rx="7" fill="url(#bronze)" stroke="#514e45" stroke-width="5"/><path d="M3 12 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 20 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 28 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 36 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 44 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 52 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 60 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/></g><g transform="translate(463 278) rotate(-11)"><rect width="32" height="71" rx="7" fill="url(#bronze)" stroke="#514e45" stroke-width="5"/><path d="M3 12 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 20 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 28 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 36 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 44 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 52 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 60 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/></g><g transform="translate(498 275) rotate(-11)"><rect width="32" height="71" rx="7" fill="url(#bronze)" stroke="#514e45" stroke-width="5"/><path d="M3 12 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 20 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 28 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 36 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 44 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 52 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/><path d="M3 60 H29" stroke="#e1c3a4" stroke-width="4" opacity=".7"/></g>
+<path d="M391 352 523 345 542 373 512 415 426 413 381 386Z" fill="url(#bronze)" stroke="#514a43" stroke-width="8"/>
+<circle cx="456" cy="374" r="38" fill="#7b6654" stroke="#dac3a7" stroke-width="8"/><circle cx="456" cy="374" r="22" fill="#4c443f" stroke="#b99a74" stroke-width="5"/>
+<path d="M490 346 548 360" stroke="#cab69f" stroke-width="7"/>
+<!-- signature four individual stainless exhaust headers sweeping under engine -->
+<path d="M411 345 C405 384 439 423 499 432 L615 439" stroke="#252c2f" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M411 345 C405 384 439 423 499 432 L615 439" stroke="url(#bronze)" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M438 345 C431 384 458 423 505 432 L615 439" stroke="#252c2f" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M438 345 C431 384 458 423 505 432 L615 439" stroke="url(#bronze)" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M465 345 C457 384 477 423 511 432 L615 439" stroke="#252c2f" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M465 345 C457 384 477 423 511 432 L615 439" stroke="url(#bronze)" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M492 345 C483 384 496 423 517 432 L615 439" stroke="#252c2f" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M492 345 C483 384 496 423 517 432 L615 439" stroke="url(#bronze)" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M554 424 Q625 438 679 424 L698 445 648 465 560 458Z" fill="url(#alu)" stroke="#737e89" stroke-width="6"/>
+<!-- front triple clamp, handlebars and two gold inverted forks -->
+<path d="M629 182 733 343" fill="none" stroke="#232a30" stroke-width="32" stroke-linecap="round"/>
+<path d="M652 180 765 347" fill="none" stroke="#121820" stroke-width="30" stroke-linecap="round"/>
+<path d="M639 195 744 343" fill="none" stroke="url(#bronze)" stroke-width="20" stroke-linecap="round"/>
+<path d="M663 190 777 349" fill="none" stroke="url(#bronze)" stroke-width="19" stroke-linecap="round"/>
+<path d="M644 190 747 327" fill="none" stroke="#edd9a1" stroke-width="5" stroke-linecap="round"/>
+<path d="M668 187 765 326" fill="none" stroke="#edd9a1" stroke-width="5" stroke-linecap="round"/>
+<path d="M631 179 671 194" stroke="#b3bdc6" stroke-width="13" stroke-linecap="round"/>
+<path d="M652 180 629 120 601 105 579 109" stroke="#28323b" stroke-width="14" stroke-linecap="round" fill="none"/>
+<path d="M650 162 682 116 715 117" stroke="#252d36" stroke-width="11" stroke-linecap="round" fill="none"/>
+<path d="M694 118 700 67" stroke="#2f3a43" stroke-width="8"/><path d="M700 68 735 62 743 75 706 82Z" fill="#252d36" stroke="#747e86" stroke-width="5"/>
+<!-- iconic modern slanted headlight -->
+<path d="M675 192 702 177 733 187 740 217 717 243 687 232Z" fill="#1d272f" stroke="#6a747c" stroke-width="6"/>
+<path d="M689 199 717 192 731 203 722 227 699 226Z" fill="#dbeaf0" stroke="#8c9aa4" stroke-width="4"/>
+<path d="M694 203 722 206 M700 218 724 212" stroke="#feffff" stroke-width="6" opacity=".8"/>
+<path d="M698 178 722 169" stroke="#88949e" stroke-width="6"/><ellipse cx="727" cy="169" rx="11" ry="7" fill="#ecac52" stroke="#2b2722" stroke-width="3"/>
+<!-- front tire hugger and radial caliper -->
+<path d="M705 279 Q783 260 853 296 L857 316 Q786 286 723 313Z" fill="url(#carbon)" stroke="#7d858d" stroke-width="6"/>
+<path d="M737 337 751 371 767 376 777 347" fill="#403a31" stroke="#9f8c65" stroke-width="6"/>
+<circle cx="784" cy="354" r="17" fill="#5b655f" stroke="#c2c4ba" stroke-width="6"/>
+<!-- bike stand foot pedals details -->
+<path d="M365 362 338 391 313 389" fill="none" stroke="#aeb9be" stroke-width="9" stroke-linecap="round"/>
+<path d="M505 391 552 407" fill="none" stroke="#a9afb5" stroke-width="9"/>
+<circle cx="556" cy="407" r="7" fill="#323941" stroke="#bdc5c9" stroke-width="4"/>
+<path d="M175 229 150 227" stroke="#bb2930" stroke-width="10" stroke-linecap="round"/>
+</svg>
