@@ -275,6 +275,29 @@ async function inspectBackupFile(file){
   records:recordCount(doc.payload.local['motorcycle-skeleton-maintenance-v1']),
   images:doc.payload.images.length,warnings:recordChronologyWarnings(doc.payload)};
 }
+const selfTestButton=document.createElement('button');
+selfTestButton.type='button';selfTestButton.className='backup-btn secondary';
+selfTestButton.style.marginTop='9px';selfTestButton.textContent='백업 자가진단 (가상 데이터)';
+checkResult.after(selfTestButton);
+selfTestButton.addEventListener('click',async()=>{
+ if(busy)return;
+ lock(true);showCheckResult('checking','가상 백업 검증 중…');
+ try{
+  const local=Object.fromEntries(KEYS.map(k=>[k,k==='motorcycle-skeleton-selected-vehicle-v1'?null:'{}']));
+  local['motorcycle-skeleton-registrations-v1']=JSON.stringify({'bike-test':{km:1000}});
+  local['motorcycle-skeleton-maintenance-v1']=JSON.stringify({'bike-test':{
+   odometer:1500,records:{oil:[{at:1200,interval:5000,date:'2025-01-10',action:'replace'}]}
+  }});
+  const payload={local,images:await packImages([{key:'test-photo',blob:new Blob(['test'],{type:'image/png'})}])};
+  const file=new Blob([JSON.stringify({format:MAGIC,version:1,payload,sha256:await checksum(payload)})],{type:'application/json'});
+  const result=await inspectBackupFile(file);
+  const bytes=unpackImages(result.doc.payload.images);
+  if(result.vehicles!==1||result.records!==1||result.images!==1||bytes.length!==1||await bytes[0].blob.text()!=='test')
+   throw new Error('가상 데이터 검증 결과 불일치');
+  showCheckResult('ok','✓ 자가진단 통과 · 가상 백업·검사·사진 복원 확인\n실제 사용자 데이터는 변경하지 않았어.');
+ }catch(e){showCheckResult('error','✕ 자가진단 실패 · '+(e.message||e))}
+ finally{lock(false)}
+});
 check.addEventListener('click',()=>{if(busy)return;checkPick.value='';checkPick.click()});
 checkPick.addEventListener('change',async()=>{
  const file=checkPick.files?.[0];if(!file||busy)return;
