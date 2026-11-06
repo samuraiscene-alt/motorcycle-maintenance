@@ -1,6 +1,6 @@
 {
-  "version": "2.9.34",
-  "cache": "motorcycle-maintenance-v2.9.34",
+  "version": "2.9.35",
+  "cache": "motorcycle-maintenance-v2.9.35",
   "released": "2026-11-06",
-  "note": "공식 주기 복원창 최신 차량별 설정 반영과 이름·사진만 수정할 때 주기 출처 유지"
+  "note": "부품 수정창에서 차종·연식별 제조사 설명서 출처와 링크 제공, 공식 주기 복원 및 사용자 기록 유지"
 }
