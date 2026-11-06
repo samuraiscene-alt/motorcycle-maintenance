@@ -616,7 +616,7 @@ function openRecord(row,options={}){
  recordAt.placeholder=historical?'당시 주행거리 입력':'';
  recordDate.max=todayLocal();recordDate.value=historical?'':todayLocal();
  actionSelect.value=['replace','inspect','clean'].includes(options.action)?options.action:partAction(currentRegistration(),id);
- recordError.textContent=historical?'과거에 실제 정비한 날짜와 당시 주행거리를 입력해. 모르면 기록을 저장하지 마.':'';
+ recordError.textContent=historical?'실제 정비한 날짜와 당시 주행거리를 입력해. 구입 전 정비기록도 입력할 수 있어. 모르면 기록을 저장하지 마.':'';
  syncAction();renderHistory();
  recordMask.hidden=false;document.body.classList.add('registration-open');recordClose.focus();
 }
@@ -625,7 +625,7 @@ function renderHistory(){const d=getVehicleData(currentBike().id),arr=Array.isAr
 document.querySelector('.rows').addEventListener('click',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn)openRecord(btn.closest('.part'))});document.querySelector('.rows').addEventListener('keydown',e=>{const btn=e.target.closest('.part:not(.part-add-card) .service');if(btn&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openRecord(btn.closest('.part'))}});
 recordForm.addEventListener('submit',e=>{e.preventDefault();if(!editingItem)return;const at=Number(recordAt.value),interval=Number(recordInterval.value),date=recordDate.value,reg=currentRegistration(),odo=getOdometer(),action=actionSelect.value;
 if(!reg){recordError.textContent='정비기록을 저장하려면 먼저 오토바이 등록이 필요해.';return}
-if(recordAt.value.trim()===''||!valid(at)||at>odo||(recordAt.readOnly&&at<reg.km)||(!recordAt.readOnly&&recordDate.value.trim()==='')||!valid(interval)||(recordInterval.required?interval<1:interval<0)||interval>1000000||!validMaintenanceDate(date)||date>todayLocal()){recordError.textContent='정비 당시 주행거리·교체주기·날짜를 확인해. 미래 날짜는 저장할 수 없어.';return}
+if(recordAt.value.trim()===''||!valid(at)||at>odo||(recordAt.readOnly&&at<reg.km)||(!recordAt.readOnly&&recordDate.value.trim()==='')||!valid(interval)||(recordInterval.required?interval<1:interval<0)||interval>1000000||!validMaintenanceDate(date)||date>todayLocal()){recordError.textContent='정비 당시 주행거리·작업 주기·날짜를 확인해. 과거 정비기록은 현재 주행거리 이하로 입력해.';return}
 const d=getVehicleData(currentBike().id),records={...(d.records||{})},old=Array.isArray(records[editingItem.id])?records[editingItem.id]:[];
 if(old.some(item=>item&&item.at===at&&item.date===date&&(item.action||'replace')===action)){recordError.textContent='같은 날짜와 주행거리의 정비기록이 이미 있어. 기존 기록을 수정해.';return}
 records[editingItem.id]=[...old,{at,interval,date,action}].sort((a,b)=>a.at-b.at||a.date.localeCompare(b.date));
