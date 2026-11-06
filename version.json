@@ -1,6 +1,6 @@
 {
-  "version": "2.9.107",
-  "cache": "motorcycle-maintenance-v2.9.107",
+  "version": "2.9.108",
+  "cache": "motorcycle-maintenance-v2.9.108",
   "released": "2026-11-07",
-  "note": "HONDA CB650R 2024 전용 4기통 네오 스포츠 카페 차량 일러스트 적용; 간판·정비 기능 변경 없음"
+  "note": "기종·연식 일치 전용 이미지 등록표 통합, 이미지 오류 시 다른 기종 대체 표시 방지; 간판 및 정비 기능 유지"
 }
