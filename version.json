@@ -1,6 +1,6 @@
 {
-  "version": "2.9.41",
-  "cache": "motorcycle-maintenance-v2.9.41",
+  "version": "2.9.42",
+  "cache": "motorcycle-maintenance-v2.9.42",
   "released": "2026-11-06",
-  "note": "정비기록 입력창에 최신 사용자 교체·점검·청소 주기 우선 적용 및 기록별 주기 입력 허용"
+  "note": "정비 알림·소모품 카드·점검 청소 이력 계산의 사용자 주기 우선순위 통일 및 주기 0 비활성화 유지"
 }
