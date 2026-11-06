@@ -160,6 +160,15 @@ function validate(payload){
   const parsed=new Date(y,m-1,d);
   return parsed.getFullYear()===y&&parsed.getMonth()===m-1&&parsed.getDate()===d;
  };
+ // Optional real first-use dates must remain valid after transfer between browsers.
+ // Old backups without this field remain fully compatible.
+ for(const [bikeId,registration] of Object.entries(registrations)){
+  const firstUse=registration.firstUseDate;
+  if(firstUse===undefined||firstUse===null||firstUse==='')continue;
+  if(!validDate(firstUse)||firstUse>today||
+     (Number.isSafeInteger(registration.year)&&Number(firstUse.slice(0,4))<registration.year))
+   throw new Error('차량의 최초 운행일이 올바르지 않아: '+bikeId);
+ }
  for(const [bikeId,vehicle] of Object.entries(maintenance)){
   if(!obj(vehicle)||!obj(vehicle.records))throw new Error('정비 데이터 구조가 올바르지 않아.');
   const registration=registrations[bikeId];
