@@ -283,14 +283,14 @@ checkPick.addEventListener('change',async()=>{
   const info=await inspectBackupFile(file);
   const summary='차량 '+info.vehicles+'대 · 정비기록 '+info.records+'건 · 사진 '+info.images+'개';
   if(info.warnings.length){
-   showCheckResult('warning','⚠ 주의 · 백업 파일 자체는 정상\\n'+summary+
-    '\\n주행거리·정비이력 확인 필요 '+info.warnings.length+'건\\n'+info.warnings.slice(0,3).join('\\n')+
-    '\\n복원 전 내용을 확인해. 현재 데이터는 변경하지 않았어.');
+   showCheckResult('warning','⚠ 주의 · 백업 파일 자체는 정상\n'+summary+
+    '\n주행거리·정비이력 확인 필요 '+info.warnings.length+'건\n'+info.warnings.slice(0,3).join('\n')+
+    '\n복원 전 내용을 확인해. 현재 데이터는 변경하지 않았어.');
   }else{
-   showCheckResult('ok','✓ 정상 · 백업 파일 검사 통과\\n'+summary+
-    '\\n파일 구조와 해시 확인 완료. 현재 데이터는 변경하지 않았어.');
+   showCheckResult('ok','✓ 정상 · 백업 파일 검사 통과\n'+summary+
+    '\n파일 구조와 해시 확인 완료. 현재 데이터는 변경하지 않았어.');
   }
- }catch(err){showCheckResult('error','✕ 오류 · 백업 파일 검사 실패\\n'+(err.message||'파일을 검사할 수 없어.')+'\\n현재 데이터는 변경하지 않았어.')}
+ }catch(err){showCheckResult('error','✕ 오류 · 백업 파일 검사 실패\n'+(err.message||'파일을 검사할 수 없어.')+'\n현재 데이터는 변경하지 않았어.')}
  finally{lock(false);checkPick.value=''}
 });
 function filename(){const d=new Date(),p=x=>String(x).padStart(2,'0');return '오토바이정비_전체백업_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json'}
