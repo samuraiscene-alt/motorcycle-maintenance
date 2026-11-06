@@ -474,17 +474,24 @@ if(r){
 const odometerReadout=$('odometer-readout');if(odometerReadout)odometerReadout.textContent=r?fmt(odo)+'km':'등록 전';
 brand.innerHTML=isHonda?hondaLogo:unknownLogo;
 if(!isHonda){const mark=brand.querySelector('strong');if(mark)mark.textContent=maker||'BRAND'}
-if(maker==='YAMAHA'){
+brand.classList.remove('brand-logo-loaded');
+const logoUrl=maker==='YAMAHA'
+ ?'https://commons.wikimedia.org/wiki/Special:Redirect/file/Yamaha_Motor_2025.svg'
+ :window.MotorcycleCatalog?.brandLogos?.[maker];
+if(logoUrl){
  const logo=document.createElement('img');
- logo.className='yamaha-official-brand-logo';
- logo.alt='Yamaha Motor 공식 로고 (2025)';
- logo.src='https://commons.wikimedia.org/wiki/Special:Redirect/file/Yamaha_Motor_2025.svg';
- logo.addEventListener('load',()=>brand.classList.add('brand-logo-loaded'),{once:true});
+ logo.className=maker==='YAMAHA'?'yamaha-official-brand-logo':'manufacturer-brand-logo';
+ logo.alt=maker+' 제조사 로고';
+ logo.decoding='async';logo.loading='lazy';
+ logo.addEventListener('load',()=>{
+  if(logo.isConnected&&logo.naturalWidth>0)brand.classList.add('brand-logo-loaded');
+ },{once:true});
  logo.addEventListener('error',()=>{logo.remove();brand.classList.remove('brand-logo-loaded')},{once:true});
+ logo.src=logoUrl;
  brand.appendChild(logo);
 }
 brand.classList.toggle('brand-yamaha',maker==='YAMAHA');
-if(maker!=='YAMAHA')brand.classList.remove('brand-logo-loaded');
+brand.classList.toggle('brand-with-logo',!!logoUrl);
 brand.setAttribute('aria-label',maker||'제조사 미정');
 counter.textContent=isLocked()?'':bikes.map((_,i)=>i===index?'●':'○').join(' ');document.body.classList.toggle('vehicle-locked',isLocked());stage.setAttribute('aria-label',isLocked()?'등록된 내 오토바이 이미지':'오토바이 이미지: 좌우 스와이프로 차량 선택');document.body.dataset.activeBike=b.id;renderParts();document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:b.id}}))}
 function renderParts(){const reg=currentRegistration(),odo=getOdometer(),data=getVehicleData(currentBike().id);
