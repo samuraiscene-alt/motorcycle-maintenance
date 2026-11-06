@@ -474,9 +474,17 @@ save.addEventListener('click',async()=>{
  try{
   const payload={local:locals(),images:await packImages(await getImages())};validate(payload);
   const backup={format:MAGIC,version:1,createdAt:new Date().toISOString(),payload,sha256:await checksum(payload)};
-  const blob=new Blob([JSON.stringify(backup)],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');
+  const blob=new Blob([JSON.stringify(backup)],{type:'application/json'});
+  // Validate the generated file before offering it. This is read-only.
+  const verified=await inspectBackupFile(blob);
+  if(verified.vehicles!==vehicleCount(payload.local['motorcycle-skeleton-registrations-v1'])||
+     verified.records!==recordCount(payload.local['motorcycle-skeleton-maintenance-v1'])||
+     verified.images!==payload.images.length)
+   throw new Error('생성된 백업 파일의 데이터 개수가 맞지 않아.');
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
   link.href=url;link.download=filename();document.body.appendChild(link);link.click();link.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),60000);message('백업 파일 생성 완료. 사진 '+payload.images.length+'개 포함. 다운로드 목록이나 파일 앱에서 확인해.');
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+  message('백업 파일 자체 검사 통과 · 차량 '+verified.vehicles+'대 · 기록 '+verified.records+'건 · 사진 '+verified.images+'개. 파일 앱에서 실제 저장 여부를 확인해.');
  }catch(err){message('백업 실패: '+(err.message||'저장할 수 없어.'))}finally{lock(false)}
 });
 load.addEventListener('click',()=>{if(!busy){pick.value='';pick.click()}});
