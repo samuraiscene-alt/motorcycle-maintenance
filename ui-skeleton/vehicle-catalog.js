@@ -47,6 +47,22 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'HONDA|CT125|2026':Object.freeze({
+  verified:true,coverage:'partial',region:'JP 8BJ-JA65 (frame JA65-1200001+)',modelCode:'JA65',year:2026,
+  source:'https://www.honda.co.jp/customer/motor/ct125/faq/qa009/',
+  sourceText:'https://www.honda.co.jp/customer/motor/ct125/faq/qa010/',
+  sourceType:'Honda Japan CT125 2026 JA65 model-specific official owner FAQ; oil and replaceable filter',
+  sourcePages:['Honda JP qa009','Honda JP qa010'],
+  intervals:Object.freeze({oil:3000,filter:12000,'oil-filter':12000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:3000,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12},
+   filter:{replaceKm:12000,firstReplaceKm:13000,firstRegularOdometerKm:25000},
+   'oil-filter':{replaceKm:12000,firstReplaceKm:13000,firstRegularOdometerKm:25000}
+  }),
+  specs:Object.freeze({oilChangeLiters:0.8,oilAndFilterChangeLiters:0.85,engineOilTotalLiters:1.0}),
+  notes:Object.freeze({firstOilCalendar:'First oil change by 1 month or 1000 km, whichever comes first; initial 1-month calculation not supported by app.'}),
+  actionByPart:Object.freeze({})
+ }),
  'HONDA|C125|2022':Object.freeze({
   verified:true,coverage:'partial',region:'US',modelCode:'C125A',year:2022,
   source:'https://cdn.powersports.honda.com/documentum/MWOM/ml.remawmom.2022_c125__super_cub__owner_s_manual.pdf',
