@@ -450,11 +450,14 @@ function renderInfo(){
   document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:null}}));
   return;
  }
- const b=currentBike(),r=currentRegistration(),odo=getOdometer();name.textContent=b.name;
+ const b=currentBike(),r=currentRegistration(),odo=getOdometer();name.textContent=b.name;name.title=b.name;
 const maker=String(r?.brand||b.brand||'').trim().toUpperCase(),isHonda=maker==='HONDA';
 document.body.classList.toggle('non-honda-bike',!isHonda);
 setGarageSign(maker);
 const xmaxRequested=maker==='YAMAHA'&&String(r?.model||'').trim().toUpperCase()==='XMAX300'&&Number(r?.year)===2025;
+const referenceImageAllowed=maker==='HONDA'&&String(r?.model||'').trim().toUpperCase()==='PCX125';
+const activeSlide=track.children[index];
+if(activeSlide){const fallbackHero=activeSlide.querySelector('.motorcycle-hero');if(fallbackHero)fallbackHero.hidden=!referenceImageAllowed;const shadow=activeSlide.querySelector('.ground-shadow');if(shadow)shadow.hidden=!referenceImageAllowed&&!xmaxRequested;}
 document.body.dataset.xmaxRequested=String(xmaxRequested);
 if(xmaxRequested){
  const slide=track.children[index];if(slide&&xmaxHero.parentElement!==slide)slide.appendChild(xmaxHero);
@@ -462,9 +465,11 @@ if(xmaxRequested){
  if(xmaxHero.getAttribute('src')!==xmaxPhotoUrl)xmaxHero.src=xmaxPhotoUrl;
  else if(xmaxHero.complete&&xmaxHero.naturalWidth>0)document.body.classList.add('xmax-2025-photo-ready');
 }else{xmaxHero.hidden=true;document.body.classList.remove('xmax-2025-photo-ready')}
-showroomNotice.textContent=xmaxRequested&&document.body.classList.contains('xmax-2025-photo-ready')
- ?'XMAX300 계열 공식 사진 · 세부 트림 참고용'
- :'차종 전용 이미지 미등록 · 참고용 스쿠터';
+const yearWarning=window.MotorcycleCatalog?.validateModelYear(maker,r?.model,Number(r?.year));
+showroomNotice.textContent=yearWarning?yearWarning.description
+ :xmaxRequested&&document.body.classList.contains('xmax-2025-photo-ready')?'XMAX300 계열 공식 사진 · 세부 트림 참고용'
+ :referenceImageAllowed?'차종 전용 이미지 미등록 · 참고용 스쿠터'
+ :'차종 전용 이미지 준비 중';
 meta.replaceChildren();
 if(r){
  const yearLine=document.createElement('span');yearLine.className='bike-meta-year';yearLine.textContent=r.year?r.year+'년형':'연식 미확인';
