@@ -219,7 +219,7 @@ function recordChronologyWarnings(payload){
   // different days. Correction entries can invalidate a simple monotonic rule.
   const snapshots=Array.isArray(history)?history.map(h=>({
    day:String(h.date).slice(0,10),at:h.at,correction:h.type==='correction'
-  })).filter(h=>/^\\d{4}-\\d{2}-\\d{2}$/.test(h.day)):[];
+  })).filter(h=>/^\d{4}-\d{2}-\d{2}$/.test(h.day)):[];
   for(const [partId,records] of Object.entries(vehicle.records||{})){
    const byAction=new Map();
    for(const item of records){
