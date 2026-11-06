@@ -1,6 +1,6 @@
 {
-  "version": "2.9.108",
-  "cache": "motorcycle-maintenance-v2.9.108",
+  "version": "2.9.109",
+  "cache": "motorcycle-maintenance-v2.9.109",
   "released": "2026-11-07",
-  "note": "기종·연식 일치 전용 이미지 등록표 통합, 이미지 오류 시 다른 기종 대체 표시 방지; 간판 및 정비 기능 유지"
+  "note": "CB125R 2021-2025 및 CB650R 2024-2026 동일 디자인 계열 이미지 공유; 그 외 기종은 공통 실루엣 표시"
 }
