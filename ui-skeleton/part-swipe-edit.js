@@ -9,7 +9,8 @@ const orderKey='motorcycle-skeleton-part-order-v1';
 let orders={};try{orders=JSON.parse(localStorage.getItem(orderKey)||'{}')||{}}catch{orders={}}
 const bike=()=>document.body.dataset.activeBike||'pcx125';
 let data={};try{data=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch{data={}}
-const active=()=>data[bike()]||{};
+function readCurrentSettings(){try{const latest=JSON.parse(localStorage.getItem(key)||'{}');if(latest&&typeof latest==='object'&&!Array.isArray(latest))data=latest}catch{}return data}
+const active=()=>readCurrentSettings()[bike()]||{};
 const cache=new Map(),originals=new WeakMap();
 let openWrap=null,gesture=null,editing=null,draft=null,previewUrl=null,updateNumber=0,drag=null,suppressUntil=0;
 function persist(){localStorage.setItem(key,JSON.stringify(data))}
@@ -79,14 +80,14 @@ function closeSwipe(){if(openWrap){openWrap.classList.remove('swiped');openWrap=
 function revokePreview(){if(previewUrl){URL.revokeObjectURL(previewUrl);previewUrl=null}}
 function closeModal(){mask.hidden=true;editing=null;draft=null;restoreOfficial=false;availableOfficialKm=0;revokePreview();photo.value='';fileInput.value='';document.body.style.overflow=''}
 function visiblePreview(img){if(img){preview.src=img;preview.hidden=false;fallback.hidden=true}else{preview.hidden=true;preview.removeAttribute('src');fallback.hidden=false}}
-function edit(row){closeSwipe();editing={id:row.dataset.partId,bike:bike(),row};draft=null;revokePreview();error.textContent='';nameInput.value=row.querySelector('.part-line strong')?.textContent||'';
+function edit(row){closeSwipe();readCurrentSettings();editing={id:row.dataset.partId,bike:bike(),row,initialInterval:Number.isSafeInteger(active()[row.dataset.partId]?.interval)?active()[row.dataset.partId].interval:0};draft=null;revokePreview();error.textContent='';nameInput.value=row.querySelector('.part-line strong')?.textContent||'';
  const cycle=active()[row.dataset.partId]?.interval;
  const builtIn={oil:3000,filter:12000,brake:12000,tire:10000,coolant:20000};
  let unverified=false;
  try{const regs=JSON.parse(localStorage.getItem('motorcycle-skeleton-registrations-v1')||'{}');unverified=!!regs[bike()]?.maintenanceProfileStatus}catch{}
  cycleInput.value=Number.isSafeInteger(cycle)&&cycle>0?String(cycle):unverified?'':String(Number(row.dataset.interval)||builtIn[row.dataset.partId]||'');
  availableOfficialKm=officialKmFor(editing.bike,editing.id);restoreOfficial=false;
- officialReset.hidden=!availableOfficialKm;
+ officialReset.hidden=!availableOfficialKm||(active()[editing.id]?.intervalSource==='official'&&active()[editing.id]?.interval===availableOfficialKm);
  officialReset.textContent=availableOfficialKm?'제조사 공식 주기로 복원 ('+availableOfficialKm.toLocaleString('ko-KR')+'km)':'제조사 공식 주기로 복원';
  const img=row.querySelector('.part-img img');visiblePreview(img?.src||'');mask.hidden=false;document.body.style.overflow='hidden';nameInput.focus({preventScroll:true})}
 mask.querySelector('.part-edit-close').addEventListener('click',closeModal);mask.addEventListener('click',e=>{if(e.target===mask)closeModal()});
@@ -100,7 +101,8 @@ form.addEventListener('submit',async e=>{e.preventDefault();if(!editing)return;c
  if(draft){await imageWrite('appearance:'+target.bike+':'+target.id,draft);const cacheKey=target.bike+':'+target.id;if(cache.has(cacheKey)){URL.revokeObjectURL(cache.get(cacheKey));cache.delete(cacheKey)}}
  if(target.bike!==bike())throw Error('차량이 변경되었어. 다시 시도해.');
  const previous=active()[target.id]||{};
- const unchanged=Number.isSafeInteger(previous.interval)&&previous.interval===cycle;
+ const initialCycle=Number.isSafeInteger(target.initialInterval)?target.initialInterval:0;
+ const unchanged=initialCycle===cycle;
  const source=restoreOfficial&&availableOfficialKm===cycle?'official':unchanged?previous.intervalSource:'user';
  const changes={name:n,interval:cycle,hasImage:!!draft||!!previous.hasImage};
  if(source)changes.intervalSource=source;
