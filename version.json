@@ -1,6 +1,6 @@
 {
-  "version": "2.9.86",
-  "cache": "motorcycle-maintenance-v2.9.86",
+  "version": "2.9.87",
+  "cache": "motorcycle-maintenance-v2.9.87",
   "released": "2026-11-06",
-  "note": "서로 다른 기종의 공용 스쿠터 이미지 표시 방지, 제조사명 줄바꿈, Suzuki 로고, BMW 모델 연식 검증"
+  "note": "하나의 공용 정비소 배경과 독립적인 제조사 네온·정비소 네온·형광등 분리"
 }
