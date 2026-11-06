@@ -1,6 +1,6 @@
 {
-  "version": "2.9.57",
-  "cache": "motorcycle-maintenance-v2.9.57",
+  "version": "2.9.58",
+  "cache": "motorcycle-maintenance-v2.9.58",
   "released": "2026-11-06",
-  "note": "기존 데이터 변경 없는 가상 백업 생성·검사·사진 복원 자가진단 버튼 추가"
+  "note": "읽기 전용 가상 백업 자가진단 4종: 정상 백업·손상 파일·정비거리 오류·사진 손상"
 }
