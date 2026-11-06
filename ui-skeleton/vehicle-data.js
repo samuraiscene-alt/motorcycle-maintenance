@@ -387,31 +387,36 @@ document.addEventListener('motorcycle:change',updateMaintenanceNotices);
 document.addEventListener('motorcycle:vehicle-saved',updateMaintenanceNotices);
 document.addEventListener('motorcycle:appearance-changed',updateMaintenanceNotices);
 
-/* Wall signage: Honda remains in the original garage scene; Yamaha uses a documented, real illuminated dealer sign photo. */
-const garageSign=document.createElement('div');
-garageSign.className='garage-sign';garageSign.setAttribute('aria-label','정비소 벽 간판');
-garageSign.innerHTML='<span class="garage-sign-caption">MOTORCYCLE SERVICE</span><img alt="야마하 모터 2025 공식 로고" loading="eager">';
-/* Mounted into the active showroom slide, behind the motorcycle, not on top of the whole garage. */
- garageSign.hidden=true;
-/* Yamaha Motor's real, unmodified 2025 logomark (not a newly invented logo). */
-const yamahaSignPhoto='https://commons.wikimedia.org/wiki/Special:Redirect/file/Yamaha_Motor_2025.svg';
-const yamahaSignImg=garageSign.querySelector('img');
-yamahaSignImg.addEventListener('load',()=>garageSign.classList.add('sign-photo-ready'));
-yamahaSignImg.addEventListener('error',()=>garageSign.classList.remove('sign-photo-ready'));
+/* Neutral workshop and independent left-logo/right-fallback neon sign system. */
+document.body.classList.add('garage-rebuilt');
+const makerSign=document.createElement('div');makerSign.className='garage-maker-neon';makerSign.hidden=true;
+const serviceSign=document.createElement('div');serviceSign.className='garage-service-neon';
+serviceSign.innerHTML='<span>정비소</span>';serviceSign.hidden=true;
+const tubeGlow=document.createElement('div');tubeGlow.className='garage-fluorescent';tubeGlow.setAttribute('aria-hidden','true');
+let signToken=0;
+function hideGarageSigns(){signToken++;makerSign.hidden=true;serviceSign.hidden=true}
 function setGarageSign(maker){
- const wall=track.children[index];
- if(wall&&garageSign.parentElement!==wall)wall.appendChild(garageSign);
- garageSign.classList.remove('sign-photo-ready');
- garageSign.dataset.brand=maker==='HONDA'?'HONDA':maker==='YAMAHA'?'YAMAHA':'GENERAL';
- document.body.classList.toggle('garage-sign-honda',maker==='HONDA');
- document.body.classList.toggle('garage-sign-yamaha',maker==='YAMAHA');
- document.body.classList.toggle('garage-sign-general',maker!=='HONDA'&&maker!=='YAMAHA');
- garageSign.hidden=maker==='HONDA';
- garageSign.querySelector('.garage-sign-caption').textContent=maker==='YAMAHA'?'YAMAHA':'MOTORCYCLE SERVICE';
- if(maker==='YAMAHA'){
-  if(yamahaSignImg.getAttribute('src')!==yamahaSignPhoto)yamahaSignImg.src=yamahaSignPhoto;
-  else if(yamahaSignImg.complete&&yamahaSignImg.naturalWidth>0)garageSign.classList.add('sign-photo-ready');
- }else yamahaSignImg.removeAttribute('src');
+ const wall=track.children[index];if(!wall)return;
+ for(const element of [makerSign,serviceSign,tubeGlow])if(element.parentElement!==wall)wall.appendChild(element);
+ const current=++signToken;
+ makerSign.replaceChildren();makerSign.hidden=true;serviceSign.hidden=true;
+ const logo=maker==='YAMAHA'?'https://commons.wikimedia.org/wiki/Special:Redirect/file/Yamaha_Motor_2025.svg':window.MotorcycleCatalog?.brandLogos?.[maker];
+ if(maker==='HONDA'){
+  const mark=document.createElement('span');mark.className='neon-maker-text';mark.textContent='HONDA';
+  makerSign.appendChild(mark);makerSign.hidden=false;
+ }else if(typeof logo==='string'&&logo){
+  const img=document.createElement('img');img.alt=maker+' 제조사 로고';
+  img.addEventListener('load',()=>{
+   if(current!==signToken||!img.isConnected)return;
+   if(img.naturalWidth>0){makerSign.hidden=false;serviceSign.hidden=true}
+  },{once:true});
+  img.addEventListener('error',()=>{
+   if(current===signToken){makerSign.hidden=true;serviceSign.hidden=false}
+  },{once:true});
+  makerSign.appendChild(img);serviceSign.hidden=false;img.src=logo;
+  if(img.complete&&img.naturalWidth>0){makerSign.hidden=false;serviceSign.hidden=true}
+ }else serviceSign.hidden=false;
+ document.body.classList.remove('garage-sign-honda','garage-sign-yamaha','garage-sign-general');
 }
 const xmaxHero=document.createElement('img');
 xmaxHero.className='xmax-model-photo';xmaxHero.alt='2025 Yamaha XMAX300 계열 공식 이미지에서 배경을 제거한 참고용 사진';
@@ -443,7 +448,7 @@ function renderInfo(){
  if(empty){
   name.textContent='등록된 차량 없음';meta.textContent='설정에서 새 차량을 등록해.';
   document.body.classList.remove('vehicle-locked','non-honda-bike','garage-sign-honda','garage-sign-yamaha','garage-sign-general');
- garageSign.hidden=true;
+ hideGarageSigns();
   stage.setAttribute('aria-label','차량이 없는 정비소');
   document.body.dataset.activeBike='';
   renderParts();
