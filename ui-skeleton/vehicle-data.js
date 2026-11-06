@@ -715,7 +715,7 @@ function syncAction(){
 actionSelect.addEventListener('change',syncAction);
 let editingRecordIndex=null;
 const historyStyle=document.createElement('style');
-historyStyle.textContent='.record-history li{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:7px 0}.record-history-entry{flex:1 1 170px;min-width:0;font-size:12px}.record-history-edit,.record-history-delete{border:1px solid #86a5bd;border-radius:7px;padding:6px 9px;background:#28475f;color:#f0f8ff;font-size:12px;font-weight:800}.record-history-delete{background:#5c2934;border-color:#a86b75}';
+historyStyle.textContent='.record-history{max-height:260px;overflow-y:auto;overscroll-behavior:contain}.record-history li{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:7px 0}.record-history-entry{flex:1 1 170px;min-width:0;font-size:12px}.record-history-edit,.record-history-delete{border:1px solid #86a5bd;border-radius:7px;padding:6px 9px;background:#28475f;color:#f0f8ff;font-size:12px;font-weight:800}.record-history-delete{background:#5c2934;border-color:#a86b75}';
 document.head.appendChild(historyStyle);
 function openRecord(row,options={}){
  if(!currentRegistration()){alert('먼저 차량을 등록해.');return}
@@ -745,7 +745,7 @@ function renderHistory(){
  const ul=document.createElement('ul');
  arr.map((record,index)=>({record,index}))
   .sort((a,b)=>Number(b.record.at)-Number(a.record.at)||String(b.record.date||'').localeCompare(String(a.record.date||'')))
-  .slice(0,8).forEach(({record,index})=>{
+  .forEach(({record,index})=>{
    const li=document.createElement('li'),kind=record.action||'replace';
    const timeOnly=kind==='replace'&&Number(record.interval)===0&&!!officialTask(currentRegistration(),editingItem.id)?.replaceMonths;
    const label=document.createElement('span');label.className='record-history-entry';
