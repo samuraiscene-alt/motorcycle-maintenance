@@ -1,6 +1,6 @@
 {
-  "version": "2.9.49",
-  "cache": "motorcycle-maintenance-v2.9.49",
+  "version": "2.9.50",
+  "cache": "motorcycle-maintenance-v2.9.50",
   "released": "2026-11-06",
-  "note": "백업 파일 검사 시 Base64 사진 데이터의 문자·패딩·복원 가능성 검사 강화, 구버전 호환 유지"
+  "note": "백업 파일 정비기록의 날짜·현재 주행거리 초과·중복·작업 종류 검사 및 등록 이전 이력 허용"
 }
