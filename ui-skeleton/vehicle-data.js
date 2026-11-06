@@ -80,10 +80,10 @@ function partAction(reg,partId){
 }
 function actionText(action){return action==='inspect'?'점검':action==='clean'?'청소':'교체'}
 function actionInterval(reg,id,action){
- const task=officialTask(reg,id);
- if(action==='inspect')return task?.inspectKm||0;
- if(action==='clean')return task?.cleanKm||0;
- return effectiveInterval(currentBike().id,id,officialProfile(reg)?.intervals?.[id]||0);
+ const task=officialTask(reg,id),settings=partSettings(currentBike().id,id);
+ const field=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
+ const fallback=action==='inspect'?task?.inspectKm||0:action==='clean'?task?.cleanKm||0:officialProfile(reg)?.intervals?.[id]||0;
+ return Number.isSafeInteger(settings[field])&&settings[field]>=0?settings[field]:fallback;
 }
 function actionCycleStatus(reg,id,records,action,odo){
  const km=actionInterval(reg,id,action);if(!Number.isSafeInteger(km)||km<=0)return '';
@@ -214,8 +214,8 @@ function updateMaintenanceNotices(){
   const id=row.dataset.partId,title=row.querySelector('.part-line strong')?.textContent||id;
   const task=officialTask(reg,id),profile=officialProfile(reg);
   const records=Array.isArray(vehicle.records?.[id])?vehicle.records[id]:[];
-  const kmReplace=effectiveInterval(currentBike().id,id,profile?.intervals?.[id]||0);
-  for(const [action,defaultKm] of [['replace',kmReplace],['inspect',task?.inspectKm||0],['clean',task?.cleanKm||0]]){
+  for(const action of ['replace','inspect','clean']){
+   const defaultKm=actionInterval(reg,id,action);
    const last=records.filter(x=>x&&valid(x.at)&&x.at<=odo&&(x.action||'replace')===action).sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||''))).at(-1);
    const km=last&&Number.isSafeInteger(last.interval)&&last.interval>0
     ?(action==='replace'?effectiveInterval(currentBike().id,id,last.interval):last.interval)
@@ -423,9 +423,11 @@ else{
  const profile=officialProfile(reg),task=officialTask(reg,id),settings=partSettings(currentBike().id,id);
  const fallback=reg.maintenanceProfileStatus?0:item.interval;
  const officialDefault=profile?.intervals?.[id]||0;
- const interval=effectiveInterval(currentBike().id,id,last&&valid(last.interval)&&last.interval>0?last.interval:officialDefault||fallback);
+ const interval=action==='replace'
+  ?effectiveInterval(currentBike().id,id,last&&valid(last.interval)&&last.interval>0?last.interval:officialDefault||fallback)
+  :actionInterval(reg,id,action)||last?.interval||0;
  const knownBase=last?last.at:reg.km;
- const firstService=!!(task?.firstReplaceKm&&reg.km===0&&settings.intervalSource==='official');
+ const firstService=action==='replace'&&!!(task?.firstReplaceKm&&reg.km===0&&settings.intervalSource==='official');
  const initialDue=task?.firstReplaceKm||interval;
  const nextFirst=task?.firstRegularOdometerKm||interval;
  const due=firstService&&!last?initialDue:firstService&&last.at<=initialDue?nextFirst:last?last.at+interval:knownBase+interval;
@@ -435,14 +437,17 @@ else{
  // Do not treat registration mileage as a confirmed service event.
  const historyUnknown=!last&&(reg.km!==0||odo>initialDue);
  if(sourceTag){
-  const hasSetting=Object.prototype.hasOwnProperty.call(settings,'interval');
+  const cfgKey=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
+  const srcKey=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
+  const hasSetting=Object.prototype.hasOwnProperty.call(settings,cfgKey);
+  const officialTaskKm=action==='inspect'?task?.inspectKm:action==='clean'?task?.cleanKm:officialDefault;
   let origin='unknown',label='주기 미확인';
-  if(hasSetting&&settings.intervalSource==='user'){origin='user';label='사용자 설정'}
-  else if(hasSetting&&settings.intervalSource==='official'){origin='official';label='제조사 공식'}
+  if(hasSetting&&settings[srcKey]==='user'){origin='user';label='사용자 설정'}
+  else if(hasSetting&&settings[srcKey]==='official'){origin='official';label='제조사 공식'}
   else if(hasSetting){origin='legacy';label='기존 설정 · 출처 미확인'}
   else if(last){origin='record';label='정비기록 기준'}
-  else if(officialDefault>0){origin='official';label='제조사 공식'}
-  else if(fallback>0){origin='default';label='앱 기본값'}
+  else if(officialTaskKm>0){origin='official';label='제조사 공식'}
+  else if(action==='replace'&&fallback>0){origin='default';label='앱 기본값'}
   else if(calendar){origin='official';label='제조사 공식 · 기간 기준'}
   sourceTag.dataset.source=origin;
   const hasKnownCycle=interval>0||!!calendar;
@@ -450,12 +455,12 @@ else{
   sourceTag.textContent=sourceTag.hidden?'':label;
  }
  if(historyUnknown&&Number.isSafeInteger(interval)&&interval>0){
-  text.textContent='정비 이력 확인 필요 · 적용 주기 '+fmt(interval)+'km';
+  text.textContent=actionText(action)+' 이력 확인 필요 · 적용 주기 '+fmt(interval)+'km';
   if(calendar&&!calendar.missing)text.textContent+=' · 날짜 기준 '+calendar.due;
   bar.style.width='0%';row.classList.add('part-unregistered');
  }else if(!valid(knownBase)||!Number.isSafeInteger(interval)||interval<=0){
   text.textContent=calendar?(calendar.missing?'마지막 교체일 입력 필요 · '+calendar.months+'개월 주기':calendar.days<0?'교체기한 '+Math.abs(calendar.days)+'일 초과 · '+calendar.due:calendar.days<=30?'교체까지 '+calendar.days+'일 · '+calendar.due:'다음 교체 '+calendar.due)
-  :interval>0?'교체기록 없음 / 주기 '+fmt(interval)+'km'
+  :interval>0?actionText(action)+' 기록 없음 / 주기 '+fmt(interval)+'km'
   :timingDescription(task)||(reg.maintenanceProfileStatus?'공식 거리주기 미확인':'교체주기 미설정');
   if(calendar&&!calendar.missing){
    const fullDays=Math.max(1,calendar.months*30.4375);
@@ -468,7 +473,7 @@ else{
  }else{
   const used=Math.max(0,odo-knownBase),percent=Math.floor(used/span*100),ratio=Math.min(100,percent);
   const distanceLabel=odo>due?fmt(percent)+'% · '+fmt(odo-due)+'km 초과':fmt(used)+' / '+fmt(span)+'km · '+fmt(percent)+'%';
-  const inspectLabel=Number.isSafeInteger(task?.inspectKm)&&task.inspectKm>0?' · 점검 '+fmt(task.inspectKm)+'km 주기':'';
+  const inspectLabel=action!=='inspect'&&actionInterval(reg,id,'inspect')>0?' · 점검 '+fmt(actionInterval(reg,id,'inspect'))+'km 주기':'';
   text.textContent=calendar&&!calendar.missing
    ?distanceLabel+' · '+(calendar.days<0?'날짜 '+Math.abs(calendar.days)+'일 초과':calendar.days<=30?'날짜 '+calendar.days+'일 남음':'날짜 '+calendar.due)
    :distanceLabel;
@@ -485,8 +490,8 @@ else{
 }
 if(reg){
  const task=officialTask(reg,id),note=[];
- if(task?.inspectKm)note.push(actionCycleStatus(reg,id,records,'inspect',odo));
- if(task?.cleanKm)note.push(actionCycleStatus(reg,id,records,'clean',odo));
+ if(actionInterval(reg,id,'inspect')>0&&partAction(reg,id)!=='inspect')note.push(actionCycleStatus(reg,id,records,'inspect',odo));
+ if(actionInterval(reg,id,'clean')>0&&partAction(reg,id)!=='clean')note.push(actionCycleStatus(reg,id,records,'clean',odo));
  if(note.length)text.textContent+=' · '+note.filter(Boolean).join(' · ');
 }
 btn.setAttribute('role','button');btn.tabIndex=0;btn.setAttribute('aria-label',row.querySelector('strong').textContent+' 정비기록 등록');});
