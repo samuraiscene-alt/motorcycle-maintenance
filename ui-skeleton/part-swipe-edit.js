@@ -48,13 +48,14 @@ const style=document.createElement('style');style.textContent=
 '.part-edit-save{width:100%;height:49px;margin-top:18px;background:linear-gradient(#55b6f6,#0960b6);color:white;border:1px solid #8bd6ff;border-radius:10px;font-size:16px;font-weight:900}' +
 '.part-edit-error{min-height:17px;margin-top:8px;color:#ffd1aa;font-size:12px}' +
 '.part-edit-official-reset{display:block;width:100%;min-height:41px;margin-top:10px;border:1px solid #7db8e2;border-radius:9px;background:#163650;color:#e4f5ff;font-size:13px;font-weight:850}.part-edit-official-reset[hidden]{display:none!important}.part-edit-official-reset:disabled{opacity:.55}' +
-'.part-edit-source{margin-top:12px;padding:11px 12px;border-radius:10px;border:1px solid #63829a;background:#12273c;color:#e5f1fc;font-size:12px;line-height:1.6}.part-edit-source[hidden]{display:none!important}.part-edit-source strong,.part-edit-source span{display:block}.part-edit-source a{display:inline-flex;margin-top:7px;padding:7px 10px;border-radius:7px;border:1px solid #7eb6dd;color:#c0eaff;text-decoration:none;font-weight:800}.part-edit-source a:focus-visible{outline:2px solid #b5e9ff;outline-offset:2px}';
+'.part-edit-source{margin-top:12px;padding:11px 12px;border-radius:10px;border:1px solid #63829a;background:#12273c;color:#e5f1fc;font-size:12px;line-height:1.6}.part-edit-source[hidden]{display:none!important}.part-edit-source strong,.part-edit-source span{display:block}.part-edit-source a{display:inline-flex;margin-top:7px;padding:7px 10px;border-radius:7px;border:1px solid #7eb6dd;color:#c0eaff;text-decoration:none;font-weight:800}.part-edit-source a:focus-visible{outline:2px solid #b5e9ff;outline-offset:2px}' +
+'.part-edit-source-rules{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.part-edit-source-rules[hidden]{display:none!important}.part-edit-rule{display:inline-flex!important;align-items:center;gap:5px;padding:4px 7px;border:1px solid #587c9c;border-radius:6px;background:#18324b;color:#dcf1ff;font-weight:750}.part-edit-rule[data-kind="inspect"]{border-color:#a48c5c;color:#ffe4a9}.part-edit-rule[data-kind="clean"]{border-color:#67a187;color:#ceffde}.part-edit-source-empty{color:#aec7dd;font-size:11px;margin-top:6px}';
 document.head.appendChild(style);
 const mask=document.createElement('div');mask.className='part-edit-mask';mask.hidden=true;mask.setAttribute('role','dialog');mask.setAttribute('aria-modal','true');mask.innerHTML=
 '<form class="part-edit-panel"><div class="part-edit-head"><strong>정비 항목 수정</strong><button type="button" class="part-edit-close" aria-label="닫기">×</button></div>' +
 '<div class="part-edit-preview"><img alt="현재 부품 이미지" hidden><span>🔧</span></div>' +
 '<div class="part-edit-pickers"><button type="button" class="part-edit-photos">사진첩</button><button type="button" class="part-edit-files">파일함</button></div>' +
-'<label>부품 이름<input type="text" maxlength="35" required></label><label style="margin-top:12px">교체 주기 (km)<input type="number" class="part-edit-interval" min="1" max="1000000" step="1" inputmode="numeric" placeholder="교체 주기 미설정"></label><button class="part-edit-official-reset" type="button" hidden>제조사 공식 주기로 복원</button><section class="part-edit-source" hidden aria-label="제조사 공식 설명서 출처"><strong class="part-edit-source-title"></strong><span class="part-edit-source-detail"></span><a class="part-edit-source-link" target="_blank" rel="noopener noreferrer">제조사 설명서 열기 ↗</a></section><div class="part-edit-error" aria-live="polite"></div>' +
+'<label>부품 이름<input type="text" maxlength="35" required></label><label style="margin-top:12px">교체 주기 (km)<input type="number" class="part-edit-interval" min="1" max="1000000" step="1" inputmode="numeric" placeholder="교체 주기 미설정"></label><button class="part-edit-official-reset" type="button" hidden>제조사 공식 주기로 복원</button><section class="part-edit-source" hidden aria-label="제조사 공식 설명서 출처"><strong class="part-edit-source-title"></strong><div class="part-edit-source-rules" aria-label="작업별 공식 정비주기"></div><span class="part-edit-source-detail"></span><a class="part-edit-source-link" target="_blank" rel="noopener noreferrer">제조사 설명서 열기 ↗</a></section><div class="part-edit-error" aria-live="polite"></div>' +
 '<button type="submit" class="part-edit-save">저장</button><input class="part-edit-photo-input" type="file" accept="image/*" hidden><input class="part-edit-file-input" type="file" accept="image/*,.png,.jpg,.jpeg,.webp,.heic,.heif" hidden></form>';
 document.body.appendChild(mask);
 const form=mask.querySelector('form'),nameInput=form.querySelector('input[type=text]'),error=form.querySelector('.part-edit-error'),preview=form.querySelector('.part-edit-preview img'),fallback=form.querySelector('.part-edit-preview span');
@@ -81,14 +82,30 @@ function showOfficialSource(bikeId,partId){
  const url=String(profile.source||'');
  if(!/^https:\/\//i.test(url))return;
  const title=[String(reg.brand||'').toUpperCase(),reg.model,reg.year+'년형'].filter(Boolean).join(' ');
- const details=[];
- if(Number.isSafeInteger(km)&&km>0)details.push('교체 주기 '+km.toLocaleString('ko-KR')+'km');
- if(Number.isSafeInteger(task?.inspectKm)&&task.inspectKm>0)details.push('점검 '+task.inspectKm.toLocaleString('ko-KR')+'km');
- if(Number.isSafeInteger(task?.cleanKm)&&task.cleanKm>0)details.push('청소 '+task.cleanKm.toLocaleString('ko-KR')+'km');
- if(Number.isSafeInteger(task?.replaceMonths)&&task.replaceMonths>0)details.push('교체 '+task.replaceMonths+'개월');
- if(task?.replaceWhenWorn)details.push('마모 상태에 따라 교체');
+ const rules=officialSource.querySelector('.part-edit-source-rules');
+ rules.replaceChildren();
+ const addRule=(kind,description)=>{
+  const chip=document.createElement('span');
+  chip.className='part-edit-rule';chip.dataset.kind=kind;chip.textContent=description;
+  rules.appendChild(chip);
+ };
+ const value=(n)=>Number.isSafeInteger(n)&&n>0?n.toLocaleString('ko-KR')+'km':null;
+ const replaceKm=value(km)||value(task?.replaceKm);
+ if(replaceKm)addRule('replace','교체 · '+replaceKm);
+ if(value(task?.inspectKm))addRule('inspect','점검 · '+value(task.inspectKm));
+ if(value(task?.cleanKm))addRule('clean','청소 · '+value(task.cleanKm));
+ if(Number.isSafeInteger(task?.replaceMonths)&&task.replaceMonths>0)
+  addRule('replace','교체 · '+task.replaceMonths+'개월');
+ if(Number.isSafeInteger(task?.inspectMonths)&&task.inspectMonths>0)
+  addRule('inspect','점검 · '+task.inspectMonths+'개월');
+ if(task?.replaceWhenWorn)addRule('replace','마모 시 교체');
+ if(task?.inspectAsScheduled)addRule('inspect','설명서 점검표 기준');
+ if(task?.cleanAtService)addRule('clean','정비 시 청소');
+ rules.hidden=!rules.children.length;
  officialSource.querySelector('.part-edit-source-title').textContent=title+' · 제조사 설명서';
- officialSource.querySelector('.part-edit-source-detail').textContent=(details.join(' · ')||'설명서에서 정비 조건 확인')+' · 운행 환경에 따라 달라질 수 있어.';
+ officialSource.querySelector('.part-edit-source-detail').textContent=rules.children.length
+  ?'작업별 주기는 별개이며, 실제 운행 조건과 설명서의 비고를 확인해.'
+  :'거리·기간 주기는 미확인 · 설명서의 정비 조건을 직접 확인해.';
  officialSource.querySelector('.part-edit-source-link').href=url;
  officialSource.hidden=false;
 }
