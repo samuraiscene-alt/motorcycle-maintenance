@@ -1,6 +1,6 @@
 {
-  "version": "2.9.56",
-  "cache": "motorcycle-maintenance-v2.9.56",
+  "version": "2.9.57",
+  "cache": "motorcycle-maintenance-v2.9.57",
   "released": "2026-11-06",
-  "note": "백업 파일 검사 정상·주의·오류 결과의 줄바꿈 표시 오류 수정"
+  "note": "기존 데이터 변경 없는 가상 백업 생성·검사·사진 복원 자가진단 버튼 추가"
 }
