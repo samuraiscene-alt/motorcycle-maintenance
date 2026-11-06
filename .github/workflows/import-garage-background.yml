@@ -1,0 +1,30 @@
+name: Import clean garage background (one time)
+on:
+  push:
+    paths:
+      - .github/workflows/import-garage-background.yml
+permissions:
+  contents: write
+jobs:
+  import-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the newly generated sign-free workshop
+        run: |
+          curl --fail --location --retry 3 --silent --show-error 'https://at.adobe.com/aYDycONqfteuaeKv' -o /tmp/clean-garage.png
+          python3 - <<'PY'
+          from pathlib import Path
+          raw=Path('/tmp/clean-garage.png').read_bytes()
+          if not raw.startswith(b'\x89PNG\r\n\x1a\n') or len(raw)<25000:
+              raise SystemExit('Downloaded content is not a PNG workshop image')
+          Path('ui-skeleton/garage-clean.png').write_bytes(raw)
+          print('Downloaded valid image:',len(raw),'bytes')
+          PY
+      - name: Commit background image
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ui-skeleton/garage-clean.png
+          git commit -m 'Add logo-free workshop PNG background' || exit 0
+          git push
