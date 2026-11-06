@@ -520,12 +520,13 @@ else{
   }else{bar.style.width='0%';row.classList.add('part-unregistered');}
  }else{
   const used=Math.max(0,odo-knownBase),percent=Math.floor(used/span*100),ratio=Math.min(100,percent);
-  const distanceLabel=odo>due?fmt(percent)+'% · '+fmt(odo-due)+'km 초과':fmt(used)+' / '+fmt(span)+'km · '+fmt(percent)+'%';
+  const overdue=odo>due;
+  const distanceLabel=overdue?'교체 기준 '+fmt(due)+'km · '+fmt(odo-due)+'km 초과':fmt(used)+' / '+fmt(span)+'km · '+fmt(percent)+'%';
   const inspectLabel=action!=='inspect'&&actionInterval(reg,id,'inspect')>0?' · 점검 '+fmt(actionInterval(reg,id,'inspect'))+'km 주기':'';
   text.textContent=calendar&&!calendar.missing
    ?distanceLabel+' · '+(calendar.days<0?'날짜 '+Math.abs(calendar.days)+'일 초과':calendar.days<=30?'날짜 '+calendar.days+'일 남음':'날짜 '+calendar.due)
    :distanceLabel;
-  text.textContent+=' · 다음 '+fmt(due)+'km'+inspectLabel;
+  text.textContent+=(overdue?' · 정비기록 확인 필요':' · 다음 '+fmt(due)+'km')+inspectLabel;
   if(firstService&&!last&&due===initialDue&&initialDue>0&&interval>0&&initialDue!==interval){
    text.textContent+=' · 최초 교체 (이후 정기 '+fmt(interval)+'km)';
   }
