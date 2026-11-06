@@ -1,6 +1,6 @@
 {
-  "version": "2.9.19",
-  "cache": "motorcycle-maintenance-v2.9.19",
+  "version": "2.9.20",
+  "cache": "motorcycle-maintenance-v2.9.20",
   "released": "2026-11-06",
-  "note": "고정 차고에서 제조사별 간판 단독 표시, 미지원 회사만 MOTORCYCLE SERVICE, 천장 형광등·네온 간판 약한 깜빡임"
+  "note": "제조사 간판을 현재 차고 슬라이드의 벽 레이어로 이동해 오토바이 앞에 겹쳐 보이는 현상 수정"
 }
