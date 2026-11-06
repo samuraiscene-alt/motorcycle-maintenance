@@ -52,14 +52,22 @@ for(const el of [...document.querySelectorAll('.tabs .tab'),...document.querySel
 function locals(){const result={};for(const k of KEYS)result[k]=localStorage.getItem(k);return result}
 function setLocals(result){
  for(const k of KEYS){
-  // Older backups may legitimately omit the optional migration marker.
-  if(!Object.prototype.hasOwnProperty.call(result,k))continue;
+  // Legacy backups omit the migration marker. Clear only that absent
+  // optional key so a newer device's card order cannot leak into restore.
+  if(!Object.prototype.hasOwnProperty.call(result,k)){
+   if(k===MIGRATION_KEY)localStorage.removeItem(k);
+   continue;
+  }
   if(result[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,result[k]);
  }
 }
 function verifyLocals(expected){
  for(const k of KEYS){
-  if(!Object.prototype.hasOwnProperty.call(expected,k))continue;
+  if(!Object.prototype.hasOwnProperty.call(expected,k)){
+   if(k===MIGRATION_KEY&&localStorage.getItem(k)!==null)
+    throw new Error('구버전 복원 후 카드 정렬 설정이 남아 있어.');
+   continue;
+  }
   if(localStorage.getItem(k)!==expected[k])throw new Error('복원한 설정을 다시 확인할 수 없어: '+k);
  }
 }
@@ -315,7 +323,8 @@ selfTestButton.addEventListener('click',async()=>{
    format:MAGIC,version:1,payload:legacyPayload,sha256:await checksum(legacyPayload)
   })],{type:'application/json'});
   const legacy=await inspectBackupFile(legacyFile);
-  if(legacy.vehicles!==1||legacy.records!==1||legacy.images!==1)
+  if(legacy.vehicles!==1||legacy.records!==1||legacy.images!==1||
+     Object.prototype.hasOwnProperty.call(legacy.doc.payload.local,MIGRATION_KEY))
    throw new Error('⑤ 구버전 백업 호환 검사 실패');
   // An orphan maintenance record must not be accepted during inspection.
   const orphan={...payload,local:{...local}};
