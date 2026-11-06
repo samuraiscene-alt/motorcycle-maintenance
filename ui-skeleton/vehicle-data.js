@@ -669,9 +669,13 @@ maintenanceEditForm.addEventListener('submit',e=>{
  }
  const source=getVehicleData(ref.bikeId),arr=source.records?.[ref.id]||[];
  if(!arr[ref.seq]||JSON.stringify(arr[ref.seq])!==JSON.stringify(ref.original)){err.textContent='기록이 변경되었어. 다시 열어 수정해.';return}
+ const action=ref.original.action||'replace';
+ if(arr.some((v,i)=>i!==ref.seq&&v&&v.date===date&&v.at===at&&(v.action||'replace')===action)){
+  err.textContent='같은 날짜·주행거리·작업 종류의 정비기록이 이미 있어. 다른 값을 입력해.';return;
+ }
  const newArr=arr.map((v,i)=>i===ref.seq?{...v,date,at,interval}:v).sort((a,b)=>a.at-b.at||String(a.date).localeCompare(String(b.date)));
  const next={...database,[ref.bikeId]:{...source,records:{...source.records,[ref.id]:newArr}}};
- try{write(dataKey,next);database=next;closeMaintenanceEdit();renderParts();showHistory()}catch(e){err.textContent='변경사항을 저장하지 못했어.'}
+ try{write(dataKey,next);database=next;closeMaintenanceEdit();renderInfo();showHistory()}catch(e){err.textContent='변경사항을 저장하지 못했어.'}
 });
 function deleteMaintenanceRecord(id,seq){
  const bikeId=currentBike().id,source=getVehicleData(bikeId),arr=source.records?.[id]||[],item=arr[seq];if(!item)return;
@@ -679,7 +683,7 @@ function deleteMaintenanceRecord(id,seq){
  const nextArr=arr.filter((_,i)=>i!==seq);
  const records={...source.records,[id]:nextArr};
  const next={...database,[bikeId]:{...source,records}};
- try{write(dataKey,next);database=next;renderParts();showHistory()}catch(e){alert('삭제하지 못했어. 저장공간을 확인해.')}
+ try{write(dataKey,next);database=next;renderInfo();showHistory()}catch(e){alert('삭제하지 못했어. 저장공간을 확인해.')}
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!maintenanceEditMask.hidden)closeMaintenanceEdit()});
 
