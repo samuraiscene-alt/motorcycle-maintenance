@@ -462,10 +462,21 @@ function renderInfo(){
 const maker=String(r?.brand||b.brand||'').trim().toUpperCase(),isHonda=maker==='HONDA';
 document.body.classList.toggle('non-honda-bike',!isHonda);
 setGarageSign(maker);
-const xmaxRequested=maker==='YAMAHA'&&String(r?.model||'').trim().toUpperCase()==='XMAX300'&&Number(r?.year)===2025;
-const referenceImageAllowed=maker==='HONDA'&&String(r?.model||'').trim().toUpperCase()==='PCX125';
+// Older backups can retain the model in the display name without a separate model field.
+const normalizedModel=String(r?.model||'').trim().toUpperCase()||
+ String(r?.name||b.name||'').trim().toUpperCase().replace(new RegExp('^'+maker+'\\s*'),'').trim();
+const xmaxRequested=maker==='YAMAHA'&&normalizedModel==='XMAX300'&&Number(r?.year)===2025;
+const referenceImageAllowed=maker==='HONDA'&&normalizedModel==='PCX125';
 const activeSlide=track.children[index];
-if(activeSlide){const fallbackHero=activeSlide.querySelector('.motorcycle-hero');if(fallbackHero)fallbackHero.hidden=!referenceImageAllowed;const shadow=activeSlide.querySelector('.ground-shadow');if(shadow)shadow.hidden=!referenceImageAllowed&&!xmaxRequested;}
+if(activeSlide){
+ const fallbackHero=activeSlide.querySelector('.motorcycle-hero');
+ if(fallbackHero){
+  fallbackHero.hidden=!referenceImageAllowed;
+  if(referenceImageAllowed&&fallbackHero.getAttribute('src')!=='./motorcycle.svg')fallbackHero.src='./motorcycle.svg';
+ }
+ const shadow=activeSlide.querySelector('.ground-shadow');
+ if(shadow)shadow.hidden=!referenceImageAllowed&&!xmaxRequested;
+}
 document.body.dataset.xmaxRequested=String(xmaxRequested);
 if(xmaxRequested){
  const slide=track.children[index];if(slide&&xmaxHero.parentElement!==slide)slide.appendChild(xmaxHero);
