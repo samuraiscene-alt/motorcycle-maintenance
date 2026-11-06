@@ -337,6 +337,30 @@ selfTestButton.addEventListener('click',async()=>{
  }catch(e){showCheckResult('error','✕ 자가진단 실패 · '+(e.message||e))}
  finally{lock(false)}
 });
+async function applyRestore(adapter,incoming,faultStage){
+ const previous={local:await adapter.readLocal(),images:await adapter.readImages()};
+ let changedImages=false,changedLocal=false;
+ try{
+  changedImages=true;await adapter.writeImages(incoming.images);
+  if(faultStage==='images')throw new Error('강제 오류: 사진 저장 직후');
+  changedLocal=true;await adapter.writeLocal(incoming.local);
+  if(faultStage==='local')throw new Error('강제 오류: 차량 기록 저장 직후');
+  await adapter.verifyLocal(incoming.local);await adapter.verifyImages(incoming.images);
+ }catch(err){
+  const failures=[];
+  if(changedLocal)try{await adapter.writeLocal(previous.local);await adapter.verifyLocal(previous.local)}
+   catch(e){failures.push('차량 기록: '+(e.message||e))}
+  if(changedImages)try{await adapter.writeImages(previous.images);await adapter.verifyImages(previous.images)}
+   catch(e){failures.push('사진: '+(e.message||e))}
+  if(failures.length)throw new Error('복원 및 자동 원상복구 일부 실패. 새로고침하지 말고 백업 파일을 보관해. '+failures.join(' / '));
+  throw new Error('복원이 완료되지 않아 기존 데이터로 되돌렸어. 원인: '+(err.message||err));
+ }
+}
+const actualRestore={
+ readLocal:async()=>locals(),readImages:getImages,
+ writeLocal:async v=>setLocals(v),writeImages:setImages,
+ verifyLocal:async v=>verifyLocals(v),verifyImages
+};
 // An isolated database is used for simulated restore; the production DB is never opened.
 const simulationButton=document.createElement('button');
 simulationButton.type='button';simulationButton.className='backup-btn secondary';
@@ -383,22 +407,27 @@ async function simulateRestore(){
       await blobDigest(actual.photo)!==await blobDigest(expected.photo))
     throw new Error('복원·원상복구 데이터 검증 실패');
   };
-  await write(oldData);await verify(oldData);
-  await write(newData);await verify(newData);
-  // Inject a failure after the replacement has already been written.
-  // Rollback must restore the original bike, mileage, service and photo.
+  const sandboxAdapter={
+   readLocal:async()=>{const v=await read();return {bike:v.bike,km:v.km,service:v.service}},
+   readImages:async()=>[{key:'photo',blob:(await read()).photo}],
+   writeLocal:async v=>write({...v,photo:(await read()).photo}),
+   writeImages:async v=>write({...await read(),photo:v[0].blob}),
+   verifyLocal:async v=>{const a=await read();if(a.bike!==v.bike||a.km!==v.km||JSON.stringify(a.service)!==JSON.stringify(v.service))throw new Error('차량 기록 불일치')},
+   verifyImages:async v=>{const a=await read();if(!(a.photo instanceof Blob)||a.photo.type!==v[0].blob.type||await blobDigest(a.photo)!==await blobDigest(v[0].blob))throw new Error('사진 불일치')}
+  };
+  const old={local:{bike:oldData.bike,km:oldData.km,service:oldData.service},images:[{key:'photo',blob:oldData.photo}]};
+  const incoming={local:{bike:newData.bike,km:newData.km,service:newData.service},images:[{key:'photo',blob:newData.photo}]};
   await write(oldData);
-  let failureDetected=false;
-  try{
-   await write(newData);
-   throw new Error('의도적으로 발생시킨 복원 실패');
-  }catch(error){
-   if(error.message!=='의도적으로 발생시킨 복원 실패')throw error;
-   failureDetected=true;
+  await applyRestore(sandboxAdapter,incoming);
+  await sandboxAdapter.verifyLocal(incoming.local);await sandboxAdapter.verifyImages(incoming.images);
+  for(const stage of ['images','local']){
    await write(oldData);
-   await verify(oldData);
+   let caught=false;
+   try{await applyRestore(sandboxAdapter,incoming,stage)}
+   catch(err){if(!String(err.message).includes('강제 오류:'))throw err;caught=true}
+   if(!caught)throw new Error('강제 오류 감지 실패');
+   await sandboxAdapter.verifyLocal(old.local);await sandboxAdapter.verifyImages(old.images);
   }
-  if(!failureDetected)throw new Error('강제 실패 상황을 감지하지 못했어.');
   passed=true;
  }finally{
   if(db)db.close();
@@ -411,7 +440,7 @@ async function simulateRestore(){
   });
  }
  if(!passed)throw new Error('복원 모의실험이 완료되지 않았어.');
- return '✓ 복원·원상복구 모의실험 3/3 통과\n① 가상 데이터 복원\n② 강제 오류 감지\n③ 기존 차량·주행거리·정비기록·사진 원상복구 확인\n실제 사용자 데이터는 변경하지 않았어.';
+ return '✓ 공통 복원·원상복구 모의실험 4/4 통과\n① 가상 데이터 복원\n② 사진 저장 후 강제 오류\n③ 기록 저장 후 강제 오류\n④ 기존 데이터 원상복구 확인\n실제 사용자 데이터는 변경하지 않았어.';
 }
 simulationButton.addEventListener('click',async()=>{
  if(busy)return;
@@ -462,34 +491,8 @@ pick.addEventListener('change',async()=>{
   const existingRecords=recordCount(localStorage.getItem('motorcycle-skeleton-maintenance-v1'));
   const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건'+(inspection.warnings.length?'\n\n주의: 주행거리 이력 일치 여부 확인 필요 '+inspection.warnings.length+'건. 백업 파일 검사에서 내용을 확인해.':'')+'\n\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
   if(!confirm(summary)){message('복원 취소: 기존 데이터 유지');return}
-  // Keep an untouched in-memory snapshot before the first destructive write.
-  const oldLocal=locals(),oldImages=await getImages();message('전체 데이터를 복원 중…');
-  let imagesChanged=false,localsChanged=false;
-  try{
-   // Mark each section before writing: even an unexpected partial failure
-   // must trigger a best-effort rollback of that section.
-   imagesChanged=true;await setImages(incoming);
-   localsChanged=true;setLocals(doc.payload.local);
-   verifyLocals(doc.payload.local);
-   await verifyImages(incoming);
-  }catch(err){
-   // Restore localStorage independently: an IndexedDB failure must not
-   // prevent recovering vehicle registrations and maintenance records.
-   const recoveryErrors=[];
-   if(localsChanged){
-    try{setLocals(oldLocal);verifyLocals(oldLocal)}
-    catch(rollbackError){recoveryErrors.push('차량·기록 설정: '+(rollbackError.message||rollbackError))}
-   }
-   if(imagesChanged){
-    try{await setImages(oldImages);await verifyImages(oldImages)}
-    catch(rollbackError){recoveryErrors.push('사용자 사진: '+(rollbackError.message||rollbackError))}
-   }
-   if(recoveryErrors.length){
-    // A failed rollback is never represented as a successful restore.
-    throw new Error('복원 실패, 자동 원상복구도 일부 실패했어. 이 화면을 닫거나 새로고침하지 말고 보관한 백업 파일로 복구해. ('+recoveryErrors.join(' / ')+')');
-   }
-   throw new Error('복원이 완료되지 않아 기존 데이터로 되돌렸어. 원인: '+(err.message||err));
-  }
+  message('전체 데이터를 복원 중…');
+  await applyRestore(actualRestore,{local:doc.payload.local,images:incoming});
   alert('전체 복원이 완료됐어. 앱을 새로고침할게.');location.reload();
  }catch(err){message('복원 실패: '+(err.message||'파일을 확인해.'))}finally{lock(false);pick.value=''}
 });
