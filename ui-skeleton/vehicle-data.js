@@ -728,11 +728,53 @@ const historyCSS=document.createElement('style');historyCSS.textContent=
 '.maintenance-edit-sheet label{display:block;font-size:13px;font-weight:800;margin-top:12px}.maintenance-edit-sheet input{width:100%;height:47px;margin-top:7px;padding:0 12px;border-radius:10px;border:2px solid #a5c5e3;background:#f3f9ff;color:#14283b;font-size:18px;font-weight:800}' +
 '.maintenance-edit-save{width:100%;height:48px;margin-top:17px;border:1px solid #80d4ff;border-radius:10px;background:linear-gradient(#52b0f6,#0d61b6);color:#fff;font-size:16px;font-weight:850}.maintenance-edit-error{min-height:19px;color:#ffd3b3;font-size:12px;margin:8px 0 0}' +
  '.maintenance-vehicle-label{display:block;color:#bbd3e8;font-size:12px;font-weight:800;margin:7px 0 5px}.maintenance-vehicle-select{width:100%;height:43px;border:1px solid #91afc8;border-radius:9px;background:#f2f8ff;color:#132b41;padding:0 10px;font-size:16px;font-weight:850;margin-bottom:13px}.maintenance-odometer-section{margin-top:17px;padding:12px;border:1px solid #5f819f;border-radius:11px;color:#dfedfa;font-size:13px}.maintenance-odometer-section summary{cursor:pointer;font-weight:850}.maintenance-odometer-entries{display:flex;flex-direction:column;gap:7px;margin-top:9px;color:#bed5e8;font-size:12px;max-height:200px;overflow:auto}.maintenance-record-next{display:block;margin-top:5px;color:#8bd2ff;font-size:12px;font-weight:850}';
+historyCSS.textContent+='.maintenance-history-review{margin:10px 0 15px;padding:12px;border:1px solid #9c7d4b;border-radius:10px;background:#33291c;color:#ffe4b4;font-size:12px;line-height:1.5}.maintenance-history-review[hidden]{display:none!important}.maintenance-history-review strong{display:block;font-size:14px}.maintenance-history-review p{margin:6px 0}.maintenance-history-review ul{margin:6px 0 0;padding-left:18px}.maintenance-history-review li{margin:4px 0}';
 historyCSS.textContent+='.maintenance-km-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid #41556d}.maintenance-km-row span{min-width:0;overflow-wrap:anywhere}.maintenance-km-actions{display:flex;gap:5px;flex-shrink:0}.maintenance-km-actions button{border:1px solid #759dbd;border-radius:7px;background:#254c70;color:#fff;font-size:11px;font-weight:800;padding:7px}.maintenance-km-actions button:last-child{background:#933443;border-color:#bd737a}';
 document.head.appendChild(historyCSS);
 function currentPartName(id){
  const row=[...document.querySelectorAll('.rows .part[data-part-id]')].find(el=>el.dataset.partId===id);
  return row?.querySelector('.part-line strong')?.textContent || id;
+}
+// Read-only chronology review: findings are prompts to check records, not proof of fraud or damage.
+function maintenanceChronologyFindings(vehicle){
+ const findings=[],history=Array.isArray(vehicle?.odometerHistory)?vehicle.odometerHistory:[];
+ const validKm=n=>Number.isSafeInteger(n)&&n>=0&&n<=9999999;
+ const snapshots=history.filter(h=>h&&validKm(h.at)&&typeof h.date==='string'&&Number.isFinite(Date.parse(h.date)))
+  .map(h=>({day:h.date.slice(0,10),km:h.at,corrected:h.type==='correction'}))
+  .filter(h=>/^\d{4}-\d{2}-\d{2}$/.test(h.day));
+ if(snapshots.length&&validKm(vehicle.odometer)&&snapshots.at(-1).km!==vehicle.odometer)
+  findings.push('최근 주행거리 이력과 현재 계기판 값이 달라. 입력 내역을 확인해.');
+ for(let i=1;i<snapshots.length;i++){
+  const prior=snapshots[i-1],now=snapshots[i];
+  if(now.km<prior.km&&!now.corrected)
+   findings.push('주행거리 이력 '+prior.km.toLocaleString('ko-KR')+'km → '+now.km.toLocaleString('ko-KR')+'km 감소: 정정 여부를 확인해.');
+ }
+ for(const [partId,entries] of Object.entries(vehicle?.records||{})){
+  if(!Array.isArray(entries))continue;
+  const byAction=new Map();
+  for(const entry of entries){
+   if(!entry||!validKm(entry.at)||typeof entry.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(entry.date))continue;
+   const action=entry.action||'replace';
+   if(!byAction.has(action))byAction.set(action,[]);
+   byAction.get(action).push(entry);
+   const before=snapshots.filter(h=>h.day<entry.date).sort((a,b)=>b.day.localeCompare(a.day))[0];
+   const after=snapshots.filter(h=>h.day>entry.date).sort((a,b)=>a.day.localeCompare(b.day))[0];
+   if(before&&before.km>entry.at&&!snapshots.some(h=>h.corrected&&h.day>=before.day&&h.day<=entry.date))
+    findings.push(partId+' · '+entry.date+' 정비 거리가 이전 '+before.day+' 계기판 기록보다 낮아. 확인해.');
+   if(after&&after.km<entry.at&&!snapshots.some(h=>h.corrected&&h.day>=entry.date&&h.day<=after.day))
+    findings.push(partId+' · '+entry.date+' 정비 거리가 이후 '+after.day+' 계기판 기록보다 높아. 확인해.');
+  }
+  for(const [action,events] of byAction){
+   const sorted=[...events].sort((a,b)=>a.date.localeCompare(b.date)||a.at-b.at);
+   for(let i=1;i<sorted.length;i++){
+    if(sorted[i].date!==sorted[i-1].date&&sorted[i].at<sorted[i-1].at){
+     findings.push(partId+' · '+action+' 기록의 날짜와 주행거리 순서를 확인해.');
+     break;
+    }
+   }
+  }
+ }
+ return findings;
 }
 let expandedOlder=false;
 function showHistory(){
@@ -754,6 +796,22 @@ function showHistory(){
   .sort((a,b)=>String(b.date).localeCompare(String(a.date))||Number(b.at)-Number(a.at));
  const box=historyMask.querySelector('.maintenance-list-items');box.replaceChildren();
  historyMask.querySelector('.maintenance-list-vehicle').textContent=currentBike().name+' · 총 '+events.length+'건';
+ let review=historyMask.querySelector('.maintenance-history-review');
+ if(!review){
+  review=document.createElement('div');
+  review.className='maintenance-history-review';
+  historyMask.querySelector('.maintenance-list-items').before(review);
+ }
+ const findings=maintenanceChronologyFindings(getVehicleData(currentBike().id));
+ review.replaceChildren();review.hidden=!findings.length;
+ if(findings.length){
+  const heading=document.createElement('strong');heading.textContent='이력 확인 권장 '+findings.length+'건';
+  const explain=document.createElement('p');explain.textContent='날짜·주행거리 기준으로 발견한 확인 항목이야. 오입력이나 계기판 정정일 수 있어. 기록은 변경하지 않았어.';
+  const list=document.createElement('ul');
+  for(const message of findings.slice(0,5)){const li=document.createElement('li');li.textContent=message;list.appendChild(li)}
+  if(findings.length>5){const li=document.createElement('li');li.textContent='그 밖에 '+(findings.length-5)+'건은 백업 파일 검사에서도 확인할 수 있어.';list.appendChild(li)}
+  review.append(heading,explain,list);
+ }
  if(!events.length){const empty=document.createElement('p');empty.className='maintenance-empty';empty.textContent='저장된 정비기록이 없습니다.';box.appendChild(empty)}
  else {
   const older=document.createElement('div');older.className='maintenance-older maintenance-list-items';older.hidden=!expandedOlder;
