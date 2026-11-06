@@ -1,6 +1,6 @@
 {
-  "version": "2.9.71",
-  "cache": "motorcycle-maintenance-v2.9.71",
+  "version": "2.9.72",
+  "cache": "motorcycle-maintenance-v2.9.72",
   "released": "2026-11-06",
-  "note": "주행거리 정정 재수정 시 이력 상태 정리 및 삭제 확인창 줄바꿈 수정"
+  "note": "과거 주행거리 수정이 현재 계기판을 초과하지 않도록 보호"
 }
