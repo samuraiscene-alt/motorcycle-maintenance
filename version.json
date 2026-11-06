@@ -1,6 +1,6 @@
 {
-  "version": "2.9.36",
-  "cache": "motorcycle-maintenance-v2.9.36",
+  "version": "2.9.37",
+  "cache": "motorcycle-maintenance-v2.9.37",
   "released": "2026-11-06",
-  "note": "부품 수정창 공식 정비자료를 교체·점검·청소 주기로 구분 표시, 기존 사용자 설정과 정비기록 유지"
+  "note": "정비 항목 수정 팝업 빈 여백 축소 및 교체·점검·청소 작업별 주기 입력명 구분"
 }
