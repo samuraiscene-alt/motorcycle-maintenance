@@ -344,7 +344,9 @@ simulationButton.style.marginTop='9px';simulationButton.textContent='복원 모�
 selfTestButton.after(simulationButton);
 async function simulateRestore(){
  const databaseName='motorcycle-maintenance-restore-simulation-v1';
- let db;
+ let db,passed=false;
+ const oldData={bike:'original-test-bike',km:1000,service:{at:700,interval:5000},photo:new Blob(['old-photo'],{type:'image/png'})};
+ const newData={bike:'restored-test-bike',km:1700,service:{at:1200,interval:5000},photo:new Blob(['new-photo'],{type:'image/png'})};
  try{
   db=await new Promise((resolve,reject)=>{
    const request=indexedDB.open(databaseName,1);
@@ -356,38 +358,60 @@ async function simulateRestore(){
    request.onerror=()=>reject(request.error||new Error('시험 저장소 생성 실패'));
    request.onblocked=()=>reject(new Error('이전 자가진단 창을 닫고 다시 시도해.'));
   });
-  const fixture={bike:'simulation-only',km:1700,service:{at:1200,interval:5000},photo:new Blob(['photo-test'],{type:'image/png'})};
-  await new Promise((resolve,reject)=>{
+  const write=values=>new Promise((resolve,reject)=>{
    const tx=db.transaction('data','readwrite'),store=tx.objectStore('data');
-   store.clear();store.put(fixture.bike,'bike');store.put(fixture.km,'km');
-   store.put(fixture.service,'service');store.put(fixture.photo,'photo');
-   tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error||new Error('가상 기록 저장 실패'));
-   tx.onabort=()=>reject(tx.error||new Error('가상 기록 저장 중단'));
+   store.clear();
+   for(const key of ['bike','km','service','photo'])store.put(values[key],key);
+   tx.oncomplete=()=>resolve();
+   tx.onerror=()=>reject(tx.error||new Error('시험 기록 저장 실패'));
+   tx.onabort=()=>reject(tx.error||new Error('시험 기록 저장 중단'));
   });
-  const values=await new Promise((resolve,reject)=>{
+  const read=()=>new Promise((resolve,reject)=>{
    const tx=db.transaction('data','readonly'),store=tx.objectStore('data');
-   const keys=['bike','km','service','photo'],result={};
-   for(const key of keys)store.get(key).onsuccess=e=>result[key]=e.target.result;
+   const result={};
+   for(const key of ['bike','km','service','photo'])
+    store.get(key).onsuccess=e=>{result[key]=e.target.result};
    tx.oncomplete=()=>resolve(result);
-   tx.onerror=()=>reject(tx.error||new Error('가상 기록 읽기 실패'));
+   tx.onerror=()=>reject(tx.error||new Error('시험 기록 읽기 실패'));
+   tx.onabort=()=>reject(tx.error||new Error('시험 기록 읽기 중단'));
   });
-  if(values.bike!==fixture.bike||values.km!==fixture.km||
-     JSON.stringify(values.service)!==JSON.stringify(fixture.service)||
-     !(values.photo instanceof Blob)||
-     await blobDigest(values.photo)!==await blobDigest(fixture.photo))
-   throw new Error('가상 복원 후 데이터가 일치하지 않아.');
-  return '✓ 복원 모의실험 통과\n별도 저장소에 가상 차량·정비기록·사진 쓰기와 재읽기 확인 완료.\n실제 차량·정비기록·사진은 변경하지 않았어.';
+  const verify=async expected=>{
+   const actual=await read();
+   if(actual.bike!==expected.bike||actual.km!==expected.km||
+      JSON.stringify(actual.service)!==JSON.stringify(expected.service)||
+      !(actual.photo instanceof Blob)||actual.photo.type!==expected.photo.type||
+      await blobDigest(actual.photo)!==await blobDigest(expected.photo))
+    throw new Error('복원·원상복구 데이터 검증 실패');
+  };
+  await write(oldData);await verify(oldData);
+  await write(newData);await verify(newData);
+  // Inject a failure after the replacement has already been written.
+  // Rollback must restore the original bike, mileage, service and photo.
+  await write(oldData);
+  let failureDetected=false;
+  try{
+   await write(newData);
+   throw new Error('의도적으로 발생시킨 복원 실패');
+  }catch(error){
+   if(error.message!=='의도적으로 발생시킨 복원 실패')throw error;
+   failureDetected=true;
+   await write(oldData);
+   await verify(oldData);
+  }
+  if(!failureDetected)throw new Error('강제 실패 상황을 감지하지 못했어.');
+  passed=true;
  }finally{
   if(db)db.close();
-  // Delete only our dedicated simulation database, never the user's production DB.
-  try{
-   await new Promise((resolve,reject)=>{
-    const req=indexedDB.deleteDatabase(databaseName);
-    req.onsuccess=resolve;req.onerror=()=>reject(req.error);
-    req.onblocked=()=>reject(new Error('시험 저장소 정리가 지연됐어.'));
-   });
-  }catch(err){throw new Error('시험 저장소 정리 실패: '+(err.message||err))}
+  // Remove the isolated database only. Never open or clear the real user database.
+  await new Promise((resolve,reject)=>{
+   const req=indexedDB.deleteDatabase(databaseName);
+   req.onsuccess=()=>resolve();
+   req.onerror=()=>reject(req.error||new Error('시험 저장소 삭제 실패'));
+   req.onblocked=()=>reject(new Error('시험 저장소 정리가 지연됐어.'));
+  });
  }
+ if(!passed)throw new Error('복원 모의실험이 완료되지 않았어.');
+ return '✓ 복원·원상복구 모의실험 3/3 통과\\n① 가상 데이터 복원\\n② 강제 오류 감지\\n③ 기존 차량·주행거리·정비기록·사진 원상복구 확인\\n실제 사용자 데이터는 변경하지 않았어.';
 }
 simulationButton.addEventListener('click',async()=>{
  if(busy)return;
