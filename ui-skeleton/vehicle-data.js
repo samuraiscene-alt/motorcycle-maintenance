@@ -189,17 +189,22 @@ function addCalendarMonths(yyyyMMdd,months){
  return due.toISOString().slice(0,10);
 }
 function dateBasedStatus(reg,partId,records){
- const months=officialTask(reg,partId)?.replaceMonths;
- if(!Number.isSafeInteger(months)||months<1)return null;
+ const task=officialTask(reg,partId);
+ const months=task?.replaceMonths,initialMonths=task?.firstReplaceMonths;
+ if((!Number.isSafeInteger(months)||months<1)&&(!Number.isSafeInteger(initialMonths)||initialMonths<1))return null;
  const past=records.filter(x=>x&&validMaintenanceDate(x.date)&&(x.action||'replace')==='replace'&&x.date<=todayLocal())
   .sort((a,b)=>String(a.date).localeCompare(String(b.date))||Number(a.at)-Number(b.at));
  const last=past.at(-1);
- if(!last)return {months,missing:true};
- const due=addCalendarMonths(last.date,months);
- if(!due)return {months,missing:true};
- const today=todayLocal();
- const days=Math.round((Date.parse(due+'T00:00:00Z')-Date.parse(today+'T00:00:00Z'))/86400000);
- return {months,due,days,missing:false};
+ // A date for first service is valid only with a known first-use date of a new vehicle.
+ const initial=!last&&reg.km===0&&Number.isSafeInteger(initialMonths)&&initialMonths>0;
+ const interval=initial?initialMonths:months;
+ if(!Number.isSafeInteger(interval)||interval<1)return null;
+ const start=last?.date||(initial&&validMaintenanceDate(reg.firstUseDate)&&reg.firstUseDate<=todayLocal()?reg.firstUseDate:null);
+ if(!start)return {months:interval,missing:true,initial,needsFirstUseDate:initial};
+ const due=addCalendarMonths(start,interval);
+ if(!due)return {months:interval,missing:true,initial,needsFirstUseDate:initial};
+ const days=Math.round((Date.parse(due+'T00:00:00Z')-Date.parse(todayLocal()+'T00:00:00Z'))/86400000);
+ return {months:interval,due,days,missing:false,initial};
 }
 function timingDescription(task){
  if(!task)return '';
@@ -213,7 +218,9 @@ document.addEventListener('motorcycle:register-new-vehicle',event=>{
  const info=event.detail||{},id=info.id,name=String(info.name||'').trim(),at=Number(info.km);
  if(!/^bike-[a-z0-9-]+$/.test(id)||!name||name.length>100||registered[id]||!valid(at)||!Number.isSafeInteger(info.cc)||info.cc<1||info.cc>3000||!String(info.brand||'').trim()||!String(info.model||'').trim()||!Number.isSafeInteger(info.year)||info.year<1950||info.year>new Date().getFullYear())return;
  const verifiedProfile=window.MotorcycleCatalog?.findOfficialProfile(info.brand,info.model,info.year)||null;
- const nextReg={...registered,[id]:{name,brand:String(info.brand).trim(),model:String(info.model).trim(),cc:info.cc,km:at,year:Number.isSafeInteger(info.year)?info.year:null,wear:'auto',maintenanceProfileStatus:verifiedProfile?'official':'unverified',maintenanceProfileSource:verifiedProfile?.source||null}};
+ const firstUseDate=String(info.firstUseDate||'').trim();
+ if(firstUseDate&&(!validMaintenanceDate(firstUseDate)||firstUseDate>todayLocal()||Number(firstUseDate.slice(0,4))<info.year))return;
+ const nextReg={...registered,[id]:{name,brand:String(info.brand).trim(),model:String(info.model).trim(),cc:info.cc,km:at,year:Number.isSafeInteger(info.year)?info.year:null,firstUseDate,wear:'auto',maintenanceProfileStatus:verifiedProfile?'official':'unverified',maintenanceProfileSource:verifiedProfile?.source||null}};
  const nextData={...database,[id]:{odometer:at,records:{},odometerHistory:[{at,date:new Date().toISOString()}]}};
  try{
   write(regKey,nextReg);write(dataKey,nextData);
@@ -240,6 +247,8 @@ document.addEventListener('motorcycle:update-vehicle',event=>{
  const lastService=entries.reduce((max,v)=>valid(v?.at)?Math.max(max,v.at):max,0);
  const current=Number.isSafeInteger(database[id]?.odometer)?database[id].odometer:prior.km;
  if(d.km>current||(lastService&&d.km>lastService))return;
+ const firstUseDate=String(d.firstUseDate??prior.firstUseDate??'').trim();
+ if(firstUseDate&&(!validMaintenanceDate(firstUseDate)||firstUseDate>todayLocal()||Number(firstUseDate.slice(0,4))<d.year))return;
  const changedProfile=String(prior.brand||'').toUpperCase()!==brandName.toUpperCase()
   ||String(prior.model||'').toUpperCase()!==modelName.toUpperCase()||prior.year!==d.year;
  const newProfile=changedProfile?window.MotorcycleCatalog?.findOfficialProfile(brandName,modelName,d.year)||null:null;
@@ -247,7 +256,7 @@ document.addEventListener('motorcycle:update-vehicle',event=>{
   maintenanceProfileStatus:newProfile?'official':'unverified',
   maintenanceProfileSource:newProfile?.source||null
  }:{};
- const next={...registered,[id]:{...prior,name:display,brand:brandName,model:modelName,cc:d.cc,year:d.year,km:d.km,wear:'auto',...profileFields}};
+ const next={...registered,[id]:{...prior,name:display,brand:brandName,model:modelName,cc:d.cc,year:d.year,km:d.km,firstUseDate,wear:'auto',...profileFields}};
  try{
   if(changedProfile){
    const key='motorcycle-skeleton-part-appearance-v1',all=load(key),existing=all[id]||{},updated={};
@@ -306,9 +315,9 @@ function updateMaintenanceNotices(){
    const remaining=due-odo;if(remaining>500)continue;
    notices.push({id,title,action,due,remaining,kind:'distance'});
   }
-  if(Number.isSafeInteger(task?.replaceMonths)&&task.replaceMonths>0){
+  if((Number.isSafeInteger(task?.replaceMonths)&&task.replaceMonths>0)||(Number.isSafeInteger(task?.firstReplaceMonths)&&task.firstReplaceMonths>0)){
    const calendar=dateBasedStatus(reg,id,records);
-   if(calendar?.missing){missingDates.push({id,title,months:task.replaceMonths})}
+   if(calendar?.missing){missingDates.push({id,title,months:calendar.months,needsFirstUseDate:calendar.needsFirstUseDate})}
    else if(calendar&&calendar.days<=30){
     notices.push({id,title,action:'replace',due:calendar.due,remaining:calendar.days,kind:'calendar'});
    }
@@ -347,13 +356,14 @@ function updateMaintenanceNotices(){
  if(!notices.length&&!missingDates.length&&!unknownEntries.length&&profile){const p=document.createElement('p');p.textContent='현재 500km 또는 30일 이내의 정비 알림이 없어.';box.appendChild(p)}
  if(missingDates.length){
   const p=document.createElement('p');p.className='maintenance-notice-disclaimer';
-  p.textContent='마지막 교체일 확인 필요 ('+missingDates.length+'건). 실제 교체한 날짜와 당시 주행거리를 알고 있다면 아래 항목을 눌러 기록해.';box.appendChild(p);
+  p.textContent='날짜 확인 필요 ('+missingDates.length+'건). 최초 운행일은 차량정보 수정에서, 마지막 교체일은 정비기록에서 실제 날짜만 입력해.';box.appendChild(p);
   for(const entry of missingDates){
    const btn=document.createElement('button');btn.type='button';btn.className='maintenance-notice-item maintenance-missing-date';
-   const label=document.createElement('strong');label.textContent=entry.title+' · '+entry.months+'개월마다 교체';
-   const subtitle=document.createElement('span');subtitle.textContent='마지막 교체일 입력 필요 · 기록 추가';
+   const label=document.createElement('strong');label.textContent=entry.title+' · '+(entry.needsFirstUseDate?'최초 '+entry.months+'개월 교체':'교체주기 '+entry.months+'개월');
+   const subtitle=document.createElement('span');subtitle.textContent=entry.needsFirstUseDate?'실제 최초 운행일을 차량정보 수정에서 입력':'마지막 교체일 확인 · 기록 추가';
    btn.append(label,subtitle);
    btn.addEventListener('click',()=>{
+    if(entry.needsFirstUseDate){const settingsTab=[...document.querySelectorAll('.tabs .tab')].find(x=>x.textContent.trim()==='설정');settingsTab?.click();return;}
     const row=[...document.querySelectorAll('.rows .part[data-part-id]')].find(x=>x.dataset.partId===entry.id);
     if(!row)return;
     openRecord(row,{historical:true,action:'replace'});
