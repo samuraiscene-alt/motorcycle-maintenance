@@ -47,6 +47,20 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'HONDA|C125|2022':Object.freeze({
+  verified:true,coverage:'partial',region:'US',modelCode:'C125A',year:2022,
+  source:'https://cdn.powersports.honda.com/documentum/MWOM/ml.remawmom.2022_c125__super_cub__owner_s_manual.pdf',
+  sourceType:'Honda 2022 C125A US official maintenance schedule',sourcePages:[61,62],
+  intervals:Object.freeze({oil:6400,filter:12800,'oil-filter':12800,'air-filter':19200,'spark-plug':12800,'valve-clearance':6400,'oil-strainer':12800,'chain-sprockets':500}),
+  tasks:Object.freeze({
+   oil:{replaceKm:6400,firstReplaceKm:1000,firstRegularOdometerKm:6400,replaceMonths:12},
+   filter:{replaceKm:12800},'oil-filter':{replaceKm:12800},
+   'air-filter':{replaceKm:19200},'spark-plug':{inspectKm:6400,replaceKm:12800},
+   'valve-clearance':{inspectKm:6400},'oil-strainer':{cleanKm:12800},
+   'chain-sprockets':{inspectKm:500},'brake-fluid':{replaceMonths:24}
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','oil-strainer':'clean','chain-sprockets':'inspect'})
+ }),
  'HONDA|C125|2026':Object.freeze({
   verified:true,coverage:'partial',region:'JP 8BJ-JA71 (2026), frame JA71-1100001+',modelCode:'JA71',year:2026,
   source:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa009/',
