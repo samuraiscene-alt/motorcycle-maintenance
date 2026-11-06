@@ -577,12 +577,21 @@ function syncAction(){
  const arr=getVehicleData(currentBike().id).records?.[id]||[];
  const last=[...arr].filter(r=>r&&(r.action||'replace')===action&&valid(r.interval)&&r.interval>0).sort((a,b)=>a.at-b.at).at(-1);
  const official=actionInterval(reg,id,action);
- const km=action==='replace'?(last?.interval||official||editingItem.interval||0):(official||last?.interval||0);
+ const settings=partSettings(currentBike().id,id);
+ const settingKey=action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
+ const settingSourceKey=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
+ const configured=Number.isSafeInteger(settings[settingKey])&&settings[settingKey]>=0;
+ // Saved user edits outrank old record snapshots; an explicitly disabled cycle (0) stays disabled.
+ const hasUserCycle=configured&&settings[settingSourceKey]==='user';
+ const km=hasUserCycle?settings[settingKey]
+  :(configured&&settings[settingSourceKey]==='official'?official
+  :last?.interval||official||(action==='replace'?editingItem.interval||0:0));
  const timeOnly=action==='replace'&&!!task?.replaceMonths&&!km;
  const wrap=recordInterval.closest('label');wrap.hidden=timeOnly;
  wrap.querySelector('.registration-label').textContent=actionText(action)+' 주기 (km)';
- recordInterval.required=!timeOnly;recordInterval.value=km?String(km):'';
- recordInterval.readOnly=!!official;
+ recordInterval.required=!timeOnly;recordInterval.value=km>0?String(km):'';
+ // A record's interval is a snapshot, not an edit to the part's configured maintenance cycle.
+ recordInterval.readOnly=false;
  recordTitle.textContent=currentPartName(id)+' '+actionText(action)+' 기록';
  recordForm.querySelector('button[type="submit"]').textContent=actionText(action)+' 완료 저장';
 }
