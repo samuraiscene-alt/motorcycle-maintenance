@@ -270,13 +270,16 @@ garageSign.className='garage-sign';garageSign.setAttribute('aria-label','정비�
 garageSign.innerHTML='<span class="garage-sign-caption">MOTORCYCLE SERVICE</span><img alt="야마하 모터 2025 공식 로고" loading="eager">';
 stage.appendChild(garageSign);
 /* Yamaha Motor's real, unmodified 2025 logomark (not a newly invented logo). */
-const yamahaSignPhoto='https://upload.wikimedia.org/wikipedia/commons/1/1b/Yamaha_Motor_2025.svg';
+const yamahaSignPhoto='https://commons.wikimedia.org/wiki/Special:Redirect/file/Yamaha_Motor_2025.svg';
 const yamahaSignImg=garageSign.querySelector('img');
 yamahaSignImg.addEventListener('load',()=>garageSign.classList.add('sign-photo-ready'));
 yamahaSignImg.addEventListener('error',()=>garageSign.classList.remove('sign-photo-ready'));
 function setGarageSign(maker){
  garageSign.classList.remove('sign-photo-ready');
  garageSign.dataset.brand=maker==='HONDA'?'HONDA':maker==='YAMAHA'?'YAMAHA':'GENERAL';
+ document.body.classList.toggle('garage-sign-honda',maker==='HONDA');
+ document.body.classList.toggle('garage-sign-yamaha',maker==='YAMAHA');
+ document.body.classList.toggle('garage-sign-general',maker!=='HONDA'&&maker!=='YAMAHA');
  garageSign.hidden=maker==='HONDA';
  garageSign.querySelector('.garage-sign-caption').textContent=maker==='YAMAHA'?'YAMAHA':'MOTORCYCLE SERVICE';
  if(maker==='YAMAHA'){
@@ -297,7 +300,7 @@ function renderInfo(){
  if(odometerButton){odometerButton.hidden=empty;odometerButton.disabled=empty}
  if(empty){
   name.textContent='등록된 차량 없음';meta.textContent='설정에서 새 차량을 등록해.';
-  document.body.classList.remove('vehicle-locked','non-honda-bike');
+  document.body.classList.remove('vehicle-locked','non-honda-bike','garage-sign-honda','garage-sign-yamaha','garage-sign-general');
  garageSign.hidden=true;
   stage.setAttribute('aria-label','차량이 없는 정비소');
   document.body.dataset.activeBike='';
