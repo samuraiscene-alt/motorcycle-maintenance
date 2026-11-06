@@ -1,5 +1,7 @@
 (()=>{'use strict';
-const KEYS=['motorcycle-skeleton-registrations-v1','motorcycle-skeleton-maintenance-v1','motorcycle-skeleton-selected-vehicle-v1','motorcycle-skeleton-added-parts-v1','motorcycle-skeleton-part-appearance-v1','motorcycle-skeleton-part-order-v1'];
+const LEGACY_KEYS=['motorcycle-skeleton-registrations-v1','motorcycle-skeleton-maintenance-v1','motorcycle-skeleton-selected-vehicle-v1','motorcycle-skeleton-added-parts-v1','motorcycle-skeleton-part-appearance-v1','motorcycle-skeleton-part-order-v1'];
+const MIGRATION_KEY='motorcycle-skeleton-priority-layout-v1';
+const KEYS=[...LEGACY_KEYS,MIGRATION_KEY];
 const DB='motorcycle-skeleton-added-images-v1',MAGIC='motorcycle-maintenance-full-backup';
 const style=document.createElement('style');
 style.textContent='.backup-overlay[hidden]{display:none!important}.backup-overlay{position:fixed;inset:0;z-index:180;background:#02070dd9;display:flex;align-items:flex-end;justify-content:center;padding:12px 12px max(24px,env(safe-area-inset-bottom))}.backup-panel{width:100%;max-width:540px;max-height:88dvh;overflow:auto;border:1px solid #92afc8;border-radius:17px;padding:18px;background:linear-gradient(150deg,#344c65,#13263a 34%,#09121e);color:#edf8ff}.backup-panel-header{display:flex;align-items:center;justify-content:space-between}.backup-panel-header strong{font-size:19px}.backup-panel-header button{border:1px solid #8ca8c1;border-radius:8px;background:#172e43;color:white;width:36px;height:36px;font-size:24px}.backup-panel p{font-size:12px;color:#c4d9ea;line-height:1.7}.backup-panel section{border:1px solid #58738c;border-radius:12px;background:#091c2e;padding:13px;margin:14px 0}.backup-panel section strong{font-size:15px}.backup-btn{width:100%;height:48px;border:1px solid #a2d8fc;border-radius:10px;background:linear-gradient(#4bb2fa,#0860ad);color:white;font-size:15px;font-weight:850}.backup-btn.secondary{background:linear-gradient(#465d73,#21344c);border-color:#92a9bf}.backup-btn:disabled{opacity:.5}.backup-status{min-height:18px;color:#aadfff!important;white-space:pre-line}.backup-file{position:absolute;opacity:0;width:1px;height:1px}';
@@ -40,7 +42,12 @@ for(const el of [...document.querySelectorAll('.tabs .tab'),...document.querySel
  el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();overlay.hidden=false;message('');refreshTransferInfo()}});
 }
 function locals(){const result={};for(const k of KEYS)result[k]=localStorage.getItem(k);return result}
-function setLocals(result){for(const k of KEYS){if(result[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,result[k])}}
+function setLocals(result){for(const k of KEYS){
+ // Version-1 backups did not contain the optional priority-migration marker.
+ // Never turn an absent key into the literal string 'undefined'.
+ if(!Object.prototype.hasOwnProperty.call(result,k))continue;
+ if(result[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,result[k]);
+}}
 function openDb(){return new Promise((resolve,reject)=>{
  const req=indexedDB.open(DB,1);
  req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('images'))req.result.createObjectStore('images')};
@@ -73,13 +80,23 @@ function unpackImages(images){return images.map(item=>({key:item.key,blob:new Bl
 function obj(x){return x!==null&&typeof x==='object'&&!Array.isArray(x)}
 function validate(payload){
  if(!obj(payload)||!obj(payload.local)||!Array.isArray(payload.images))throw new Error('백업 파일 형식이 맞지 않아.');
- if(Object.keys(payload.local).length!==KEYS.length)throw new Error('백업 저장 항목 수가 맞지 않아.');
- for(const k of KEYS){
+ const storedKeys=Object.keys(payload.local);
+ if(storedKeys.length!==LEGACY_KEYS.length&&storedKeys.length!==KEYS.length)throw new Error('백업 저장 항목 수가 맞지 않아.');
+ if(storedKeys.some(k=>!KEYS.includes(k)))throw new Error('알 수 없는 백업 항목이 있어.');
+ for(const k of LEGACY_KEYS){
   if(!Object.prototype.hasOwnProperty.call(payload.local,k))throw new Error('백업 항목이 누락됐어.');
   const x=payload.local[k];if(x!==null&&typeof x!=='string')throw new Error('백업 설정이 올바르지 않아.');
   if(x!==null&&k!=='motorcycle-skeleton-selected-vehicle-v1'){
    let parsed;try{parsed=JSON.parse(x)}catch{throw new Error('백업 설정을 읽을 수 없어.')}
    if(!obj(parsed))throw new Error('백업 설정 구조가 맞지 않아.');
+  }
+ }
+ if(Object.prototype.hasOwnProperty.call(payload.local,MIGRATION_KEY)){
+  const migration=payload.local[MIGRATION_KEY];
+  if(migration!==null){
+   if(typeof migration!=='string')throw new Error('카드 순서 변환 설정이 올바르지 않아.');
+   let parsed;try{parsed=JSON.parse(migration)}catch{throw new Error('카드 순서 변환 설정을 읽을 수 없어.');}
+   if(!obj(parsed))throw new Error('카드 순서 변환 설정 구조가 맞지 않아.');
   }
  }
  const maintenance=JSON.parse(payload.local['motorcycle-skeleton-maintenance-v1']||'{}');
