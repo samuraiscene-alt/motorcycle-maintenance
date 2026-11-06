@@ -153,6 +153,19 @@ function validate(payload){
    throw new Error('계기판 주행거리 형식이 잘못됐어: '+bikeId);
   if(obj(registration)&&Number.isSafeInteger(registration.km)&&Number.isSafeInteger(odo)&&odo<registration.km)
    throw new Error('현재 주행거리가 등록 시 주행거리보다 작아: '+bikeId);
+  // Older backups can have no odometer history; validate only saved entries.
+  if(vehicle.odometerHistory!==undefined){
+   if(!Array.isArray(vehicle.odometerHistory))throw new Error('주행거리 변경 이력 형식이 잘못됐어: '+bikeId);
+   for(const entry of vehicle.odometerHistory){
+    if(!obj(entry)||!Number.isSafeInteger(entry.at)||entry.at<0||entry.at>9999999||
+       typeof entry.date!=='string'||!Number.isFinite(Date.parse(entry.date)))
+     throw new Error('주행거리 변경 이력 값이 잘못됐어: '+bikeId);
+    if(entry.type!==undefined&&entry.type!=='correction')
+     throw new Error('주행거리 정정 이력 종류가 잘못됐어: '+bikeId);
+    if(entry.previous!==undefined&&(!Number.isSafeInteger(entry.previous)||entry.previous<0||entry.previous>9999999))
+     throw new Error('정정 이전 주행거리 값이 잘못됐어: '+bikeId);
+   }
+  }
   for(const [partId,records] of Object.entries(vehicle.records)){
    if(!Array.isArray(records))throw new Error('정비기록 목록 형식이 잘못됐어: '+partId);
    const seen=new Set();
@@ -191,6 +204,17 @@ function validate(payload){
 function recordChronologyWarnings(payload){
  const maintenance=JSON.parse(payload.local['motorcycle-skeleton-maintenance-v1']||'{}'),warnings=[];
  for(const [bikeId,vehicle] of Object.entries(maintenance)){
+  const history=vehicle.odometerHistory;
+  if(Array.isArray(history)&&history.length&&Number.isSafeInteger(vehicle.odometer)){
+   const latest=history[history.length-1];
+   if(latest.at!==vehicle.odometer)
+    warnings.push(bikeId+': 마지막 이력 '+latest.at+'km / 현재 계기판 '+vehicle.odometer+'km 불일치');
+   for(let i=1;i<history.length;i++){
+    const prev=history[i-1],next=history[i];
+    if(next.at<prev.at&&next.type!=='correction')
+     warnings.push(bikeId+': '+prev.at+'km → '+next.at+'km 감소 (정정 표시 없음)');
+   }
+  }
   for(const [partId,records] of Object.entries(vehicle.records||{})){
    const byAction=new Map();
    for(const item of records){
@@ -233,7 +257,7 @@ checkPick.addEventListener('change',async()=>{
   const info=await inspectBackupFile(file);
   checkResult.textContent='검사 통과 · 차량 '+info.vehicles+'대 · 정비기록 '+info.records+
    '건 · 사진 '+info.images+'개\\n백업 파일 해시 및 구조 확인 완료. 현재 데이터는 변경하지 않았어.'+
-   (info.warnings.length?'\\n주의: 날짜순 주행거리 감소 의심 '+info.warnings.length+'건 (계기판 정정 이력일 수 있어)\\n'+info.warnings.slice(0,3).join('\\n'):'');
+   (info.warnings.length?'\\n주의: 주행거리·이력 일치 여부 확인 필요 '+info.warnings.length+'건 (정정 이력 포함)\\n'+info.warnings.slice(0,3).join('\\n'):'');
  }catch(err){checkResult.textContent='검사 실패: '+(err.message||'파일을 검사할 수 없어.')}
  finally{lock(false);checkPick.value=''}
 });
@@ -258,7 +282,7 @@ pick.addEventListener('change',async()=>{
   const incomingRecords=inspection.records;
   const existingRegs=vehicleCount(localStorage.getItem('motorcycle-skeleton-registrations-v1'));
   const existingRecords=recordCount(localStorage.getItem('motorcycle-skeleton-maintenance-v1'));
-  const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건'+(inspection.warnings.length?'\\n\\n주의: 날짜순 주행거리 감소 의심 '+inspection.warnings.length+'건. 계기판 오입력 정정인지 확인해.':'')+'\\n\\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
+  const summary='가져올 파일: 차량 '+incomingRegs+'대 / 정비기록 '+incomingRecords+'건 / 사진 '+incoming.length+'개\\n현재 브라우저: 차량 '+existingRegs+'대 / 정비기록 '+existingRecords+'건'+(inspection.warnings.length?'\\n\\n주의: 주행거리 이력 일치 여부 확인 필요 '+inspection.warnings.length+'건. 백업 파일 검사에서 내용을 확인해.':'')+'\\n\\n현재 브라우저의 기존 자료를 파일 내용으로 완전히 교체할까?\\n두 곳의 기록을 합치지 않아. 필요하다면 먼저 현재 브라우저도 백업해.';
   if(!confirm(summary)){message('복원 취소: 기존 데이터 유지');return}
   // Keep an untouched in-memory snapshot before the first destructive write.
   const oldLocal=locals(),oldImages=await getImages();message('전체 데이터를 복원 중…');
