@@ -37,6 +37,13 @@ const verifiedDimensions=Object.freeze({
  'HONDA|PCX125|2025':Object.freeze({lengthMm:1935,widthMm:740,heightMm:1125,region:'EU',source:'https://hondanews.eu/eu/en/motorcycles/media/pressreleases/503766/25ym-honda-pcx125-press-kit'}),
  'YAMAHA|XMAX300|2025':Object.freeze({lengthMm:2184,widthMm:775,heightMm:1410,region:'US',heightRangeMm:[1410,1506],source:'https://www.yamahamotorsports.com/models/25-xmax/specs'})
 });
+// Linked manufacturer marks; preserve readable names when image loading fails.
+const brandLogos=Object.freeze({
+ SUZUKI:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Suzuki_logo_2025.svg',
+ KAWASAKI:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Kawasaki_Motors_logo.svg',
+ BMW:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_BMW_Motorrad_2021.svg',
+ VESPA:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Vespa-logo.svg'
+});
 const officialProfiles=Object.freeze({
  'YAMAHA|NMAX125|2022':Object.freeze({
   verified:true,coverage:'partial',region:'GPD125 / Yamaha Korea 2022',modelCode:'GPD125',year:2022,
@@ -194,6 +201,7 @@ window.MotorcycleCatalog=Object.freeze({
  brands,
  officialProfiles:expandedOfficialProfiles,
  profileKey,
+ brandLogos,
  modelStyles,
  verifiedDimensions,
  findBodyStyle(brand,model){
