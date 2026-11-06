@@ -1,6 +1,6 @@
 {
-  "version": "2.9.37",
-  "cache": "motorcycle-maintenance-v2.9.37",
+  "version": "2.9.38",
+  "cache": "motorcycle-maintenance-v2.9.38",
   "released": "2026-11-06",
-  "note": "정비 항목 수정 팝업 빈 여백 축소 및 교체·점검·청소 작업별 주기 입력명 구분"
+  "note": "점검·청소 전용 정비주기 수정값을 교체주기와 분리해 저장하고 정비 알림에 반영"
 }
