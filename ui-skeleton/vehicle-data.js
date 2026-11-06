@@ -236,9 +236,8 @@ function updateMaintenanceNotices(){
   const partRow=[...document.querySelectorAll('.rows .part[data-part-id]')].find(row=>row.dataset.partId===n.id);
   if(!partRow)return;
   partRow.classList.add('maintenance-notice-target');
-  partRow.scrollIntoView({behavior:'smooth',block:'center'});
+  openRecord(partRow,{action:n.action});
   setTimeout(()=>partRow.classList.remove('maintenance-notice-target'),1800);
-  openRecord(partRow);actionSelect.value=n.action;syncAction();
  });
   const title=document.createElement('strong');title.textContent=n.title+' · '+actionText(n.action);
   const detail=document.createElement('span');
@@ -491,7 +490,7 @@ function openRecord(row,options={}){
  recordAt.max=String(getOdometer());
  recordAt.placeholder=historical?'당시 주행거리 입력':'';
  recordDate.max=todayLocal();recordDate.value=historical?'':todayLocal();
- actionSelect.value=options.action||partAction(currentRegistration(),id);
+ actionSelect.value=['replace','inspect','clean'].includes(options.action)?options.action:partAction(currentRegistration(),id);
  recordError.textContent=historical?'과거에 실제 정비한 날짜와 당시 주행거리를 입력해. 모르면 기록을 저장하지 마.':'';
  syncAction();renderHistory();
  recordMask.hidden=false;document.body.classList.add('registration-open');recordClose.focus();
