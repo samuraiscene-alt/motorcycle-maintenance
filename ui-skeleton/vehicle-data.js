@@ -431,6 +431,9 @@ else{
  const due=firstService&&!last?initialDue:firstService&&last.at<=initialDue?nextFirst:last?last.at+interval:knownBase+interval;
  const span=Math.max(1,due-knownBase);
  const calendar=dateBasedStatus(reg,id,records);
+ // An existing motorcycle may have been serviced before registration.
+ // Do not treat registration mileage as a confirmed service event.
+ const historyUnknown=!last&&(reg.km!==0||odo>initialDue);
  if(sourceTag){
   const hasSetting=Object.prototype.hasOwnProperty.call(settings,'interval');
   let origin='unknown',label='주기 미확인';
@@ -446,7 +449,11 @@ else{
   sourceTag.hidden=!hasKnownCycle||origin==='unknown';
   sourceTag.textContent=sourceTag.hidden?'':label;
  }
- if(!valid(knownBase)||!Number.isSafeInteger(interval)||interval<=0){
+ if(historyUnknown&&Number.isSafeInteger(interval)&&interval>0){
+  text.textContent='정비 이력 확인 필요 · 적용 주기 '+fmt(interval)+'km';
+  if(calendar&&!calendar.missing)text.textContent+=' · 날짜 기준 '+calendar.due;
+  bar.style.width='0%';row.classList.add('part-unregistered');
+ }else if(!valid(knownBase)||!Number.isSafeInteger(interval)||interval<=0){
   text.textContent=calendar?(calendar.missing?'마지막 교체일 입력 필요 · '+calendar.months+'개월 주기':calendar.days<0?'교체기한 '+Math.abs(calendar.days)+'일 초과 · '+calendar.due:calendar.days<=30?'교체까지 '+calendar.days+'일 · '+calendar.due:'다음 교체 '+calendar.due)
   :interval>0?'교체기록 없음 / 주기 '+fmt(interval)+'km'
   :timingDescription(task)||(reg.maintenanceProfileStatus?'공식 거리주기 미확인':'교체주기 미설정');
