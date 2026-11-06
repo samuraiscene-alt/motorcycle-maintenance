@@ -35,24 +35,52 @@ function currentBike(){return bikes[index]}function currentRegistration(){return
 function getVehicleData(id){const x=database[id];return x&&typeof x==='object'&&!Array.isArray(x)?x:{records:{}}}
 function getOdometer(){const r=currentRegistration(),v=getVehicleData(currentBike().id);return r?valid(v.odometer)&&v.odometer>=r.km?v.odometer:r.km:null}
 function write(key,obj){localStorage.setItem(key,JSON.stringify(obj))}
+function officialCycleSettings(profile){
+ const result={};
+ if(!profile)return result;
+ const add=(part,field,value)=>{
+  if(!Number.isSafeInteger(value)||value<=0||value>1000000)return;
+  const source=field+'Source',entry=result[part]||(result[part]={});
+  entry[field]=value;entry[source]='official';
+ };
+ for(const [part,km] of Object.entries(profile.intervals||{})){
+  const action=profile.actionByPart?.[part]||'replace';
+  add(part,action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval',km);
+ }
+ for(const [part,task] of Object.entries(profile.tasks||{})){
+  add(part,'inspectInterval',task.inspectKm);
+  add(part,'cleanInterval',task.cleanKm);
+  if(task.replaceKm&&!Object.prototype.hasOwnProperty.call(result[part]||{},'interval'))
+   add(part,'interval',task.replaceKm);
+ }
+ return result;
+}
+function mergeOfficialCycles(previous,cycles){
+ const updated={...previous};
+ for(const [part,cycle] of Object.entries(cycles)){
+  const cfg={...(previous[part]||{})};
+  // A cleaning or inspection-only component must never inherit a false
+  // official replacement interval from older app versions.
+  if(!Object.prototype.hasOwnProperty.call(cycle,'interval')&&cfg.intervalSource==='official'){
+   delete cfg.interval;delete cfg.intervalSource;
+  }
+  for(const field of ['interval','inspectInterval','cleanInterval']){
+   if(!Object.prototype.hasOwnProperty.call(cycle,field))continue;
+   const source=field+'Source';
+   if(cfg[source]==='user'||(Object.prototype.hasOwnProperty.call(cfg,field)&&cfg[source]!=='official'))continue;
+   cfg[field]=cycle[field];cfg[source]='official';
+  }
+  updated[part]=cfg;
+ }
+ return updated;
+}
 function reconnectOfficialProfile(id){
  const reg=registered[id];if(!reg)return false;
  const profile=window.MotorcycleCatalog?.findOfficialProfile(reg.brand,reg.model,reg.year)||null;
  if(!profile)return false;
- const key='motorcycle-skeleton-part-appearance-v1',all=load(key),existing=all[id]||{},updated={...existing};
- let settingsChanged=false;
- for(const [part,km] of Object.entries(profile.intervals||{})){
-  if(!Number.isSafeInteger(km)||km<=0||km>1000000)continue;
-  const item=existing[part]||{};
-  // Never overwrite a user's saved interval, even when the official schedule changes.
-  if(item.intervalSource==='user')continue;
-  // Unknown/legacy values with no explicit source are treated as user-owned.
-  if(Object.prototype.hasOwnProperty.call(item,'interval')&&item.intervalSource!=='official')continue;
-  if(item.interval!==km||item.intervalSource!=='official'){
-   updated[part]={...item,interval:km,intervalSource:'official'};
-   settingsChanged=true;
-  }
- }
+ const key='motorcycle-skeleton-part-appearance-v1',all=load(key),existing=all[id]||{};
+ const updated=mergeOfficialCycles(existing,officialCycleSettings(profile));
+ const settingsChanged=JSON.stringify(updated)!==JSON.stringify(existing);
  const registrationChanged=reg.maintenanceProfileStatus!=='official'||reg.maintenanceProfileSource!==profile.source;
  if(!settingsChanged&&!registrationChanged)return false;
  const nextReg=registrationChanged?{...registered,[id]:{...reg,maintenanceProfileStatus:'official',maintenanceProfileSource:profile.source}}:registered;
@@ -140,10 +168,9 @@ document.addEventListener('motorcycle:register-new-vehicle',event=>{
  const nextData={...database,[id]:{odometer:at,records:{},odometerHistory:[{at,date:new Date().toISOString()}]}};
  try{
   write(regKey,nextReg);write(dataKey,nextData);
-  if(verifiedProfile?.intervals){
+  if(verifiedProfile){
    const key='motorcycle-skeleton-part-appearance-v1',appearance=load(key),current=appearance[id]||{};
-   const entries=Object.entries(verifiedProfile.intervals).filter(([,km])=>Number.isSafeInteger(km)&&km>0&&km<=1000000);
-   write(key,{...appearance,[id]:{...current,...Object.fromEntries(entries.map(([part,km])=>[part,{...(current[part]||{}),interval:km,intervalSource:'official'}]))}});
+   write(key,{...appearance,[id]:mergeOfficialCycles(current,officialCycleSettings(verifiedProfile))});
   }
   localStorage.setItem(chosenKey,id)
  }
@@ -176,15 +203,13 @@ document.addEventListener('motorcycle:update-vehicle',event=>{
   if(changedProfile){
    const key='motorcycle-skeleton-part-appearance-v1',all=load(key),existing=all[id]||{},updated={};
    for(const [part,cfg] of Object.entries(existing)){
-    const clean={...cfg};if(clean.intervalSource==='official'){delete clean.interval;delete clean.intervalSource}
+    const clean={...cfg};
+    for(const field of ['interval','inspectInterval','cleanInterval']){
+     if(clean[field+'Source']==='official'){delete clean[field];delete clean[field+'Source']}
+    }
     updated[part]=clean;
    }
-   for(const [part,km] of Object.entries(newProfile?.intervals||{})){
-    if(!Number.isSafeInteger(km)||km<=0)continue;
-    const current=updated[part]||{};
-    if(!Object.prototype.hasOwnProperty.call(current,'interval'))
-     updated[part]={...current,interval:km,intervalSource:'official'};
-   }
+   Object.assign(updated,mergeOfficialCycles(updated,officialCycleSettings(newProfile)));
    write(key,{...all,[id]:updated});
   }
   write(regKey,next);
