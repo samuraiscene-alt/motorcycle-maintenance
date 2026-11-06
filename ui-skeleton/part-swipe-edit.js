@@ -45,17 +45,31 @@ const style=document.createElement('style');style.textContent=
 '.part-edit-panel label{display:block;font-size:13px;font-weight:800}.part-edit-panel input[type=text]{width:100%;margin-top:8px;height:49px;padding:10px 12px;border:2px solid #a5c5e3;border-radius:10px;background:#f3f9ff;color:#14283b;font-size:17px;font-weight:800}' +
 '.part-edit-panel input[type=number]{width:100%;margin-top:8px;height:49px;padding:10px 12px;border:2px solid #a5c5e3;border-radius:10px;background:#f3f9ff;color:#14283b;font-size:17px;font-weight:800}' +
 '.part-edit-save{width:100%;height:49px;margin-top:18px;background:linear-gradient(#55b6f6,#0960b6);color:white;border:1px solid #8bd6ff;border-radius:10px;font-size:16px;font-weight:900}' +
-'.part-edit-error{min-height:17px;margin-top:8px;color:#ffd1aa;font-size:12px}';
+'.part-edit-error{min-height:17px;margin-top:8px;color:#ffd1aa;font-size:12px}' +
+'.part-edit-official-reset{display:block;width:100%;min-height:41px;margin-top:10px;border:1px solid #7db8e2;border-radius:9px;background:#163650;color:#e4f5ff;font-size:13px;font-weight:850}.part-edit-official-reset[hidden]{display:none!important}.part-edit-official-reset:disabled{opacity:.55}';
 document.head.appendChild(style);
 const mask=document.createElement('div');mask.className='part-edit-mask';mask.hidden=true;mask.setAttribute('role','dialog');mask.setAttribute('aria-modal','true');mask.innerHTML=
 '<form class="part-edit-panel"><div class="part-edit-head"><strong>정비 항목 수정</strong><button type="button" class="part-edit-close" aria-label="닫기">×</button></div>' +
 '<div class="part-edit-preview"><img alt="현재 부품 이미지" hidden><span>🔧</span></div>' +
 '<div class="part-edit-pickers"><button type="button" class="part-edit-photos">사진첩</button><button type="button" class="part-edit-files">파일함</button></div>' +
-'<label>부품 이름<input type="text" maxlength="35" required></label><label style="margin-top:12px">교체 주기 (km)<input type="number" class="part-edit-interval" min="1" max="1000000" step="1" inputmode="numeric" placeholder="교체 주기 미설정"></label><div class="part-edit-error" aria-live="polite"></div>' +
+'<label>부품 이름<input type="text" maxlength="35" required></label><label style="margin-top:12px">교체 주기 (km)<input type="number" class="part-edit-interval" min="1" max="1000000" step="1" inputmode="numeric" placeholder="교체 주기 미설정"></label><button class="part-edit-official-reset" type="button" hidden>제조사 공식 주기로 복원</button><div class="part-edit-error" aria-live="polite"></div>' +
 '<button type="submit" class="part-edit-save">저장</button><input class="part-edit-photo-input" type="file" accept="image/*" hidden><input class="part-edit-file-input" type="file" accept="image/*,.png,.jpg,.jpeg,.webp,.heic,.heif" hidden></form>';
 document.body.appendChild(mask);
 const form=mask.querySelector('form'),nameInput=form.querySelector('input[type=text]'),error=form.querySelector('.part-edit-error'),preview=form.querySelector('.part-edit-preview img'),fallback=form.querySelector('.part-edit-preview span');
-const photo=form.querySelector('.part-edit-photo-input'),fileInput=form.querySelector('.part-edit-file-input'),cycleInput=form.querySelector('.part-edit-interval');
+const photo=form.querySelector('.part-edit-photo-input'),fileInput=form.querySelector('.part-edit-file-input'),cycleInput=form.querySelector('.part-edit-interval'),officialReset=form.querySelector('.part-edit-official-reset');
+let restoreOfficial=false,availableOfficialKm=0;
+function officialKmFor(bikeId,partId){
+ let registrations={};try{registrations=JSON.parse(localStorage.getItem('motorcycle-skeleton-registrations-v1')||'{}')||{}}catch{}
+ const reg=registrations[bikeId];if(!reg)return 0;
+ const profile=window.MotorcycleCatalog?.findOfficialProfile(reg.brand,reg.model,reg.year);
+ const km=profile?.intervals?.[partId];return Number.isSafeInteger(km)&&km>0&&km<=1000000?km:0;
+}
+officialReset.addEventListener('click',()=>{
+ if(!editing||!availableOfficialKm)return;
+ cycleInput.value=String(availableOfficialKm);restoreOfficial=true;
+ error.textContent='제조사 공식 주기 '+availableOfficialKm.toLocaleString('ko-KR')+'km로 변경할 준비가 됐어. 저장을 누르면 적용돼.';
+});
+cycleInput.addEventListener('input',()=>{restoreOfficial=false;error.textContent=''});
 let databasePromise;
 function db(){if(!databasePromise)databasePromise=new Promise((resolve,reject)=>{const request=indexedDB.open(dbName,1);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('images'))request.result.createObjectStore('images')};request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)}).catch(err=>{databasePromise=null;throw err});return databasePromise}
 async function imageRead(k){const d=await db();return new Promise((resolve,reject)=>{const r=d.transaction('images').objectStore('images').get(k);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error)})}
@@ -63,7 +77,7 @@ async function imageWrite(k,blob){const d=await db();return new Promise((resolve
 async function shrinkImage(f){if(!f||(!f.type.startsWith('image/')&&!/\.(png|jpe?g|webp|heic|heif)$/i.test(f.name)))throw Error('이미지 파일을 선택해.');if(f.size>18*1024*1024)throw Error('18MB 이하의 이미지를 선택해.');const source=URL.createObjectURL(f);try{const img=new Image();img.src=source;await img.decode();const ratio=Math.min(1,640/Math.max(img.naturalWidth,img.naturalHeight));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*ratio));canvas.height=Math.max(1,Math.round(img.naturalHeight*ratio));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);return await new Promise((res,rej)=>canvas.toBlob(b=>b?res(b):rej(Error('이미지 변환 실패')),'image/png'))}finally{URL.revokeObjectURL(source)}}
 function closeSwipe(){if(openWrap){openWrap.classList.remove('swiped');openWrap=null}}
 function revokePreview(){if(previewUrl){URL.revokeObjectURL(previewUrl);previewUrl=null}}
-function closeModal(){mask.hidden=true;editing=null;draft=null;revokePreview();photo.value='';fileInput.value='';document.body.style.overflow=''}
+function closeModal(){mask.hidden=true;editing=null;draft=null;restoreOfficial=false;availableOfficialKm=0;revokePreview();photo.value='';fileInput.value='';document.body.style.overflow=''}
 function visiblePreview(img){if(img){preview.src=img;preview.hidden=false;fallback.hidden=true}else{preview.hidden=true;preview.removeAttribute('src');fallback.hidden=false}}
 function edit(row){closeSwipe();editing={id:row.dataset.partId,bike:bike(),row};draft=null;revokePreview();error.textContent='';nameInput.value=row.querySelector('.part-line strong')?.textContent||'';
  const cycle=active()[row.dataset.partId]?.interval;
@@ -71,6 +85,9 @@ function edit(row){closeSwipe();editing={id:row.dataset.partId,bike:bike(),row};
  let unverified=false;
  try{const regs=JSON.parse(localStorage.getItem('motorcycle-skeleton-registrations-v1')||'{}');unverified=!!regs[bike()]?.maintenanceProfileStatus}catch{}
  cycleInput.value=Number.isSafeInteger(cycle)&&cycle>0?String(cycle):unverified?'':String(Number(row.dataset.interval)||builtIn[row.dataset.partId]||'');
+ availableOfficialKm=officialKmFor(editing.bike,editing.id);restoreOfficial=false;
+ officialReset.hidden=!availableOfficialKm;
+ officialReset.textContent=availableOfficialKm?'제조사 공식 주기로 복원 ('+availableOfficialKm.toLocaleString('ko-KR')+'km)':'제조사 공식 주기로 복원';
  const img=row.querySelector('.part-img img');visiblePreview(img?.src||'');mask.hidden=false;document.body.style.overflow='hidden';nameInput.focus({preventScroll:true})}
 mask.querySelector('.part-edit-close').addEventListener('click',closeModal);mask.addEventListener('click',e=>{if(e.target===mask)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!mask.hidden)closeModal();else closeSwipe()}});
@@ -82,7 +99,12 @@ form.addEventListener('submit',async e=>{e.preventDefault();if(!editing)return;c
  if(!Number.isSafeInteger(cycle)||cycle<0||cycle>1000000){error.textContent='교체주기는 1~1,000,000km로 입력하거나 비워 둬.';return}const target=editing;const button=form.querySelector('.part-edit-save');button.disabled=true;try{
  if(draft){await imageWrite('appearance:'+target.bike+':'+target.id,draft);const cacheKey=target.bike+':'+target.id;if(cache.has(cacheKey)){URL.revokeObjectURL(cache.get(cacheKey));cache.delete(cacheKey)}}
  if(target.bike!==bike())throw Error('차량이 변경되었어. 다시 시도해.');
- setPart(target.id,{name:n,interval:cycle,intervalSource:'user',hasImage:!!draft||!!active()[target.id]?.hasImage});
+ const previous=active()[target.id]||{};
+ const unchanged=Number.isSafeInteger(previous.interval)&&previous.interval===cycle;
+ const source=restoreOfficial&&availableOfficialKm===cycle?'official':unchanged?previous.intervalSource:'user';
+ const changes={name:n,interval:cycle,hasImage:!!draft||!!previous.hasImage};
+ if(source)changes.intervalSource=source;
+ setPart(target.id,changes);
   document.dispatchEvent(new CustomEvent('motorcycle:custom-parts-change'));
  if(target.id.startsWith('custom-')){try{const all=JSON.parse(localStorage.getItem(addedKey)||'{}');if(Array.isArray(all[target.bike])){const entry=all[target.bike].find(x=>x.id===target.id);if(entry){entry.name=n;localStorage.setItem(addedKey,JSON.stringify(all))}}}catch(err){console.warn('Custom label sync:',err)}}
  closeModal();refresh();
