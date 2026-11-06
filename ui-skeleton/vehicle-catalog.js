@@ -47,6 +47,23 @@ const brandLogos=Object.freeze({
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
 const officialProfiles=Object.freeze({
+ 'HONDA|SUPER CUB110|2022':Object.freeze({
+  verified:true,coverage:'partial',region:'JP 8BJ-JA59 (frame JA59-1000001+)',modelCode:'JA59',year:2022,
+  source:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa009/',
+  sourceText:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa010/',
+  sourceType:'Honda Japan official Super Cub 110 JA59 oil and oil-filter FAQ, applicable model specified as 2022',
+  sourcePages:['Honda FAQ qa009','Honda FAQ qa010','Honda FAQ qa013'],
+  // Oil: 1,000 km / 1 month initial, then 3,000 km / 1 year.
+  // Filter: first at 13,000 km, then every 12,000 km (25,000 km, 37,000 km ...).
+  // The app records 12-month replacement guidance; initial 1-month time limit is in source metadata.
+  intervals:Object.freeze({oil:3000,filter:12000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:3000,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12},
+   filter:{replaceKm:12000,firstReplaceKm:13000,firstRegularOdometerKm:25000}
+  }),
+  specs:Object.freeze({chainSlackMm:[20,30],chainSlackSource:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa013/'}),
+  actionByPart:Object.freeze({})
+ }),
  'HONDA|FORZA350|2025':Object.freeze({
   verified:true,coverage:'partial',region:'HMEE European NSS350A, IV ED / VI ED',modelCode:'NSS350A',year:2025,
   source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/NSS250A_350A/2025/FORZA%20250350%20%28NSS250A-350A%29_32K1BF300_web.pdf',
