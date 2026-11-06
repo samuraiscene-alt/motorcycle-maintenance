@@ -75,6 +75,8 @@ edit.addEventListener('submit',e=>{
  e.preventDefault();const id=editingId,status=edit.querySelector('.fleet-edit-feedback');
  const brand=edit.elements.brand.value.trim(),model=edit.elements.model.value.trim(),rawCC=edit.elements.cc.value.trim(),rawYear=edit.elements.year.value.trim(),rawKM=edit.elements.km.value.trim(),cc=Number(rawCC),year=Number(rawYear),km=Number(rawKM);
  if(!id||!brand||brand.length>40||!model||model.length>55||brand.length+model.length+1>100||!rawCC||!Number.isSafeInteger(cc)||cc<1||cc>3000||!rawYear||!Number.isSafeInteger(year)||year<1950||year>new Date().getFullYear()||!rawKM||!Number.isSafeInteger(km)||km<0||km>9999999){status.textContent='제조사·기종·배기량·연식·주행거리를 확인해.';return}
+ const yearWarning=catalog?.validateModelYear(brand,model,year);
+ if(yearWarning){status.textContent=yearWarning.description;return}
  const r=parse(REG)[id];if(!r){status.textContent='차량을 찾지 못했어.';return}
  const data=parse(DATA)[id]||{},odometer=Number.isSafeInteger(data.odometer)?data.odometer:Number(r.km)||0;
  const maxService=Object.values(data.records||{}).flat().reduce((max,item)=>Number.isSafeInteger(item?.at)?Math.max(max,item.at):max,0);
@@ -223,6 +225,8 @@ form.addEventListener('submit',e=>{
  e.preventDefault();
  const brand=(form.elements.brand.value==='OTHER'?form.elements.brandOther.value:form.elements.brand.value).trim(),model=(form.elements.model.value==='OTHER'?form.elements.modelOther.value:form.elements.model.value).trim(),cc=Number(form.elements.cc.value),name=(brand+' '+model).trim(),km=Number(form.elements.km.value),yearValue=form.elements.year.value.trim(),year=yearValue?Number(yearValue):null;
  if(!brand||brand.length>40||!model||model.length>55||name.length>100||!Number.isSafeInteger(cc)||cc<1||cc>3000||!Number.isSafeInteger(km)||km<0||km>9999999||(!Number.isSafeInteger(year)||year<1950||year>new Date().getFullYear())){newFeedback.textContent='제조사·기종·배기량·제조 연식·시작 주행거리를 확인해.';return}
+ const yearWarning=catalog?.validateModelYear(brand,model,year);
+ if(yearWarning){newFeedback.textContent=yearWarning.description;return}
  const id='bike-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
  document.dispatchEvent(new CustomEvent('motorcycle:register-new-vehicle',{detail:{id,name,brand,model,cc,km,year,wear:'auto'}}));
  if(localStorage.getItem(SEL)!==id){newFeedback.textContent='새 차량을 저장하지 못했어. 저장공간을 확인해.';return}
