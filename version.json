@@ -1,6 +1,6 @@
 {
-  "version": "2.9.101",
-  "cache": "motorcycle-maintenance-v2.9.101",
+  "version": "2.9.102",
+  "cache": "motorcycle-maintenance-v2.9.102",
   "released": "2026-11-06",
-  "note": "40개 기종 전수 자료 현황 관리; REBEL500·BMW G310R/R1300GS·YAMAHA MT-07 및 HONDA CB650R/CBR650R 공식 정비표 추가, 미검증 주기 적용 보류"
+  "note": "40기종 공식자료 현황 검토 및 검증된 연식별 정비주기 확충"
 }
