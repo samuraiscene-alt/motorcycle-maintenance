@@ -309,7 +309,22 @@ selfTestButton.addEventListener('click',async()=>{
   blocked=false;try{validate(badPhoto)}catch{blocked=true}
   if(!blocked)throw new Error('④ 손상된 사진 데이터 차단 실패');
   if(validSha!==result.doc.sha256)throw new Error('검증값이 일치하지 않아.');
-  showCheckResult('ok','✓ 자가진단 4/4 통과\n① 정상 백업·사진 확인\n② 손상된 파일 차단\n③ 잘못된 정비기록 차단\n④ 손상된 사진 차단\n실제 사용자 데이터는 변경하지 않았어.');
+  // Older backups have six localStorage keys without the optional migration key.
+  const legacyPayload={local:Object.fromEntries(LEGACY_KEYS.map(k=>[k,local[k]])),images:payload.images};
+  const legacyFile=new Blob([JSON.stringify({
+   format:MAGIC,version:1,payload:legacyPayload,sha256:await checksum(legacyPayload)
+  })],{type:'application/json'});
+  const legacy=await inspectBackupFile(legacyFile);
+  if(legacy.vehicles!==1||legacy.records!==1||legacy.images!==1)
+   throw new Error('⑤ 구버전 백업 호환 검사 실패');
+  // An orphan maintenance record must not be accepted during inspection.
+  const orphan={...payload,local:{...local}};
+  orphan.local['motorcycle-skeleton-maintenance-v1']=JSON.stringify({'bike-missing':{
+   odometer:1500,records:{oil:[{at:1200,interval:5000,date:'2025-01-10',action:'replace'}]}
+  }});
+  blocked=false;try{validate(orphan)}catch{blocked=true}
+  if(!blocked)throw new Error('⑥ 미등록 차량 정비기록 차단 실패');
+  showCheckResult('ok','✓ 자가진단 6/6 통과\n① 정상 백업·사진 확인\n② 손상된 파일 차단\n③ 잘못된 정비기록 차단\n④ 손상된 사진 차단\n⑤ 구버전 6개 항목 백업 호환\n⑥ 미등록 차량 기록 차단\n실제 사용자 데이터는 변경하지 않았어.');
  }catch(e){showCheckResult('error','✕ 자가진단 실패 · '+(e.message||e))}
  finally{lock(false)}
 });
