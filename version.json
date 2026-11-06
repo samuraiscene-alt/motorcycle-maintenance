@@ -1,6 +1,6 @@
 {
-  "version": "2.9.59",
-  "cache": "motorcycle-maintenance-v2.9.59",
+  "version": "2.9.60",
+  "cache": "motorcycle-maintenance-v2.9.60",
   "released": "2026-11-06",
-  "note": "백업 가상 자가진단 6종: 구버전 6항목 호환 및 미등록 차량 기록 차단 테스트 추가"
+  "note": "실제 차량 데이터와 분리된 IndexedDB 시험 저장소에서 가상 복원·재검증·정리 기능 추가"
 }
