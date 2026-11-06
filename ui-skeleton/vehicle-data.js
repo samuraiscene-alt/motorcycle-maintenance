@@ -868,6 +868,10 @@ function editOdometerEntry(seq){
   if(i!==seq)return item;
   const edited={...item,at:value,date:new Date(newDate+'T12:00:00').toISOString(),editedAt:new Date().toISOString()};
   if(correction){edited.type='correction';edited.previous=Number(entry.at)}
+  else if(isLatest&&edited.type==='correction'&&Number.isSafeInteger(edited.previous)&&value>=edited.previous){
+   // Re-editing above the original reading is no longer a downward correction.
+   delete edited.type;delete edited.previous;
+  }
   return edited;
  });
  const next={...database,[bikeId]:{...source,odometer:isLatest?value:source.odometer,odometerHistory:nextArr}};
@@ -882,7 +886,7 @@ function deleteOdometerEntry(seq){
  if(isLatest&&(!valid(nextOdo)||nextOdo<reg.km||nextOdo<maxServiceOdometer(bikeId))){
   alert('이 기록을 삭제하면 현재 주행거리가 저장된 정비기록보다 낮아져. 먼저 주행거리나 정비기록을 수정해.');return;
  }
- if(!confirm(fmt(entry.at)+'km 주행거리 이력 1건을 삭제할까?'+(isLatest?'\\n현재 계기판도 남은 마지막 기록으로 변경돼.':'')))return;
+ if(!confirm(fmt(entry.at)+'km 주행거리 이력 1건을 삭제할까?'+(isLatest?'\n현재 계기판도 남은 마지막 기록으로 변경돼.':'')))return;
  const next={...database,[bikeId]:{...source,odometer:isLatest?nextOdo:source.odometer,odometerHistory:nextArr}};
  try{write(dataKey,next);database=next;renderInfo();showHistory()}
  catch{alert('주행거리 이력 삭제에 실패했어.')}
