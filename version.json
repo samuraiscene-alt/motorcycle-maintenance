@@ -1,6 +1,6 @@
 {
-  "version": "2.9.29",
-  "cache": "motorcycle-maintenance-v2.9.29",
+  "version": "2.9.30",
+  "cache": "motorcycle-maintenance-v2.9.30",
   "released": "2026-11-06",
-  "note": "정비주기 출처칩 중복 제거, 최초 엔진오일 교체 기준 명확화, 차고 이미지 안내문 분리"
+  "note": "YAMAHA XMAX300 2025 공식 정비주기(확인 범위) 연결, 제조사 로고 및 XMAX300 계열 공식 참고사진 적용"
 }
