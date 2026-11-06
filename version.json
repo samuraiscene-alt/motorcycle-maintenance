@@ -1,6 +1,6 @@
 {
-  "version": "2.9.25",
-  "cache": "motorcycle-maintenance-v2.9.25",
+  "version": "2.9.26",
+  "cache": "motorcycle-maintenance-v2.9.26",
   "released": "2026-11-06",
-  "note": "정비 알림·기록의 주기 계산 일치와 다음 예정 주행거리 표시"
+  "note": "정비기록 수정 중복 방지 및 수정·삭제 후 정비 알림 즉시 갱신"
 }
