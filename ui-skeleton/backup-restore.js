@@ -84,6 +84,23 @@ async function packImages(images){const out=[];for(const item of images){
  out.push({key:item.key,mime:item.blob.type||'image/png',data:base64(new Uint8Array(await item.blob.arrayBuffer()))});
 }return out}
 function unpackImages(images){return images.map(item=>({key:item.key,blob:new Blob([unbase64(item.data)],{type:item.mime})}))}
+async function blobDigest(blob){
+ const bytes=new Uint8Array(await blob.arrayBuffer());
+ const digest=new Uint8Array(await crypto.subtle.digest('SHA-256',bytes));
+ return Array.from(digest,b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function verifyImages(expected){
+ const actual=await getImages();
+ if(actual.length!==expected.length)throw new Error('복원 사진 개수가 일치하지 않아.');
+ const current=new Map(actual.map(item=>[item.key,item.blob]));
+ for(const item of expected){
+  const blob=current.get(item.key);
+  if(!(blob instanceof Blob)||blob.size!==item.blob.size||blob.type!==item.blob.type)
+   throw new Error('복원한 사진의 정보가 일치하지 않아: '+item.key);
+  if(await blobDigest(blob)!==await blobDigest(item.blob))
+   throw new Error('복원한 사진의 내용이 일치하지 않아: '+item.key);
+ }
+}
 function obj(x){return x!==null&&typeof x==='object'&&!Array.isArray(x)}
 function validate(payload){
  if(!obj(payload)||!obj(payload.local)||!Array.isArray(payload.images))throw new Error('백업 파일 형식이 맞지 않아.');
@@ -150,13 +167,12 @@ pick.addEventListener('change',async()=>{
   const oldLocal=locals(),oldImages=await getImages();message('전체 데이터를 복원 중…');
   let imagesChanged=false,localsChanged=false;
   try{
-   await setImages(incoming);imagesChanged=true;
+   // Mark each section before writing: even an unexpected partial failure
+   // must trigger a best-effort rollback of that section.
+   imagesChanged=true;await setImages(incoming);
    localsChanged=true;setLocals(doc.payload.local);
    verifyLocals(doc.payload.local);
-   // IndexedDB writes are atomic per transaction; check the restored count
-   // before showing success and reloading.
-   const restoredImages=await getImages();
-   if(restoredImages.length!==incoming.length)throw new Error('복원 사진 개수가 일치하지 않아.');
+   await verifyImages(incoming);
   }catch(err){
    // Restore localStorage independently: an IndexedDB failure must not
    // prevent recovering vehicle registrations and maintenance records.
@@ -166,7 +182,7 @@ pick.addEventListener('change',async()=>{
     catch(rollbackError){recoveryErrors.push('차량·기록 설정: '+(rollbackError.message||rollbackError))}
    }
    if(imagesChanged){
-    try{await setImages(oldImages)}
+    try{await setImages(oldImages);await verifyImages(oldImages)}
     catch(rollbackError){recoveryErrors.push('사용자 사진: '+(rollbackError.message||rollbackError))}
    }
    if(recoveryErrors.length){
