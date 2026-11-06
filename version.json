@@ -1,6 +1,6 @@
 {
-  "version": "2.9.76",
-  "cache": "motorcycle-maintenance-v2.9.76",
+  "version": "2.9.77",
+  "cache": "motorcycle-maintenance-v2.9.77",
   "released": "2026-11-06",
-  "note": "정비 기준 초과 상태를 다음 예정 거리와 구분해 표시"
+  "note": "연식 미확인 및 변경 시 오래된 공식 정비주기 정리하고 사용자 설정 보존"
 }
