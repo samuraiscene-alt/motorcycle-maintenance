@@ -68,10 +68,14 @@ function officialProfileFor(bikeId){
  const profile=window.MotorcycleCatalog?.findOfficialProfile(reg.brand,reg.model,reg.year)||null;
  return profile?{reg,profile}:null;
 }
-function officialKmFor(bikeId,partId){
+function officialKmFor(bikeId,partId,action='replace'){
  const profile=officialProfileFor(bikeId)?.profile;
- const km=profile?.intervals?.[partId];return Number.isSafeInteger(km)&&km>0&&km<=1000000?km:0;
+ const task=profile?.tasks?.[partId];
+ const km=action==='inspect'?task?.inspectKm:action==='clean'?task?.cleanKm:profile?.intervals?.[partId];
+ return Number.isSafeInteger(km)&&km>0&&km<=1000000?km:0;
 }
+const intervalKey=(action)=>action==='inspect'?'inspectInterval':action==='clean'?'cleanInterval':'interval';
+const intervalSourceKey=(action)=>action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
 function showOfficialSource(bikeId,partId){
  officialSource.hidden=true;
  officialSource.querySelector('.part-edit-source-link').removeAttribute('href');
@@ -126,17 +130,20 @@ function revokePreview(){if(previewUrl){URL.revokeObjectURL(previewUrl);previewU
 function closeModal(){mask.hidden=true;officialSource.hidden=true;editing=null;draft=null;restoreOfficial=false;availableOfficialKm=0;revokePreview();photo.value='';fileInput.value='';document.body.style.overflow=''}
 function visiblePreview(img){if(img){preview.src=img;preview.hidden=false;fallback.hidden=true}else{preview.hidden=true;preview.removeAttribute('src');fallback.hidden=false}}
 function edit(row){closeSwipe();readCurrentSettings();editing={id:row.dataset.partId,bike:bike(),row};draft=null;revokePreview();error.textContent='';nameInput.value=row.querySelector('.part-line strong')?.textContent||'';
- const cycle=active()[row.dataset.partId]?.interval;
+ const result=officialProfileFor(editing.bike);
+ const action=result?.profile?.actionByPart?.[editing.id]||'replace';
+ editing.action=action;
+ const key=intervalKey(action),settings=active()[row.dataset.partId]||{};
+ const cycle=settings[key];
  const builtIn={oil:3000,filter:12000,brake:12000,tire:10000,coolant:20000};
  let unverified=false;
  try{const regs=JSON.parse(localStorage.getItem('motorcycle-skeleton-registrations-v1')||'{}');unverified=!!regs[bike()]?.maintenanceProfileStatus}catch{}
- cycleInput.value=Number.isSafeInteger(cycle)&&cycle>0?String(cycle):unverified?'':String(Number(row.dataset.interval)||builtIn[row.dataset.partId]||'');
+ const officialKm=officialKmFor(editing.bike,editing.id,action);
+ cycleInput.value=Number.isSafeInteger(cycle)&&cycle>0?String(cycle):officialKm?String(officialKm):action==='replace'&&!unverified?String(Number(row.dataset.interval)||builtIn[row.dataset.partId]||''):'';
  editing.initialInterval=Number(cycleInput.value)||0;
- const result=officialProfileFor(editing.bike);
- const action=result?.profile?.actionByPart?.[editing.id]||'replace';
  cycleCaption.textContent=(action==='inspect'?'점검':action==='clean'?'청소':'교체')+' 주기 (km)';
- availableOfficialKm=officialKmFor(editing.bike,editing.id);restoreOfficial=false;
- officialReset.hidden=!availableOfficialKm||(active()[editing.id]?.intervalSource==='official'&&active()[editing.id]?.interval===availableOfficialKm);
+ availableOfficialKm=officialKm;restoreOfficial=false;
+ officialReset.hidden=!availableOfficialKm||(settings[intervalSourceKey(action)]==='official'&&settings[key]===availableOfficialKm);
  officialReset.textContent=availableOfficialKm?'제조사 공식 주기로 복원 ('+availableOfficialKm.toLocaleString('ko-KR')+'km)':'제조사 공식 주기로 복원';
  showOfficialSource(editing.bike,editing.id);
  const img=row.querySelector('.part-img img');visiblePreview(img?.src||'');mask.hidden=false;document.body.style.overflow='hidden';nameInput.focus({preventScroll:true})}
@@ -147,15 +154,16 @@ mask.querySelector('.part-edit-files').addEventListener('click',()=>{fileInput.v
 async function choose(e){const f=e.target.files?.[0];if(!f)return;error.textContent='이미지 확인 중…';try{const b=await shrinkImage(f);draft=b;revokePreview();previewUrl=URL.createObjectURL(b);visiblePreview(previewUrl);error.textContent=''}catch(err){error.textContent=err.message||'이미지를 열 수 없어.'}finally{e.target.value=''}}
 photo.addEventListener('change',choose);fileInput.addEventListener('change',choose);
 form.addEventListener('submit',async e=>{e.preventDefault();if(!editing)return;const n=nameInput.value.trim(),rawInterval=cycleInput.value.trim(),cycle=rawInterval?Number(rawInterval):0;if(!n){error.textContent='부품 이름을 입력해.';return}
- if(!Number.isSafeInteger(cycle)||cycle<0||cycle>1000000){error.textContent='교체주기는 1~1,000,000km로 입력하거나 비워 둬.';return}const target=editing;const button=form.querySelector('.part-edit-save');button.disabled=true;try{
+ if(!Number.isSafeInteger(cycle)||cycle<0||cycle>1000000){error.textContent='정비 주기는 1~1,000,000km로 입력하거나 비워 둬.';return}const target=editing;const button=form.querySelector('.part-edit-save');button.disabled=true;try{
  if(draft){await imageWrite('appearance:'+target.bike+':'+target.id,draft);const cacheKey=target.bike+':'+target.id;if(cache.has(cacheKey)){URL.revokeObjectURL(cache.get(cacheKey));cache.delete(cacheKey)}}
  if(target.bike!==bike())throw Error('차량이 변경되었어. 다시 시도해.');
  const previous=active()[target.id]||{};
+ const action=target.action||'replace',key=intervalKey(action),sourceKey=intervalSourceKey(action);
  const initialCycle=Number.isSafeInteger(target.initialInterval)?target.initialInterval:0;
  const unchanged=initialCycle===cycle;
- const source=restoreOfficial&&availableOfficialKm===cycle?'official':unchanged?previous.intervalSource:'user';
- const changes={name:n,interval:cycle,hasImage:!!draft||!!previous.hasImage};
- if(source)changes.intervalSource=source;
+ const source=restoreOfficial&&availableOfficialKm===cycle?'official':unchanged?previous[sourceKey]:'user';
+ const changes={name:n,[key]:cycle,hasImage:!!draft||!!previous.hasImage};
+ if(source)changes[sourceKey]=source;
  setPart(target.id,changes);
   document.dispatchEvent(new CustomEvent('motorcycle:custom-parts-change'));
  if(target.id.startsWith('custom-')){try{const all=JSON.parse(localStorage.getItem(addedKey)||'{}');if(Array.isArray(all[target.bike])){const entry=all[target.bike].find(x=>x.id===target.id);if(entry){entry.name=n;localStorage.setItem(addedKey,JSON.stringify(all))}}}catch(err){console.warn('Custom label sync:',err)}}
