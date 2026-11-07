@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v2.9.122';
+const CACHE='motorcycle-maintenance-v2.9.123';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
@@ -24,7 +24,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/backup-restore.js?v=backup-check-105',ROOT).href,
   new URL('./ui-skeleton/i18n.js?v=locale-scaffold-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=first-use-103',ROOT).href,
-  new URL('./ui-skeleton/version-check.js?v=app-version-422',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=app-version-423',ROOT).href,
   new URL('./ui-skeleton/wear-library.js?v=shared-materials-1',ROOT).href,
   new URL('./ui-skeleton/bike-aging.js?v=parts-safe-2',ROOT).href,
   new URL('./icon-bike-192.jpg',ROOT).href,
@@ -35,12 +35,20 @@ const PRECACHE=[
 ];
 self.addEventListener('install',event=>{
  // Only core files gate installation. A missing optional illustration must never block an update.
- event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll([SHELL,new URL('./version.json',ROOT).href])).then(()=>self.skipWaiting()));
+ // The garage background is essential. Refresh it independently; don't fail installation
+ // if one optional asset is temporarily unreachable.
+ event.waitUntil(caches.open(CACHE).then(async cache=>{
+   const critical=[SHELL,new URL('./version.json',ROOT).href,new URL('./ui-skeleton/garage-clean.png?v=5',ROOT).href];
+   await Promise.allSettled(critical.map(url=>cache.add(new Request(url,{cache:'reload'}))));
+ }).then(()=>self.skipWaiting()));
 });
 self.addEventListener('activate',event=>{
- event.waitUntil(caches.keys().then(keys=>Promise.all(
-   keys.filter(key=>key.startsWith('motorcycle-maintenance-')&&key!==CACHE).map(key=>caches.delete(key))
- )).then(()=>self.clients.claim()));
+ // Retain one previous app version as an offline rollback, including its garage artwork.
+ event.waitUntil(caches.keys().then(async keys=>{
+   const older=keys.filter(key=>key.startsWith('motorcycle-maintenance-')&&key!==CACHE).sort();
+   await Promise.all(older.slice(0,-1).map(key=>caches.delete(key)));
+   await self.clients.claim();
+ }));
 });
 self.addEventListener('fetch',event=>{
  if(event.request.method!=='GET')return;

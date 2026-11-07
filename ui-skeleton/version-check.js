@@ -1,18 +1,19 @@
 (()=>{'use strict';
-const CURRENT='2.9.122';
+const CURRENT='2.9.123';
 const SCRIPT=document.currentScript;
 const ROOT=new URL('../',SCRIPT?.src||location.href);
 let remote=CURRENT,checking=false,autoApplying=false;
 const standalone=window.matchMedia?.('(display-mode: standalone)').matches||navigator.standalone===true;
 const compare=(a,b)=>{const aa=String(a).split('.').map(Number),bb=String(b).split('.').map(Number);for(let i=0;i<Math.max(aa.length,bb.length);i++){if((aa[i]||0)!==(bb[i]||0))return (aa[i]||0)-(bb[i]||0)}return 0};
 function hasPendingInput(){const el=document.activeElement;return !!(el&&(/INPUT|TEXTAREA|SELECT/.test(el.tagName))&&!el.disabled)||!!document.querySelector('.registration-mask:not([hidden]),.backup-overlay:not([hidden])')}
-function clearAppCaches(){if(!('caches' in window))return Promise.resolve();return caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('motorcycle-maintenance-')).map(k=>caches.delete(k))));}
+// Do not purge caches from the page. A previous cache can be the only copy of the garage asset while offline.
+async function prepareServiceWorker(){if(!('serviceWorker' in navigator))return;const reg=await navigator.serviceWorker.getRegistration(ROOT.pathname);if(reg)await reg.update();}
 async function applyVersion(target,automatic=false){
  if(autoApplying||automatic&&hasPendingInput())return;
  autoApplying=true;
  try{
-  await clearAppCaches();
-  if('serviceWorker' in navigator){const reg=await navigator.serviceWorker.getRegistration(ROOT.pathname);if(reg)reg.update().catch(()=>{});}
+  // Keep the previous version until the new worker has finished trying to refresh its shell.
+  await Promise.race([prepareServiceWorker(),new Promise(resolve=>setTimeout(resolve,2500))]).catch(()=>{});
   const url=new URL('./ui-skeleton/index.html',ROOT);url.searchParams.set('app-version',target);url.searchParams.set('refresh',String(Date.now()));
   location.replace(url.href);
  }catch(error){autoApplying=false;writeInfo('업데이트 적용 실패: '+String(error?.message||error));}

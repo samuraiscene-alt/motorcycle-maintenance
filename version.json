@@ -1,6 +1,6 @@
 {
-  "version": "2.9.122",
-  "cache": "motorcycle-maintenance-v2.9.122",
+  "version": "2.9.123",
+  "cache": "motorcycle-maintenance-v2.9.123",
   "released": "2026-11-07",
-  "note": "홈 화면 PWA 기준 최신 버전 자동 확인·안전 업데이트, Safari/ChatGPT 공통 진입 주소 및 캐시 안정화"
+  "note": "홈 화면 업데이트 시 기존 캐시 보존, 정비소 배경 재캐싱 및 이전 버전 오프라인 복구 지원"
 }
