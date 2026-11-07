@@ -4,7 +4,7 @@
   "lastAudited": "2026-11-07",
   "totalModels": 40,
   "modelsWithPreparedAssets": 5,
-  "individualImageAssetsPrepared": 6,
+  "individualImageAssetsPrepared": 7,
   "notCreatedModels": 35,
   "principles": [
     "기종/디자인 세대별 독립 이미지 1장/파일",
@@ -237,6 +237,15 @@
       "generations": [
         {
           "yearRange": [
+            2020,
+            2024
+          ],
+          "file": "kawasaki-z900-2024-studio.png",
+          "source": "AI-generated reference artwork",
+          "note": "2024 이전 디자인 계열 참고 이미지; 세부 연식·트림 차이 가능"
+        },
+        {
+          "yearRange": [
             2025,
             2026
           ],
@@ -245,7 +254,7 @@
           "designSource": "https://global.kawasaki.com/en/corp/newsroom/news/detail/?f=20241031_1292"
         }
       ],
-      "note": "2025~2026 동일 외형 세대 AI 참고 이미지 공유; 색상/트림별 세부 차이는 있음"
+      "note": "2020~2024 세대와 2025~2026 세대 이미지를 분리; AI 참고 이미지"
     },
     {
       "brand": "BMW",

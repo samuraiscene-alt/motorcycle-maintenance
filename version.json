@@ -1,6 +1,6 @@
 {
-  "version": "2.9.123",
-  "cache": "motorcycle-maintenance-v2.9.123",
+  "version": "2.9.124",
+  "cache": "motorcycle-maintenance-v2.9.124",
   "released": "2026-11-07",
-  "note": "홈 화면 업데이트 시 기존 캐시 보존, 정비소 배경 재캐싱 및 이전 버전 오프라인 복구 지원"
+  "note": "Kawasaki Z900 2020~2024 전용 독립 투명 이미지 등록, 기존 2025~2026 외형과 분리"
 }
