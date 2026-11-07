@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "title": "오토바이 정비 개별 차량 이미지 제작 목록",
+  "lastAudited": "2026-11-07",
+  "totalModels": 40,
+  "modelsWithPreparedAssets": 4,
+  "individualImageAssetsPrepared": 5,
+  "notCreatedModels": 36,
+  "principles": [
+    "기종/디자인 세대별 독립 이미지 1장/파일",
+    "스프라이트시트 및 합본 절대 금지",
+    "투명 배경(알파 채널) 검증",
+    "전체 차량/타이어 잘림 방지",
+    "실사형 통일, 실제 기종/연식 실루엣 확인",
+    "바닥 그림자는 앱 CSS 공통 레이어 사용",
+    "제조사 공식 정비주기는 이미지 목록과 별도 관리"
+  ],
+  "models": [
+    {
+      "brand": "HONDA",
+      "model": "PCX125",
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2021,
+            2024
+          ],
+          "file": "honda-pcx125-studio.png"
+        }
+      ],
+      "note": "AI 참고 이미지, 정확한 형상 검증 전"
+    },
+    {
+      "brand": "HONDA",
+      "model": "FORZA350",
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2021,
+            2022
+          ],
+          "file": "honda-forza350-2022-studio.png"
+        },
+        {
+          "yearRange": [
+            2023,
+            2025
+          ],
+          "file": "honda-forza350-studio.png"
+        }
+      ],
+      "note": "AI 참고 이미지, 정확한 형상 검증 전"
+    },
+    {
+      "brand": "HONDA",
+      "model": "ADV350",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "HONDA",
+      "model": "SUPER CUB110",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "HONDA",
+      "model": "C125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "HONDA",
+      "model": "CT125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "HONDA",
+      "model": "CB125R",
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2021,
+            2025
+          ],
+          "file": "honda-cb125r-studio.png"
+        }
+      ],
+      "note": "AI 참고 이미지, 정확한 형상 검증 전"
+    },
+    {
+      "brand": "HONDA",
+      "model": "CB650R",
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2024,
+            2026
+          ],
+          "file": "honda-cb650r-studio.png"
+        }
+      ],
+      "note": "AI 참고 이미지, 정확한 형상 검증 전"
+    },
+    {
+      "brand": "HONDA",
+      "model": "CBR650R",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "HONDA",
+      "model": "REBEL500",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "YAMAHA",
+      "model": "NMAX125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "YAMAHA",
+      "model": "XMAX300",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "YAMAHA",
+      "model": "XMAX125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "YAMAHA",
+      "model": "TMAX560",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "YAMAHA",
+      "model": "MT-03",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "YAMAHA",
+      "model": "MT-07",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "YAMAHA",
+      "model": "YZF-R3",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "YAMAHA",
+      "model": "TRICITY125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "SUZUKI",
+      "model": "BURGMAN125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "SUZUKI",
+      "model": "BURGMAN400",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "SUZUKI",
+      "model": "ADDRESS125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "SUZUKI",
+      "model": "AVENIS125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "SUZUKI",
+      "model": "GSX-S125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "KAWASAKI",
+      "model": "NINJA500",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "KAWASAKI",
+      "model": "Z500",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "KAWASAKI",
+      "model": "Z900",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "BMW",
+      "model": "G310R",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "BMW",
+      "model": "R1300GS",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "DUCATI",
+      "model": "MONSTER",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "TRIUMPH",
+      "model": "SPEED400",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "SYM",
+      "model": "JET14",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "SYM",
+      "model": "JOYMAX",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "SYM",
+      "model": "JET X 125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "KYMCO",
+      "model": "DOWNTOWN",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "KYMCO",
+      "model": "AK550",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "KYMCO",
+      "model": "LIKE125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "VESPA",
+      "model": "PRIMAVERA125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "VESPA",
+      "model": "GTS300",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "VESPA",
+      "model": "SPRINT125",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "VESPA",
+      "model": "GTV300",
+      "status": "not-created",
+      "generations": [],
+      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    }
+  ]
+}
