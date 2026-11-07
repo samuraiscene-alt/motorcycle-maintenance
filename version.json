@@ -1,6 +1,6 @@
 {
-  "version": "2.9.115",
-  "cache": "motorcycle-maintenance-v2.9.115",
+  "version": "2.9.116",
+  "cache": "motorcycle-maintenance-v2.9.116",
   "released": "2026-11-07",
-  "note": "버전 확인과 서비스워커 갱신 분리, 앱 파일 캐시 안전 정리 후 최신 화면 로드"
+  "note": "HONDA CB650R 2024 고화질 실사형 차량 이미지 적용 및 차체 크기 보정, 공통 그림자 유지"
 }
