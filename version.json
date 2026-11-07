@@ -1,6 +1,6 @@
 {
-  "version": "2.9.119",
-  "cache": "motorcycle-maintenance-v2.9.119",
+  "version": "2.9.120",
+  "cache": "motorcycle-maintenance-v2.9.120",
   "released": "2026-11-07",
-  "note": "Kawasaki Z900 2025 독립 투명 이미지 추가 및 실제 차체비율 보정; 나머지 기종 유지"
+  "note": "Kawasaki Z900 2025~2026 동일 외형 세대 이미지 공유; 2026 등록 시 기본 실루엣으로 대체되던 문제 수정"
 }

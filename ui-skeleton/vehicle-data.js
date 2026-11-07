@@ -513,7 +513,7 @@ const vehicleArtwork=Object.freeze({
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
 const modelYear=Number(r?.year);
-const generationArt=maker==='KAWASAKI'&&normalizedModel==='Z900'&&modelYear===2025
+const generationArt=maker==='KAWASAKI'&&normalizedModel==='Z900'&&modelYear>=2025&&modelYear<=2026
  ?vehicleArtwork['KAWASAKI|Z900|2025']
  :maker==='HONDA'&&normalizedModel==='FORZA350'&&modelYear>=2021&&modelYear<=2022
  ?vehicleArtwork['HONDA|FORZA350|2022']
