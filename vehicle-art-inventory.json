@@ -3,9 +3,9 @@
   "title": "오토바이 정비 개별 차량 이미지 제작 목록",
   "lastAudited": "2026-11-07",
   "totalModels": 40,
-  "modelsWithPreparedAssets": 5,
-  "individualImageAssetsPrepared": 7,
-  "notCreatedModels": 35,
+  "modelsWithPreparedAssets": 9,
+  "individualImageAssetsPrepared": 11,
+  "notCreatedModels": 31,
   "principles": [
     "기종/디자인 세대별 독립 이미지 1장/파일",
     "스프라이트시트 및 합본 절대 금지",
@@ -128,30 +128,70 @@
     {
       "brand": "YAMAHA",
       "model": "NMAX125",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2026
+          ],
+          "file": "yamaha-nmax125-studio.png",
+          "source": "AI-generated individual studio reference art",
+          "note": "외형 계열 참고 이미지; 색상·트림·연식별 세부 차이 가능"
+        }
+      ],
+      "note": "개별 투명 PNG 준비 완료; 공식 차량 사진이 아닌 AI 참고 이미지"
     },
     {
       "brand": "YAMAHA",
       "model": "XMAX300",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2023,
+            2026
+          ],
+          "file": "yamaha-xmax300-studio.png",
+          "source": "AI-generated individual studio reference art",
+          "note": "외형 계열 참고 이미지; 색상·트림·연식별 세부 차이 가능"
+        }
+      ],
+      "note": "개별 투명 PNG 준비 완료; 공식 차량 사진이 아닌 AI 참고 이미지"
     },
     {
       "brand": "YAMAHA",
       "model": "XMAX125",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2023,
+            2026
+          ],
+          "file": "yamaha-xmax125-studio.png",
+          "source": "AI-generated individual studio reference art",
+          "note": "외형 계열 참고 이미지; 색상·트림·연식별 세부 차이 가능"
+        }
+      ],
+      "note": "개별 투명 PNG 준비 완료; 공식 차량 사진이 아닌 AI 참고 이미지"
     },
     {
       "brand": "YAMAHA",
       "model": "TMAX560",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2022,
+            2026
+          ],
+          "file": "yamaha-tmax560-studio.png",
+          "source": "AI-generated individual studio reference art",
+          "note": "외형 계열 참고 이미지; 색상·트림·연식별 세부 차이 가능"
+        }
+      ],
+      "note": "개별 투명 PNG 준비 완료; 공식 차량 사진이 아닌 AI 참고 이미지"
     },
     {
       "brand": "YAMAHA",

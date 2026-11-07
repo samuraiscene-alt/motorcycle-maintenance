@@ -500,7 +500,8 @@ setGarageSign(maker);
 // Older backups can retain the model in the display name without a separate model field.
 const normalizedModel=String(r?.model||'').trim().toUpperCase()||
  String(r?.name||b.name||'').trim().toUpperCase().replace(new RegExp('^'+maker+'\\s*'),'').trim();
-const xmaxRequested=maker==='YAMAHA'&&normalizedModel==='XMAX300'&&Number(r?.year)===2025;
+// Legacy XMAX cutout is superseded by the independent studio asset; never stack two bikes.
+const xmaxRequested=false;
 // Exact-model art only: never display another model's body as the active vehicle.
 const vehicleArtwork=Object.freeze({
  'HONDA|PCX125':{src:'./motorcycle.svg',alt:'HONDA PCX125 참고용 일러스트'},
@@ -510,12 +511,24 @@ const vehicleArtwork=Object.freeze({
  'HONDA|FORZA350|2025':{src:'./honda-forza350-studio.png?v=117',alt:'Honda Forza350 2025 고화질 스튜디오 참고 이미지'},
  'HONDA|FORZA350|2022':{src:'./honda-forza350-2022-studio.png?v=118',alt:'Honda Forza350 2022 디자인 세대 고화질 참고 이미지'},
  'KAWASAKI|Z900|2025':{src:'./kawasaki-z900-2025-studio.png?v=119',alt:'Kawasaki Z900 2025 AI 제작 고화질 참고 이미지'},
- 'KAWASAKI|Z900|2024':{src:'./kawasaki-z900-2024-studio.png?v=124',alt:'Kawasaki Z900 2024 전용 AI 참고 이미지'}
+ 'KAWASAKI|Z900|2024':{src:'./kawasaki-z900-2024-studio.png?v=124',alt:'Kawasaki Z900 2024 전용 AI 참고 이미지'},
+ 'YAMAHA|NMAX125|2025':{src:'./yamaha-nmax125-studio.png?v=125',alt:'Yamaha NMAX125 2025 계열 독립 AI 참고 이미지'},
+ 'YAMAHA|XMAX300|2023':{src:'./yamaha-xmax300-studio.png?v=125',alt:'Yamaha XMAX300 2023 이후 독립 AI 참고 이미지'},
+ 'YAMAHA|XMAX125|2023':{src:'./yamaha-xmax125-studio.png?v=125',alt:'Yamaha XMAX125 2023 이후 독립 AI 참고 이미지'},
+ 'YAMAHA|TMAX560|2022':{src:'./yamaha-tmax560-studio.png?v=125',alt:'Yamaha TMAX560 2022 이후 독립 AI 참고 이미지'}
 });
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
 const modelYear=Number(r?.year);
-const generationArt=maker==='KAWASAKI'&&normalizedModel==='Z900'&&modelYear>=2020&&modelYear<=2024
+const generationArt=maker==='YAMAHA'&&normalizedModel==='NMAX125'&&modelYear>=2025&&modelYear<=2026
+ ?vehicleArtwork['YAMAHA|NMAX125|2025']
+ :maker==='YAMAHA'&&normalizedModel==='XMAX300'&&modelYear>=2023&&modelYear<=2026
+ ?vehicleArtwork['YAMAHA|XMAX300|2023']
+ :maker==='YAMAHA'&&normalizedModel==='XMAX125'&&modelYear>=2023&&modelYear<=2026
+ ?vehicleArtwork['YAMAHA|XMAX125|2023']
+ :maker==='YAMAHA'&&normalizedModel==='TMAX560'&&modelYear>=2022&&modelYear<=2026
+ ?vehicleArtwork['YAMAHA|TMAX560|2022']
+ :maker==='KAWASAKI'&&normalizedModel==='Z900'&&modelYear>=2020&&modelYear<=2024
  ?vehicleArtwork['KAWASAKI|Z900|2024']
  :maker==='KAWASAKI'&&normalizedModel==='Z900'&&modelYear>=2025&&modelYear<=2026
  ?vehicleArtwork['KAWASAKI|Z900|2025']
@@ -538,7 +551,7 @@ const garageModelImage=activeArt.src;
 // Reference lengths: 2023 PCX125 1935mm; 2021 CB125R 2015mm.
 // An image-height correction keeps their projected lengths approximately proportional.
 const artSizeKey=maker+'|'+normalizedModel;
-const artHeightByModel={'HONDA|PCX125':'75%','HONDA|CB125R':'87%','HONDA|CB650R':'89%','HONDA|FORZA350':'86%','KAWASAKI|Z900':'88%'};
+const artHeightByModel={'HONDA|PCX125':'75%','HONDA|CB125R':'87%','HONDA|CB650R':'89%','HONDA|FORZA350':'86%','KAWASAKI|Z900':'88%','YAMAHA|NMAX125':'77%','YAMAHA|XMAX300':'86%','YAMAHA|XMAX125':'85%','YAMAHA|TMAX560':'89%'};
 centeredBike.style.setProperty('--bike-art-height',artHeightByModel[artSizeKey]||'87%');
 bikeContactShadow.hidden=!!xmaxRequested;
 centeredBike.dataset.modelSize=artSizeKey;

@@ -1,6 +1,6 @@
 {
-  "version": "2.9.124",
-  "cache": "motorcycle-maintenance-v2.9.124",
+  "version": "2.9.125",
+  "cache": "motorcycle-maintenance-v2.9.125",
   "released": "2026-11-07",
-  "note": "Kawasaki Z900 2020~2024 전용 독립 투명 이미지 등록, 기존 2025~2026 외형과 분리"
+  "note": "Yamaha NMAX125 XMAX300 XMAX125 TMAX560 독립 투명 실사형 이미지 4개 적용 및 XMAX 중복 표시 방지"
 }
