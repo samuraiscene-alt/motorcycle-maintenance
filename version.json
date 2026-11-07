@@ -1,6 +1,6 @@
 {
-  "version": "2.9.113",
-  "cache": "motorcycle-maintenance-v2.9.113",
+  "version": "2.9.114",
+  "cache": "motorcycle-maintenance-v2.9.114",
   "released": "2026-11-07",
-  "note": "정비소 기존 차량 이미지와 중앙 고화질 이미지 중복 표시 CSS 우선순위 충돌 수정"
+  "note": "중복 차량 이미지 제거: 기존 슬라이드 이미지를 DOM에서 제거하고 중앙 고화질 차량만 유지"
 }
