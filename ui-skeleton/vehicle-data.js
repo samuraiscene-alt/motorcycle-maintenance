@@ -519,7 +519,7 @@ const vehicleArtwork=Object.freeze({
  'YAMAHA|TMAX560|2022':{src:'./yamaha-tmax560-studio.png?v=125',alt:'Yamaha TMAX560 2022 이후 독립 AI 참고 이미지'},
  'SUZUKI|BURGMAN125|2023':{src:'./suzuki-burgman125-studio.png?v=126',alt:'Suzuki Burgman Street 125 계열 AI 참고 이미지, 상세 모델 확인 필요'},
  'SUZUKI|BURGMAN400|2024':{src:'./suzuki-burgman400-studio.png?v=128',alt:'Suzuki Burgman 400 2024 외형 계열 독립 AI 참고 이미지'},
- 'DNA MOTORS|UHR125|2025':{src:'./dna-motors-uhr125-studio.png?v=129',alt:'DNA Motors UHR125 고화질 AI 참고 이미지 · 연식별 세부 외형 차이 가능'}
+ 'DNA MOTORS|UHR125|2025':{src:'./dna-motors-uhr125-studio.png?v=130',alt:'DNA Motors UHR125 고화질 AI 참고 이미지 · 연식별 세부 외형 차이 가능'}
 });
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
