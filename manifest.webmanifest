@@ -20,5 +20,6 @@
       "type": "image/jpeg",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "id": "./ui-skeleton/index.html"
 }

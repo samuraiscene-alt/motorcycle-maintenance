@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v2.9.121';
+const CACHE='motorcycle-maintenance-v2.9.122';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
@@ -24,7 +24,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/backup-restore.js?v=backup-check-105',ROOT).href,
   new URL('./ui-skeleton/i18n.js?v=locale-scaffold-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=first-use-103',ROOT).href,
-  new URL('./ui-skeleton/version-check.js?v=app-version-421',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=app-version-422',ROOT).href,
   new URL('./ui-skeleton/wear-library.js?v=shared-materials-1',ROOT).href,
   new URL('./ui-skeleton/bike-aging.js?v=parts-safe-2',ROOT).href,
   new URL('./icon-bike-192.jpg',ROOT).href,
@@ -34,7 +34,8 @@ const PRECACHE=[
   new URL('./manifest.webmanifest',ROOT).href
 ];
 self.addEventListener('install',event=>{
- event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(PRECACHE)).then(()=>self.skipWaiting()));
+ // Only core files gate installation. A missing optional illustration must never block an update.
+ event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll([SHELL,new URL('./version.json',ROOT).href])).then(()=>self.skipWaiting()));
 });
 self.addEventListener('activate',event=>{
  event.waitUntil(caches.keys().then(keys=>Promise.all(
@@ -47,9 +48,10 @@ self.addEventListener('fetch',event=>{
  if(url.origin!==self.location.origin||!url.pathname.startsWith(ROOT.pathname))return;
  // Version checks and recovery pages always consult the network.
  if(url.pathname.endsWith('/version.json')||url.pathname.endsWith('/safe-refresh-111.html'))return;
- const request=event.request.mode==='navigate'?new Request(event.request,{cache:'no-store'}):event.request;
+ // Prefer fresh files on every online visit, fall back to previous app only when offline.
+ const request=new Request(event.request,{cache:'no-store'});
  event.respondWith(fetch(request).then(response=>{
-   if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)));}
+   if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{}));}
    return response;
  }).catch(async()=>{
    const stored=await caches.match(event.request);
