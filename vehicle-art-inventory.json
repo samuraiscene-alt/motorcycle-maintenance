@@ -3,9 +3,9 @@
   "title": "오토바이 정비 개별 차량 이미지 제작 목록",
   "lastAudited": "2026-11-07",
   "totalModels": 40,
-  "modelsWithPreparedAssets": 4,
-  "individualImageAssetsPrepared": 5,
-  "notCreatedModels": 36,
+  "modelsWithPreparedAssets": 5,
+  "individualImageAssetsPrepared": 6,
+  "notCreatedModels": 35,
   "principles": [
     "기종/디자인 세대별 독립 이미지 1장/파일",
     "스프라이트시트 및 합본 절대 금지",
@@ -233,9 +233,19 @@
     {
       "brand": "KAWASAKI",
       "model": "Z900",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "kawasaki-z900-2025-studio.png",
+          "source": "AI-generated reference artwork",
+          "designSource": "https://global.kawasaki.com/en/corp/newsroom/news/detail/?f=20241031_1292"
+        }
+      ],
+      "note": "2025년형 AI 참고 이미지; 연식·세부 트림 외형 정밀 검증 전"
     },
     {
       "brand": "BMW",

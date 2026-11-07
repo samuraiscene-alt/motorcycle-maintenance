@@ -507,12 +507,15 @@ const vehicleArtwork=Object.freeze({
  'HONDA|PCX125|2023':{src:'./honda-pcx125-studio.png?v=111',alt:'Honda PCX125 2023 고화질 스튜디오 참고 이미지'},
  'HONDA|CB650R|2024':{src:'./honda-cb650r-studio.png?v=116',alt:'Honda CB650R 2024 고화질 스튜디오 참고 이미지'},
  'HONDA|FORZA350|2025':{src:'./honda-forza350-studio.png?v=117',alt:'Honda Forza350 2025 고화질 스튜디오 참고 이미지'},
- 'HONDA|FORZA350|2022':{src:'./honda-forza350-2022-studio.png?v=118',alt:'Honda Forza350 2022 디자인 세대 고화질 참고 이미지'}
+ 'HONDA|FORZA350|2022':{src:'./honda-forza350-2022-studio.png?v=118',alt:'Honda Forza350 2022 디자인 세대 고화질 참고 이미지'},
+ 'KAWASAKI|Z900|2025':{src:'./kawasaki-z900-2025-studio.png?v=119',alt:'Kawasaki Z900 2025 AI 제작 고화질 참고 이미지'}
 });
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
 const modelYear=Number(r?.year);
-const generationArt=maker==='HONDA'&&normalizedModel==='FORZA350'&&modelYear>=2021&&modelYear<=2022
+const generationArt=maker==='KAWASAKI'&&normalizedModel==='Z900'&&modelYear===2025
+ ?vehicleArtwork['KAWASAKI|Z900|2025']
+ :maker==='HONDA'&&normalizedModel==='FORZA350'&&modelYear>=2021&&modelYear<=2022
  ?vehicleArtwork['HONDA|FORZA350|2022']
  :maker==='HONDA'&&normalizedModel==='FORZA350'&&modelYear>=2023&&modelYear<=2025
  ?vehicleArtwork['HONDA|FORZA350|2025']
@@ -531,7 +534,7 @@ const garageModelImage=activeArt.src;
 // Reference lengths: 2023 PCX125 1935mm; 2021 CB125R 2015mm.
 // An image-height correction keeps their projected lengths approximately proportional.
 const artSizeKey=maker+'|'+normalizedModel;
-const artHeightByModel={'HONDA|PCX125':'75%','HONDA|CB125R':'87%','HONDA|CB650R':'89%','HONDA|FORZA350':'86%'};
+const artHeightByModel={'HONDA|PCX125':'75%','HONDA|CB125R':'87%','HONDA|CB650R':'89%','HONDA|FORZA350':'86%','KAWASAKI|Z900':'88%'};
 centeredBike.style.setProperty('--bike-art-height',artHeightByModel[artSizeKey]||'87%');
 bikeContactShadow.hidden=!!xmaxRequested;
 centeredBike.dataset.modelSize=artSizeKey;
