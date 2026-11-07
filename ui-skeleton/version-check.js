@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const CURRENT='2.9.114';
+const CURRENT='2.9.115';
 const SCRIPT=document.currentScript;
 const ROOT=new URL('../',SCRIPT?.src||location.href);
 let remote=CURRENT,checking=false;
@@ -22,7 +22,7 @@ writeInfo();
 async function check(automatic=false){
  if(checking)return;checking=true;const button=holder.querySelector('.app-version-check');button.disabled=true;
  try{
-  if('serviceWorker' in navigator){const reg=await navigator.serviceWorker.getRegistration(ROOT.pathname);if(reg)await reg.update()}
+  // Fetch version first. A stalled service worker update must not block the check.
   const url=new URL('version.json',ROOT);
   url.searchParams.set('check',Date.now().toString());
   const response=await fetch(url.href,{cache:'no-store',credentials:'same-origin'});
@@ -32,6 +32,9 @@ async function check(automatic=false){
   remote=latest.version;
   const newer=remote!==CURRENT;
   writeInfo(newer?'새 버전 v'+remote+'을 사용할 수 있어.':'앱 코드가 최신 버전이야.');
+  if('serviceWorker' in navigator){
+   navigator.serviceWorker.getRegistration(ROOT.pathname).then(reg=>reg?.update()).catch(()=>{});
+  }
   if(newer){banner.querySelector('.app-update-title').textContent='새 버전 v'+remote+'이 있어';banner.hidden=false}
   else if(!automatic){button.textContent='최신 버전 확인됨';setTimeout(()=>button.textContent='업데이트 확인',1800)}
  }catch(e){writeInfo('업데이트 확인에 실패했어. 인터넷 연결을 확인해.')}
@@ -42,10 +45,20 @@ banner.querySelector('.app-update-dismiss').addEventListener('click',()=>banner.
 banner.querySelector('.app-update-apply').addEventListener('click',async()=>{
  const b=banner.querySelector('.app-update-apply');b.disabled=true;b.textContent='최신 화면 불러오는 중…';
  try{
-  if('serviceWorker' in navigator){const reg=await navigator.serviceWorker.getRegistration(ROOT.pathname);if(reg)await reg.update()}
-  const url=new URL(location.href);url.searchParams.set('app-version',remote);url.searchParams.set('refresh',Date.now().toString());
+  // Cache Storage holds only app files. Never touch localStorage or IndexedDB.
+  if('caches' in window){
+   const keys=await caches.keys();
+   await Promise.all(keys.filter(key=>key.startsWith('motorcycle-maintenance-')).map(key=>caches.delete(key)));
+  }
+  if('serviceWorker' in navigator){
+   const reg=await navigator.serviceWorker.getRegistration(ROOT.pathname);
+   if(reg)await Promise.race([reg.update(),new Promise(resolve=>setTimeout(resolve,2000))]).catch(()=>{});
+  }
+  const url=new URL(location.href);
+  url.searchParams.set('app-version',remote);
+  url.searchParams.set('refresh',Date.now().toString());
   location.replace(url.href);
- }catch{b.disabled=false;b.textContent='새 버전 적용'}
+ }catch(err){writeInfo('자동 업데이트 오류: '+String(err?.message||err));b.disabled=false;b.textContent='새 버전 적용'}
 });
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)check(true)});
 window.addEventListener('pageshow',e=>{writeInfo();if(e.persisted)check(true)});
