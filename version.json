@@ -1,6 +1,6 @@
 {
-  "version": "2.9.114",
-  "cache": "motorcycle-maintenance-v2.9.114",
+  "version": "2.9.115",
+  "cache": "motorcycle-maintenance-v2.9.115",
   "released": "2026-11-07",
-  "note": "중복 차량 이미지 제거: 기존 슬라이드 이미지를 DOM에서 제거하고 중앙 고화질 차량만 유지"
+  "note": "버전 확인과 서비스워커 갱신 분리, 앱 파일 캐시 안전 정리 후 최신 화면 로드"
 }
