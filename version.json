@@ -1,6 +1,6 @@
 {
-  "version": "2.9.111",
-  "cache": "motorcycle-maintenance-v2.9.111",
+  "version": "2.9.112",
+  "cache": "motorcycle-maintenance-v2.9.112",
   "released": "2026-11-07",
-  "note": "Honda CB125R (2021~2025) 및 PCX125 (2021~2024) 고화질 스튜디오 이미지 교체; 기존 기능 및 정비기록 유지"
+  "note": "실제 차체 전장 비율을 기준으로 CB125R/PCX125 시각 크기 보정, 공통 바닥 접지 그림자 및 접지선 정렬"
 }
