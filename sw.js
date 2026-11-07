@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v2.9.114';
+const CACHE='motorcycle-maintenance-v2.9.115';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
@@ -20,7 +20,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/backup-restore.js?v=backup-check-105',ROOT).href,
   new URL('./ui-skeleton/i18n.js?v=locale-scaffold-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=first-use-103',ROOT).href,
-  new URL('./ui-skeleton/version-check.js?v=app-version-414',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=app-version-415',ROOT).href,
   new URL('./ui-skeleton/wear-library.js?v=shared-materials-1',ROOT).href,
   new URL('./ui-skeleton/bike-aging.js?v=parts-safe-2',ROOT).href,
   new URL('./icon-bike-192.jpg',ROOT).href,
@@ -41,6 +41,8 @@ self.addEventListener('fetch',event=>{
  if(event.request.method!=='GET')return;
  const url=new URL(event.request.url);
  if(url.origin!==self.location.origin||!url.pathname.startsWith(ROOT.pathname))return;
+ // Version checks and recovery pages always consult the network.
+ if(url.pathname.endsWith('/version.json')||url.pathname.endsWith('/safe-refresh-111.html'))return;
  const request=event.request.mode==='navigate'?new Request(event.request,{cache:'no-store'}):event.request;
  event.respondWith(fetch(request).then(response=>{
    if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)));}
