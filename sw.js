@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v2.9.125';
+const CACHE='motorcycle-maintenance-v2.9.126';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
@@ -18,10 +18,11 @@ const PRECACHE=[
   new URL('./ui-skeleton/yamaha-xmax300-studio.png?v=125',ROOT).href,
   new URL('./ui-skeleton/yamaha-xmax125-studio.png?v=125',ROOT).href,
   new URL('./ui-skeleton/yamaha-tmax560-studio.png?v=125',ROOT).href,
+  new URL('./ui-skeleton/suzuki-burgman125-studio.png?v=126',ROOT).href,
   new URL('./ui-skeleton/motorcycle.svg',ROOT).href,
   new URL('./ui-skeleton/alternate-scooter.svg',ROOT).href,
   new URL('./ui-skeleton/vehicle-catalog.js?v=filter-map-104',ROOT).href,
-  new URL('./ui-skeleton/vehicle-data.js?v=yamaha-four-125',ROOT).href,
+  new URL('./ui-skeleton/vehicle-data.js?v=burgman-126',ROOT).href,
   new URL('./ui-skeleton/part-customize.js?v=accordion-order-3',ROOT).href,
   new URL('./ui-skeleton/priority-parts.js?v=priority-13-2',ROOT).href,
   new URL('./ui-skeleton/priority-images.js?v=studio-icons-4',ROOT).href,
@@ -29,7 +30,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/backup-restore.js?v=backup-check-105',ROOT).href,
   new URL('./ui-skeleton/i18n.js?v=locale-scaffold-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=first-use-103',ROOT).href,
-  new URL('./ui-skeleton/version-check.js?v=app-version-425',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=app-version-426',ROOT).href,
   new URL('./ui-skeleton/wear-library.js?v=shared-materials-1',ROOT).href,
   new URL('./ui-skeleton/bike-aging.js?v=parts-safe-2',ROOT).href,
   new URL('./icon-bike-192.jpg',ROOT).href,

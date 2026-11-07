@@ -3,9 +3,9 @@
   "title": "오토바이 정비 개별 차량 이미지 제작 목록",
   "lastAudited": "2026-11-07",
   "totalModels": 40,
-  "modelsWithPreparedAssets": 9,
-  "individualImageAssetsPrepared": 11,
-  "notCreatedModels": 31,
+  "modelsWithPreparedAssets": 10,
+  "individualImageAssetsPrepared": 12,
+  "notCreatedModels": 30,
   "principles": [
     "기종/디자인 세대별 독립 이미지 1장/파일",
     "스프라이트시트 및 합본 절대 금지",
@@ -224,9 +224,19 @@
     {
       "brand": "SUZUKI",
       "model": "BURGMAN125",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2023,
+            2025
+          ],
+          "file": "suzuki-burgman125-studio.png",
+          "source": "AI-generated independent transparent studio cutout",
+          "note": "Burgman Street 125계열 참고 렌더. 구형 Burgman125와 다른 모델이며 등록 시 세부 모델 구분 필요"
+        }
+      ],
+      "note": "2023~2025 연식에는 스트리트 계열 참고 이미지만 제공. 구형 버그만125 전용 이미지 미제작"
     },
     {
       "brand": "SUZUKI",

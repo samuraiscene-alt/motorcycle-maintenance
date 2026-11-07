@@ -515,12 +515,15 @@ const vehicleArtwork=Object.freeze({
  'YAMAHA|NMAX125|2025':{src:'./yamaha-nmax125-studio.png?v=125',alt:'Yamaha NMAX125 2025 계열 독립 AI 참고 이미지'},
  'YAMAHA|XMAX300|2023':{src:'./yamaha-xmax300-studio.png?v=125',alt:'Yamaha XMAX300 2023 이후 독립 AI 참고 이미지'},
  'YAMAHA|XMAX125|2023':{src:'./yamaha-xmax125-studio.png?v=125',alt:'Yamaha XMAX125 2023 이후 독립 AI 참고 이미지'},
- 'YAMAHA|TMAX560|2022':{src:'./yamaha-tmax560-studio.png?v=125',alt:'Yamaha TMAX560 2022 이후 독립 AI 참고 이미지'}
+ 'YAMAHA|TMAX560|2022':{src:'./yamaha-tmax560-studio.png?v=125',alt:'Yamaha TMAX560 2022 이후 독립 AI 참고 이미지'},
+ 'SUZUKI|BURGMAN125|2023':{src:'./suzuki-burgman125-studio.png?v=126',alt:'Suzuki Burgman Street 125 계열 AI 참고 이미지, 상세 모델 확인 필요'}
 });
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
 const modelYear=Number(r?.year);
-const generationArt=maker==='YAMAHA'&&normalizedModel==='NMAX125'&&modelYear>=2025&&modelYear<=2026
+const generationArt=maker==='SUZUKI'&&normalizedModel==='BURGMAN125'&&modelYear>=2023&&modelYear<=2025
+ ?vehicleArtwork['SUZUKI|BURGMAN125|2023']
+ :maker==='YAMAHA'&&normalizedModel==='NMAX125'&&modelYear>=2025&&modelYear<=2026
  ?vehicleArtwork['YAMAHA|NMAX125|2025']
  :maker==='YAMAHA'&&normalizedModel==='XMAX300'&&modelYear>=2023&&modelYear<=2026
  ?vehicleArtwork['YAMAHA|XMAX300|2023']
@@ -551,7 +554,7 @@ const garageModelImage=activeArt.src;
 // Reference lengths: 2023 PCX125 1935mm; 2021 CB125R 2015mm.
 // An image-height correction keeps their projected lengths approximately proportional.
 const artSizeKey=maker+'|'+normalizedModel;
-const artHeightByModel={'HONDA|PCX125':'75%','HONDA|CB125R':'87%','HONDA|CB650R':'89%','HONDA|FORZA350':'86%','KAWASAKI|Z900':'88%','YAMAHA|NMAX125':'77%','YAMAHA|XMAX300':'86%','YAMAHA|XMAX125':'85%','YAMAHA|TMAX560':'89%'};
+const artHeightByModel={'HONDA|PCX125':'75%','HONDA|CB125R':'87%','HONDA|CB650R':'89%','HONDA|FORZA350':'86%','KAWASAKI|Z900':'88%','YAMAHA|NMAX125':'77%','YAMAHA|XMAX300':'86%','YAMAHA|XMAX125':'85%','YAMAHA|TMAX560':'89%','SUZUKI|BURGMAN125':'76%'};
 centeredBike.style.setProperty('--bike-art-height',artHeightByModel[artSizeKey]||'87%');
 bikeContactShadow.hidden=!!xmaxRequested;
 centeredBike.dataset.modelSize=artSizeKey;

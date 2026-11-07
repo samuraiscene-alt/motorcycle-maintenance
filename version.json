@@ -1,6 +1,6 @@
 {
-  "version": "2.9.125",
-  "cache": "motorcycle-maintenance-v2.9.125",
+  "version": "2.9.126",
+  "cache": "motorcycle-maintenance-v2.9.126",
   "released": "2026-11-07",
-  "note": "Yamaha NMAX125 XMAX300 XMAX125 TMAX560 독립 투명 실사형 이미지 4개 적용 및 XMAX 중복 표시 방지"
+  "note": "Suzuki BURGMAN125 2023~2025 참고 실사형 개별 이미지 적용, 구형 BURGMAN과 스트리트 모델 구분 필요"
 }

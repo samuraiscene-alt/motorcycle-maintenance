@@ -12,7 +12,7 @@
 - 정비 기록/주행거리/localStorage/IndexedDB는 변경하지 않는다.
 
 ## 진행 현황
-- 준비된 기종: HONDA PCX125, FORZA350, CB125R, CB650R / KAWASAKI Z900 / YAMAHA NMAX125, XMAX300, XMAX125, TMAX560 (총 9개 기종, 11개 독립 이미지)
-- 추가 제작 대상: 31개 기종. 세대 구분에 따라 파일 수는 늘어날 수 있다.
+- 준비된 기종: HONDA PCX125, FORZA350, CB125R, CB650R / KAWASAKI Z900 / YAMAHA NMAX125, XMAX300, XMAX125, TMAX560 및 SUZUKI BURGMAN125 참고 이미지 (총 10개 기종, 12개 독립 이미지)
+- 추가 제작 대상: 30개 기종. BURGMAN125 구형과 Street 모델의 외형 구분은 별도 검수 필요. 세대 구분에 따라 파일 수는 늘어날 수 있다.
 - 이미지 생성 검증에 실패한 파일은 앱에 올리지 않는다.
 - `vehicle-art-inventory.json`에서 기종별 상태를 관리한다.
