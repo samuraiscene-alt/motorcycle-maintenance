@@ -461,6 +461,7 @@ centeredBike.addEventListener('error',()=>{
  centeredBike.dataset.fallback='1';
  centeredBike.src='./bike-placeholder.svg?v=109';
  showroomNotice.textContent='전용 이미지 로드 실패 · 일반 오토바이 실루엣 표시';
+ showroomNotice.hidden=false;
 });
 stage.appendChild(centeredBike);
 // Shared contact shadow, tied to the visible center layer rather than moving slides.
@@ -549,20 +550,7 @@ if(!xmaxRequested){
   centeredBike.hidden=false;
  }
 }
-const activeSlide=track.children[index];
-if(activeSlide){
- const fallbackHero=activeSlide.querySelector('.motorcycle-hero');
- if(fallbackHero){
-  fallbackHero.hidden=false;
-  if(garageModelImage&&fallbackHero.getAttribute('src')!==garageModelImage)fallbackHero.src=garageModelImage;
-  if(garageModelImage)fallbackHero.alt=activeArt.alt;
-  fallbackHero.onerror=()=>{if(fallbackHero.dataset.fallback==='1'){fallbackHero.hidden=true;return;}fallbackHero.dataset.fallback='1';fallbackHero.src='./bike-placeholder.svg?v=109';showroomNotice.textContent='전용 이미지 준비 중 · 일반 오토바이 실루엣';};
-  fallbackHero.dataset.fallback='0';
-
- }
- const shadow=activeSlide.querySelector('.ground-shadow');
- if(shadow)shadow.hidden=false;
-}
+// Legacy slide vehicle images were removed in v2.9.114. The only visible bike is centeredBike.
 document.body.dataset.xmaxRequested=String(xmaxRequested);
 if(xmaxRequested){
  const slide=track.children[index];if(slide&&xmaxHero.parentElement!==slide)slide.appendChild(xmaxHero);
@@ -571,15 +559,13 @@ if(xmaxRequested){
  else if(xmaxHero.complete&&xmaxHero.naturalWidth>0)document.body.classList.add('xmax-2025-photo-ready');
 }else{xmaxHero.hidden=true;document.body.classList.remove('xmax-2025-photo-ready')}
 const yearWarning=window.MotorcycleCatalog?.validateModelYear(maker,r?.model,Number(r?.year));
-showroomNotice.textContent=yearWarning?yearWarning.description
- :xmaxRequested&&document.body.classList.contains('xmax-2025-photo-ready')?'XMAX300 계열 공식 사진 · 세부 트림 참고용'
- :cb650rIllustration?'CB650R 2024 · 고화질 참고 이미지'
- :generationArt&&normalizedModel==='PCX125'?'PCX125 동일 외형 계열 · 연식별 세부 차이 있음'
- :generationArt&&normalizedModel==='CB125R'?'CB125R 동일 외형 계열 · 연식별 세부 차이 있음'
- :generationArt&&normalizedModel==='CB650R'?'CB650R 동일 외형 계열 · 연식별 세부 차이 있음'
- :cb125rIllustration?'CB125R 2025 · 기종 전용 참고 일러스트'
- :referenceImageAllowed?'차종 전용 이미지 미등록 · 참고용 스쿠터'
- :'전용 이미지 준비 중 · 일반 오토바이 실루엣';
+const isPlaceholderArt=garageModelImage.includes('bike-placeholder.svg');
+const showXmaxReference=xmaxRequested&&document.body.classList.contains('xmax-2025-photo-ready');
+showroomNotice.textContent=yearWarning?.description
+ ||(isPlaceholderArt?'전용 이미지 준비 중 · 일반 오토바이 실루엣'
+ :showXmaxReference?'XMAX300 계열 참고 이미지 · 세부 트림 차이 있음':'');
+// A real cutout must never be labelled as an unavailable model.
+showroomNotice.hidden=!(yearWarning||isPlaceholderArt||showXmaxReference);
 meta.replaceChildren();
 if(r){
  const yearLine=document.createElement('span');yearLine.className='bike-meta-year';yearLine.textContent=r.year?r.year+'년형':'연식 미확인';
