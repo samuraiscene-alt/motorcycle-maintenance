@@ -470,6 +470,9 @@ bikeContactShadow.setAttribute('aria-hidden','true');
 stage.insertBefore(bikeContactShadow,centeredBike);
 document.body.classList.add('centered-bike-layer');
 function renderInfo(){
+ // Exactly one vehicle artwork element: legacy slide images were still made
+ // visible by old garage CSS !important rules. Remove those nodes entirely.
+ track.querySelectorAll('.showroom-slide > .motorcycle-hero').forEach(img=>img.remove());
  // Each motorcycle keeps its own garage scene when the active brand changes.
  [...track.children].forEach((slide,i)=>slide.classList.toggle('current-bike-slide',i===index));
  const empty=!hasRegisteredBikes();
