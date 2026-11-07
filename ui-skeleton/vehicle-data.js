@@ -463,6 +463,11 @@ centeredBike.addEventListener('error',()=>{
  showroomNotice.textContent='전용 이미지 로드 실패 · 일반 오토바이 실루엣 표시';
 });
 stage.appendChild(centeredBike);
+// Shared contact shadow, tied to the visible center layer rather than moving slides.
+const bikeContactShadow=document.createElement('div');
+bikeContactShadow.className='bike-contact-shadow';
+bikeContactShadow.setAttribute('aria-hidden','true');
+stage.insertBefore(bikeContactShadow,centeredBike);
 document.body.classList.add('centered-bike-layer');
 function renderInfo(){
  // Each motorcycle keeps its own garage scene when the active brand changes.
@@ -474,7 +479,7 @@ function renderInfo(){
  const odometerButton=$('odometer-button');
  if(odometerButton){odometerButton.hidden=empty;odometerButton.disabled=empty}
  if(empty){
-  centeredBike.hidden=true;
+  centeredBike.hidden=true;bikeContactShadow.hidden=true;
   name.textContent='등록된 차량 없음';meta.textContent='설정에서 새 차량을 등록해.';
   document.body.classList.remove('vehicle-locked','non-honda-bike','garage-sign-honda','garage-sign-yamaha','garage-sign-general');
  hideGarageSigns();
@@ -513,6 +518,14 @@ const cb125rIllustration=artKey==='HONDA|CB125R|2025';
 const cb650rIllustration=artKey==='HONDA|CB650R|2024';
 const referenceImageAllowed=!!activeArt&&maker==='HONDA'&&normalizedModel==='PCX125';
 const garageModelImage=activeArt.src;
+// Optical correction: original source images use different aspect ratios and viewpoints.
+// Reference lengths: 2023 PCX125 1935mm; 2021 CB125R 2015mm.
+// An image-height correction keeps their projected lengths approximately proportional.
+const artSizeKey=maker+'|'+normalizedModel;
+const artHeightByModel={'HONDA|PCX125':'75%','HONDA|CB125R':'87%'};
+centeredBike.style.setProperty('--bike-art-height',artHeightByModel[artSizeKey]||'87%');
+bikeContactShadow.hidden=!!xmaxRequested;
+centeredBike.dataset.modelSize=artSizeKey;
 // Always position artwork over the visible garage, not inside an offscreen carousel panel.
 centeredBike.hidden=!!xmaxRequested;
 if(!xmaxRequested){
