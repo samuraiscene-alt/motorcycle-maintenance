@@ -3,9 +3,9 @@
   "title": "오토바이 정비 개별 차량 이미지 제작 목록",
   "lastAudited": "2026-11-07",
   "totalModels": 40,
-  "modelsWithPreparedAssets": 10,
-  "individualImageAssetsPrepared": 12,
-  "notCreatedModels": 30,
+  "modelsWithPreparedAssets": 11,
+  "individualImageAssetsPrepared": 13,
+  "notCreatedModels": 29,
   "principles": [
     "기종/디자인 세대별 독립 이미지 1장/파일",
     "스프라이트시트 및 합본 절대 금지",
@@ -241,9 +241,19 @@
     {
       "brand": "SUZUKI",
       "model": "BURGMAN400",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2023,
+            2026
+          ],
+          "file": "suzuki-burgman400-studio.png",
+          "source": "AI generated independent studio cutout, Suzuki manufacturer references",
+          "note": "2023~2026 외형 참고, 공식 사진 아님; 색상 및 세부 연식 차이 가능"
+        }
+      ],
+      "note": "중형 스쿠터 실제 전장 2235mm 기준 표시 크기 별도 조정"
     },
     {
       "brand": "SUZUKI",
