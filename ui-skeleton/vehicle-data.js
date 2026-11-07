@@ -494,6 +494,7 @@ function renderInfo(){
   return;
  }
  const b=currentBike(),r=currentRegistration(),odo=getOdometer();name.textContent=b.name;name.title=b.name;
+name.classList.toggle('long-bike-model',String(b.name||'').length>=17);
 const maker=String(r?.brand||b.brand||'').trim().toUpperCase(),isHonda=maker==='HONDA';
 document.body.classList.toggle('non-honda-bike',!isHonda);
 setGarageSign(maker);
@@ -521,7 +522,7 @@ const vehicleArtwork=Object.freeze({
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
 const modelYear=Number(r?.year);
-const generationArt=maker==='SUZUKI'&&normalizedModel==='BURGMAN125'&&modelYear>=2023&&modelYear<=2025
+const generationArt=maker==='SUZUKI'&&normalizedModel==='BURGMAN125'&&modelYear>=2023&&modelYear<=2026
  ?vehicleArtwork['SUZUKI|BURGMAN125|2023']
  :maker==='YAMAHA'&&normalizedModel==='NMAX125'&&modelYear>=2025&&modelYear<=2026
  ?vehicleArtwork['YAMAHA|NMAX125|2025']

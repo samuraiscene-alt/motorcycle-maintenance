@@ -229,14 +229,14 @@
         {
           "yearRange": [
             2023,
-            2025
+            2026
           ],
           "file": "suzuki-burgman125-studio.png",
           "source": "AI-generated independent transparent studio cutout",
-          "note": "Burgman Street 125계열 참고 렌더. 구형 Burgman125와 다른 모델이며 등록 시 세부 모델 구분 필요"
+          "note": "2023~2026 국내 BURGMAN STREET 125EX 디자인 계열 참고 렌더. 구형 Burgman125와 모델 구분 필요; 공식사진 아님."
         }
       ],
-      "note": "2023~2025 연식에는 스트리트 계열 참고 이미지만 제공. 구형 버그만125 전용 이미지 미제작"
+      "note": "2023~2026 스트리트 125EX 참고 외형만 연결. 세부 트림과 구형 버그만은 별도 검수."
     },
     {
       "brand": "SUZUKI",

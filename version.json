@@ -1,6 +1,6 @@
 {
-  "version": "2.9.126",
-  "cache": "motorcycle-maintenance-v2.9.126",
+  "version": "2.9.127",
+  "cache": "motorcycle-maintenance-v2.9.127",
   "released": "2026-11-07",
-  "note": "Suzuki BURGMAN125 2023~2025 참고 실사형 개별 이미지 적용, 구형 BURGMAN과 스트리트 모델 구분 필요"
+  "note": "SUZUKI BURGMAN125 2026 스트리트 계열 참고 이미지 표시 및 긴 차량명 잘림 수정"
 }
