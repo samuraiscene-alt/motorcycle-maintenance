@@ -505,12 +505,15 @@ const vehicleArtwork=Object.freeze({
  'HONDA|PCX125':{src:'./motorcycle.svg',alt:'HONDA PCX125 참고용 일러스트'},
  'HONDA|CB125R|2025':{src:'./honda-cb125r-studio.png?v=111',alt:'Honda CB125R 고화질 스튜디오 참고 이미지'},
  'HONDA|PCX125|2023':{src:'./honda-pcx125-studio.png?v=111',alt:'Honda PCX125 2023 고화질 스튜디오 참고 이미지'},
- 'HONDA|CB650R|2024':{src:'./honda-cb650r-studio.png?v=116',alt:'Honda CB650R 2024 고화질 스튜디오 참고 이미지'}
+ 'HONDA|CB650R|2024':{src:'./honda-cb650r-studio.png?v=116',alt:'Honda CB650R 2024 고화질 스튜디오 참고 이미지'},
+ 'HONDA|FORZA350|2025':{src:'./honda-forza350-studio.png?v=117',alt:'Honda Forza350 2025 고화질 스튜디오 참고 이미지'}
 });
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
 const modelYear=Number(r?.year);
-const generationArt=maker==='HONDA'&&normalizedModel==='PCX125'&&modelYear>=2021&&modelYear<=2024
+const generationArt=maker==='HONDA'&&normalizedModel==='FORZA350'&&modelYear===2025
+ ?vehicleArtwork['HONDA|FORZA350|2025']
+ :maker==='HONDA'&&normalizedModel==='PCX125'&&modelYear>=2021&&modelYear<=2024
  ?vehicleArtwork['HONDA|PCX125|2023']
  :maker==='HONDA'&&normalizedModel==='CB125R'&&modelYear>=2021&&modelYear<=2025
  ?vehicleArtwork['HONDA|CB125R|2025']
@@ -525,7 +528,7 @@ const garageModelImage=activeArt.src;
 // Reference lengths: 2023 PCX125 1935mm; 2021 CB125R 2015mm.
 // An image-height correction keeps their projected lengths approximately proportional.
 const artSizeKey=maker+'|'+normalizedModel;
-const artHeightByModel={'HONDA|PCX125':'75%','HONDA|CB125R':'87%','HONDA|CB650R':'89%'};
+const artHeightByModel={'HONDA|PCX125':'75%','HONDA|CB125R':'87%','HONDA|CB650R':'89%','HONDA|FORZA350':'86%'};
 centeredBike.style.setProperty('--bike-art-height',artHeightByModel[artSizeKey]||'87%');
 bikeContactShadow.hidden=!!xmaxRequested;
 centeredBike.dataset.modelSize=artSizeKey;
