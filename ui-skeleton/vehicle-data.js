@@ -495,13 +495,16 @@ const xmaxRequested=maker==='YAMAHA'&&normalizedModel==='XMAX300'&&Number(r?.yea
 // Exact-model art only: never display another model's body as the active vehicle.
 const vehicleArtwork=Object.freeze({
  'HONDA|PCX125':{src:'./motorcycle.svg',alt:'HONDA PCX125 참고용 일러스트'},
- 'HONDA|CB125R|2025':{src:'./cb125r-2025.svg?v=1',alt:'Honda CB125R 2025 전용 참고 일러스트'},
+ 'HONDA|CB125R|2025':{src:'./honda-cb125r-studio.png?v=111',alt:'Honda CB125R 고화질 스튜디오 참고 이미지'},
+ 'HONDA|PCX125|2023':{src:'./honda-pcx125-studio.png?v=111',alt:'Honda PCX125 2023 고화질 스튜디오 참고 이미지'},
  'HONDA|CB650R|2024':{src:'./cb650r-2024.svg?v=1',alt:'Honda CB650R 2024 4기통 전용 참고 일러스트'}
 });
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
 const modelYear=Number(r?.year);
-const generationArt=maker==='HONDA'&&normalizedModel==='CB125R'&&modelYear>=2021&&modelYear<=2025
+const generationArt=maker==='HONDA'&&normalizedModel==='PCX125'&&modelYear>=2021&&modelYear<=2024
+ ?vehicleArtwork['HONDA|PCX125|2023']
+ :maker==='HONDA'&&normalizedModel==='CB125R'&&modelYear>=2021&&modelYear<=2025
  ?vehicleArtwork['HONDA|CB125R|2025']
  :maker==='HONDA'&&normalizedModel==='CB650R'&&modelYear>=2024&&modelYear<=2026
  ?vehicleArtwork['HONDA|CB650R|2024']:null;
@@ -546,6 +549,7 @@ const yearWarning=window.MotorcycleCatalog?.validateModelYear(maker,r?.model,Num
 showroomNotice.textContent=yearWarning?yearWarning.description
  :xmaxRequested&&document.body.classList.contains('xmax-2025-photo-ready')?'XMAX300 계열 공식 사진 · 세부 트림 참고용'
  :cb650rIllustration?'CB650R 2024 · 4기통 전용 참고 일러스트'
+ :generationArt&&normalizedModel==='PCX125'?'PCX125 동일 외형 계열 · 연식별 세부 차이 있음'
  :generationArt&&normalizedModel==='CB125R'?'CB125R 동일 외형 계열 · 연식별 세부 차이 있음'
  :generationArt&&normalizedModel==='CB650R'?'CB650R 동일 외형 계열 · 연식별 세부 차이 있음'
  :cb125rIllustration?'CB125R 2025 · 기종 전용 참고 일러스트'

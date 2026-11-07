@@ -1,6 +1,6 @@
 {
-  "version": "2.9.110",
-  "cache": "motorcycle-maintenance-v2.9.110",
+  "version": "2.9.111",
+  "cache": "motorcycle-maintenance-v2.9.111",
   "released": "2026-11-07",
-  "note": "등록 차량 그림을 쇼룸 중앙 독립 레이어로 이동해 슬라이드 인덱스로 인한 표시 누락 방지; 기존 차량·정비 기록 유지"
+  "note": "Honda CB125R (2021~2025) 및 PCX125 (2021~2024) 고화질 스튜디오 이미지 교체; 기존 기능 및 정비기록 유지"
 }
