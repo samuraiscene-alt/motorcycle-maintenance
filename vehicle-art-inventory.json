@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "title": "오토바이 정비 개별 차량 이미지 제작 목록",
   "lastAudited": "2026-11-07",
-  "totalModels": 40,
-  "modelsWithPreparedAssets": 11,
-  "individualImageAssetsPrepared": 13,
+  "totalModels": 41,
+  "modelsWithPreparedAssets": 12,
+  "individualImageAssetsPrepared": 14,
   "notCreatedModels": 29,
   "principles": [
     "기종/디자인 세대별 독립 이미지 1장/파일",
@@ -413,6 +413,23 @@
       "status": "not-created",
       "generations": [],
       "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+    },
+    {
+      "brand": "DNA MOTORS",
+      "model": "UHR125",
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2022,
+            2026
+          ],
+          "file": "dna-motors-uhr125-studio.png",
+          "source": "AI-generated independently isolated studio artwork",
+          "note": "2022~2026 참고 외형; 2025년 이후 시트·쇼크·펜더 등 세부 부품 변경 가능"
+        }
+      ],
+      "note": "공식 제조사 DNA MOTORS; 매뉴얼 검증 전 정비 주기 자동입력 없음"
     }
   ]
 }

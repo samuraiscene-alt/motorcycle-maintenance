@@ -14,7 +14,8 @@ const brands=[
  {id:'TRIUMPH',label:'TRIUMPH',models:[['SPEED400',400]]},
  {id:'SYM',label:'SYM',models:[['JET14',125],['JOYMAX',300],['JET X 125',125]]},
  {id:'KYMCO',label:'KYMCO',models:[['DOWNTOWN',350],['AK550',550],['LIKE125',125]]},
- {id:'VESPA',label:'VESPA',models:[['PRIMAVERA125',125],['GTS300',300],['SPRINT125',125],['GTV300',300]]}
+ {id:'VESPA',label:'VESPA',models:[['PRIMAVERA125',125],['GTS300',300],['SPRINT125',125],['GTV300',300]]},
+ {id:'DNA MOTORS',label:'DNA MOTORS',models:[['UHR125',125]]}
 ];
 
 // A classification is not a physical dimension or an image scaling instruction.
@@ -29,11 +30,13 @@ const modelStyles=Object.freeze({
  TRIUMPH:Object.freeze({'SPEED400':'modern-classic'}),
  SYM:Object.freeze({'JET14':'scooter-compact','JOYMAX':'scooter-mid','JET X 125':'scooter-compact'}),
  KYMCO:Object.freeze({'DOWNTOWN':'scooter-mid','AK550':'scooter-large','LIKE125':'scooter-compact'}),
- VESPA:Object.freeze({'PRIMAVERA125':'scooter-classic','GTS300':'scooter-classic-large','SPRINT125':'scooter-classic','GTV300':'scooter-classic-large'})
+ VESPA:Object.freeze({'PRIMAVERA125':'scooter-classic','GTS300':'scooter-classic-large','SPRINT125':'scooter-classic','GTV300':'scooter-classic-large'}),
+ 'DNA MOTORS':Object.freeze({'UHR125':'scooter-compact'})
 });
 // Verified dimensions are tied to region and model year, never extrapolated to all years.
 // Values measure the real vehicle's envelope (mm), not its drawn asset bounding box.
 const verifiedDimensions=Object.freeze({
+ 'DNA MOTORS|UHR125|2025':Object.freeze({lengthMm:1950,widthMm:755,heightMm:1120,region:'KR',source:'https://www.dnamotors.co.kr/brand/scooter_UHR125'}),
  'HONDA|PCX125|2025':Object.freeze({lengthMm:1935,widthMm:740,heightMm:1125,region:'EU',source:'https://hondanews.eu/eu/en/motorcycles/media/pressreleases/503766/25ym-honda-pcx125-press-kit'}),
  'YAMAHA|XMAX300|2025':Object.freeze({lengthMm:2184,widthMm:775,heightMm:1410,region:'US',heightRangeMm:[1410,1506],source:'https://www.yamahamotorsports.com/models/25-xmax/specs'})
 });
@@ -45,7 +48,7 @@ const brandLogos=Object.freeze({
  VESPA:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Vespa-logo.svg'
 });
 // Known release-year restrictions: do not infer model years from the model name.
-const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024});
+const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022});
 const officialProfiles=Object.freeze({
  'HONDA|CB125R|2025':Object.freeze({
   verified:true,coverage:'partial',region:'HMEE CBF125NA 2025',modelCode:'CBF125NA',year:2025,
@@ -425,6 +428,7 @@ const expandedOfficialProfiles=Object.freeze({
 // or manufacturer statement exists, NOT that its replacement/inspection chart has
 // been validated. Only exact brand|model|year keys in officialProfiles are automatable.
 const sourceAudit=Object.freeze({
+ 'DNA MOTORS|UHR125':Object.freeze({year:2025,url:'https://www.dnamotors.co.kr/brand/scooter_UHR125',type:'DNA Motors official product specifications; maintenance schedule not verified'}),
  'HONDA|CB125R':Object.freeze({year:2025,url:'https://www.hondamotopub.com/om/HMEE/CBF125NA%20%28CB125R%29/2025',type:'Honda owner manual listing'}),
  'HONDA|CB650R':Object.freeze({year:2025,url:'https://www.hondamotopub.com/model/THM/MKY251',type:'Honda 2025 CB650R/CBR650R manual catalog'}),
  'HONDA|CBR650R':Object.freeze({year:2025,url:'https://www.hondamotopub.com/model/THM/MKY251',type:'Honda 2025 CB650R/CBR650R manual catalog'}),
