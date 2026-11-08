@@ -1,6 +1,6 @@
 {
-  "version": "2.9.161",
-  "cache": "motorcycle-maintenance-v2.9.161",
+  "version": "2.9.162",
+  "cache": "motorcycle-maintenance-v2.9.162",
   "released": "2026-11-08",
-  "note": "YAMAHA XMAX125 2025 제조사 설명서 부품별 필터·점화플러그·미션오일 및 냉각수·브레이크 주기 일부 반영; 표시등 기준 오일·벨트는 주행거리 임의값 제외"
+  "note": "SUZUKI GSX-S125 2023 제조사 매뉴얼 6-4~6-5쪽 엔진오일/필터/에어필터/체인 등 공식 간격 반영; 냉각수 종류별 차이로 자동 적용 유보"
 }
