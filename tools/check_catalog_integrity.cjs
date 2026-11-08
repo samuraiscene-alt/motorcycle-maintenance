@@ -138,4 +138,9 @@ assert.ok(vehicleSource.includes("const nextId=ids[(current+direction+ids.length
   'header switcher should wrap among registered bikes');
 assert.ok(vehicleSource.includes("headerSwipeSuppressClick=false;e.preventDefault();e.stopImmediatePropagation()"),
   'header swipes should not open the edit-vehicle modal');
+const htmlSource=fs.readFileSync(path.join(root,'ui-skeleton/index.html'),'utf8');
+assert.match(htmlSource,/\.vehicle-lines\{position:absolute;[^}]*pointer-events:auto/,
+ 'header must accept pointer events; the old pointer-events:none broke iPhone swiping');
+assert.match(htmlSource,/\.vehicle-lines\{position:absolute;[^}]*touch-action:pan-y/,
+ 'allow vertical scroll while recognizing horizontal header swipes');
 console.log('PASS: ' + pairs.length + ' models, ' + keys.length + ' exact-year official profiles for ' + modelSet.size + ' models; regional isolation verified');
