@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v2.9.132';
+const CACHE='motorcycle-maintenance-v2.9.133';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
@@ -22,10 +22,11 @@ const PRECACHE=[
   new URL('./ui-skeleton/suzuki-burgman400-studio.png?v=128',ROOT).href,
   new URL('./ui-skeleton/dna-motors-uhr125-studio.png?v=130',ROOT).href,
   new URL('./honda-ct125-2026-studio.png?v=131',ROOT).href,
+  new URL('./honda-monkey125-studio.png?v=133',ROOT).href,
   new URL('./ui-skeleton/motorcycle.svg',ROOT).href,
   new URL('./ui-skeleton/alternate-scooter.svg',ROOT).href,
-  new URL('./ui-skeleton/vehicle-catalog.js?v=dna-uhr129',ROOT).href,
-  new URL('./ui-skeleton/vehicle-data.js?v=ct125-131',ROOT).href,
+  new URL('./ui-skeleton/vehicle-catalog.js?v=monkey-133',ROOT).href,
+  new URL('./ui-skeleton/vehicle-data.js?v=monkey-133',ROOT).href,
   new URL('./ui-skeleton/part-customize.js?v=accordion-order-3',ROOT).href,
   new URL('./ui-skeleton/priority-parts.js?v=priority-13-2',ROOT).href,
   new URL('./ui-skeleton/priority-images.js?v=studio-icons-4',ROOT).href,
