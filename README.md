@@ -1,27 +1,29 @@
 # 오토바이 정비 (motorcycle-maintenance)
 
-아이폰 PWA 기반 오토바이 소모품·정비 관리 앱 프로젝트.
+아이폰 홈 화면 PWA 기반 오토바이 소모품·정비 기록 관리 앱.
 
-## 개발 현황
-- v0.1 앱 전체 소스와 WebP 이미지 자료는 별도 ZIP 원본으로 준비됨.
-- 이 저장소는 배포 및 대화창 간 인수인계를 위한 단일 공식 저장소임.
-- 현재 앱 전체 파일 업로드와 GitHub Pages 활성화는 아직 완료되지 않음.
+## 현재 개발 기준 (2026-11-08)
 
-## v0.1 구성
-- 정비소 배경 + 오토바이 8종 차량 선택
-- 신차/중고차 및 초기 누적 주행거리 입력
-- 소모품별 진행 게이지와 파랑/노랑/빨강 정비 버튼
-- 정비 및 교체 내역 기록, JSON 백업/복원
-- IndexedDB를 통한 각 사용자의 기기 내 데이터 저장
-- PWA 오프라인 사용
+- 앱 버전: **v2.9.167** (`version.json`).
+- 등록 후보: **44기종 / 12개 브랜드** (`ui-skeleton/vehicle-catalog.js`).
+- 기술자료·공식 정비주기 조사 현황: [MODEL_RESEARCH_AUDIT.md](./MODEL_RESEARCH_AUDIT.md). 공식 정비주기는 일부 연식·기종·항목만 검증되었으며 **44기종 전체 완료가 아니다**.
+- 실제 실행 화면: `ui-skeleton/index.html`. 저장소 루트의 `index.html`은 이 화면으로 이동시킨다.
+- 루트 `app.js`, `style.css` 등은 초기 버전 잔존 파일로, 현재 실행 화면의 주 구현 파일이 아니다.
+- 차종 이미지: 각 기종별 독립 파일. 이미지가 없는 기종을 다른 기종 이미지로 완성 처리하지 않는다.
+- 부품/정비 주기: 제조사 원문에서 정확한 **연식·지역·트림**이 확인된 경우에만 적용한다. 확인 불가 시 공식 기본값으로 추측 입력하지 않는다.
+- 사용자의 차량 등록, 주행거리, 정비 기록, 사용자 수정 주기는 앱 업데이트와 별도로 보존해야 한다.
 
-## 운영 및 안전
-- 앱 이름: 오토바이 정비
-- 저장소: samuraiscene-alt/motorcycle-maintenance
-- 외부 데이터베이스 없음; 휴대폰 내부 데이터 백업 권장
-- 부품 교체 주기는 차종별 제조사 매뉴얼 기준으로 설정해야 하며 앱 초기 수치는 예시임
-- 기존 정비 기록은 배포 또는 채팅 변경 시 삭제하지 않음
+## 개발 및 확인
 
-## 배포
-v0.1 ZIP의 내부 motorcycle-maintenance 폴더에 있는 모든 파일을 **저장소 루트**에 올린 다음,
-Settings → Pages → Deploy from a branch → main / (root) → Save.
+1. 모델/부품/정비주기 기준: `ui-skeleton/vehicle-catalog.js`.
+2. 사용자 데이터·화면 연결 코드: `ui-skeleton/` 하위 파일.
+3. 모델별 조사 근거와 잔여 항목: `MODEL_RESEARCH_AUDIT.md`.
+4. 이미지 파일 기준: `vehicle-art-inventory.json` 및 `VEHICLE_ART_GUIDE.md`.
+5. 변경 후 `version.json` 및 아이폰 **홈 화면 PWA**의 표시 버전을 비교한다. GitHub에 커밋한 사실만으로 홈 화면 배포·실기기 동작 성공으로 간주하지 않는다.
+
+## 배포 / 데이터
+
+- 저장소: https://github.com/samuraiscene-alt/motorcycle-maintenance
+- GitHub Pages: https://samuraiscene-alt.github.io/motorcycle-maintenance/
+- 별도 유료 백엔드 없이 각 기기에 저장. 브라우저 Safari와 홈 화면 PWA는 설치 방식에 따라 저장 공간이 달라질 수 있으므로 백업/복원이 중요하다.
+- **남은 작업**: 기종별 공식 전체 정비표와 지역·트림 확인, 부품 이미지 개별 제작 및 연결, 실제 홈 화면 PWA 동작 및 배포 검증.
