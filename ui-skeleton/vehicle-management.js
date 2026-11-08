@@ -42,7 +42,8 @@ if(Array.isArray(catalog?.researchInventory)){
  report.appendChild(title);
  const info=document.createElement('p');
  const confirmedParts=all.filter(x=>x.verifiedPartYears.length).length;
- info.textContent='정비주기 공식 검증 '+verified+'기종 · 특정 연식 부품 구성 확인 '+confirmedParts+'기종 · 연식별 부품 검증 대기 '+(all.length-confirmedParts)+'기종. 제조사 자료 발견과 정비주기 검증은 달라. 국가·연식·세부 사양이 다르면 실차 설명서를 우선해.';
+ const variantPending=all.filter(x=>x.verifiedPartYears.some(year=>catalog.findPartEvidenceForYear?.(x.brand,x.model,year)?.variantMatchRequired)).length;
+ info.textContent='전체 '+all.length+'기종 기술자료 연결 · 정비주기 일부 검증 '+verified+'기종 · 연식별 부품자료 '+confirmedParts+'기종 · 세부 트림 확인 필요 '+variantPending+'기종. 연식별 정비주기와 단종 연도는 별도로 검증 중이며, 자료만 있다고 교체주기를 자동 생성하지 않아.';
  report.appendChild(info);
  for(const brandGroup of catalog.brands){
   const group=document.createElement('details');group.className='fleet-research-group';
@@ -56,8 +57,10 @@ if(Array.isArray(catalog?.researchInventory)){
     row.manual?'제조사 자료 발견 · 주기 미확인':'공식 주기 확인 필요';
    line.appendChild(status);
    const parts=document.createElement('small');parts.style.display='block';parts.style.color='#bdd5e9';
-   parts.textContent=row.verifiedPartYears.length
-    ?'부품 구성: 확인 연식 '+row.verifiedPartYears.join(', ')
+   const variantYears=row.verifiedPartYears.filter(year=>catalog.findPartEvidenceForYear?.(row.brand,row.model,year)?.variantMatchRequired);
+   parts.textContent=variantYears.length
+    ?'부품 자료 연식 '+row.verifiedPartYears.join(', ')+' · 세부 트림 확인 후 적용'
+    :row.verifiedPartYears.length?'부품 구성: 확인 연식 '+row.verifiedPartYears.join(', ')
     :row.partEvidence?'부품 구성: 기종 계열 자료 있음 · 연식 검증 필요':'부품 구성: 추가 조사 필요';
    line.appendChild(parts);
    const newestYear=row.verifiedYears.at(-1);
@@ -98,6 +101,13 @@ function refreshModelChoice(){
  refreshYears();
 }
 setChoices(brandSelect,[...(catalog?.brands||[]).map(x=>[x.label,x.id]),['기타 제조사 (직접 입력)','OTHER']],'제조사 선택');
+function syncModelDisplacement(){
+ if(brandSelect.value!=='DUCATI'||modelSelect.value!=='MONSTER')return;
+ const year=Number(yearSelect.value);
+ if(year===2026)form.elements.cc.value='890';
+ else if(year>=2021&&year<=2025)form.elements.cc.value='937';
+}
+yearSelect.addEventListener('change',syncModelDisplacement);
 function refreshYears(){
  const previous=yearSelect.value;
  const currentYear=new Date().getFullYear();
@@ -106,6 +116,7 @@ function refreshYears(){
  const years=Array.from({length:Math.max(0,currentYear-first+1)},(_,i)=>currentYear-i);
  setChoices(yearSelect,years.map(y=>[y+'년',y]),'연식 선택');
  if(years.some(y=>String(y)===previous))yearSelect.value=previous;
+ syncModelDisplacement();
 }
 refreshYears();
 brandSelect.addEventListener('change',refreshModels);
