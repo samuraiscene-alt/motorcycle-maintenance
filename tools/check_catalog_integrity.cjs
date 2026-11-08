@@ -84,4 +84,28 @@ let next=compute({km:0},avenis.tasks['oil-strainer'],'inspect',{},8000,{at:1000}
 assert.equal(next.due,8000,'after first inspection, next one is 8000');
 let custom=compute({km:0},avenis.tasks['oil-strainer'],'inspect',{inspectIntervalSource:'user'},9000,null);
 assert.equal(custom.due,9000,'user-adjusted inspection interval must take precedence');
+
+// Audit all declared exact-year profiles: never silently default another year's task.
+for(const [key,profile] of Object.entries(catalog.officialProfiles)){
+  const [brand,model,yearText] = key.split('|');
+  assert.equal(catalog.findOfficialProfile(brand,model,Number(yearText)),profile,
+    'exact model/year lookup must return its original profile');
+  for(const [part,task] of Object.entries(profile.tasks||{})){
+    assert.ok(task && typeof task==='object','bad task for '+key+' '+part);
+    for(const [field,value] of Object.entries(task)){
+      if(/^(replaceKm|inspectKm|cleanKm|firstReplaceKm|firstInspectKm|firstCleanKm|firstRegularOdometerKm|replaceMonths|inspectMonths|cleanMonths)$/.test(field)){
+        assert.ok(Number.isSafeInteger(value)&&value>0, 'invalid service cycle '+key+'/'+part+'/'+field);
+      }
+    }
+  }
+  for(const [part,action] of Object.entries(profile.actionByPart||{})){
+    assert.ok(['replace','inspect','clean'].includes(action),'invalid maintenance action '+key+'/'+part);
+  }
+}
+assert.ok(vehicleSource.includes("const distanceLabel=overdue?actionText(action)+' 기준 '"),
+  'inspection and cleaning overdue labels must never say replacement');
+assert.ok(vehicleSource.includes("' · 최초 '+actionText(action)+' (이후 정기 '"),
+  'initial inspection/cleaning label should not pretend to be replacement');
+assert.ok(vehicleSource.includes('const initialDue=firstService?schedule.due:interval;'),
+  'all initial maintenance types must use their actual first due distance');
 console.log('PASS: ' + pairs.length + ' models, ' + keys.length + ' exact-year official profiles for ' + modelSet.size + ' models; regional isolation verified');
