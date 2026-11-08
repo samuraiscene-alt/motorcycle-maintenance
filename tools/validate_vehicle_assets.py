@@ -21,7 +21,7 @@ def catalog_pairs():
     block = source.split("const brands=[", 1)[1].split("const modelStyles=", 1)[0]
     found = set()
     for brand, models in re.findall(
-        r"\{id:'([^']+)',label:'[^']+',models:\[([^\]]*)\]\}", block
+        r"\{id:'([^']+)',label:'[^']+',models:\[(.*?)\]\}", block, re.S
     ):
         for model in re.findall(r"\['([^']+)',\d+\]", models):
             found.add((brand, model))
