@@ -110,11 +110,11 @@ function reconcileVehicleOfficialCycles(previous,profile){
 }
 function reconnectOfficialProfile(id){
  const reg=registered[id];if(!reg)return false;
- const profile=window.MotorcycleCatalog?.findOfficialProfile(reg.brand,reg.model,reg.year)||null;
+ const profile=window.MotorcycleCatalog?.findMaintenanceProfile(reg.brand,reg.model,reg.year)||null;
  const key='motorcycle-skeleton-part-appearance-v1',all=load(key),existing=all[id]||{};
  const updated=reconcileVehicleOfficialCycles(existing,profile);
  const settingsChanged=JSON.stringify(updated)!==JSON.stringify(existing);
- const status=profile?'official':'unverified',source=profile?.source||null;
+ const status=profile?(profile.inheritedServiceCycle?'estimated':'official'):'unverified',source=profile?.source||null;
  const registrationChanged=reg.maintenanceProfileStatus!==status||(reg.maintenanceProfileSource||null)!==source;
  if(!settingsChanged&&!registrationChanged)return false;
  const nextReg=registrationChanged?{...registered,[id]:{...reg,maintenanceProfileStatus:status,maintenanceProfileSource:source}}:registered;
@@ -134,7 +134,7 @@ document.addEventListener('motorcycle:year-changed',event=>{
 });
 function partSettings(bikeId,partId){return load('motorcycle-skeleton-part-appearance-v1')[bikeId]?.[partId]||{}}
 function officialProfile(reg){
- return reg?window.MotorcycleCatalog?.findOfficialProfile(reg.brand,reg.model,reg.year)||null:null;
+ return reg?window.MotorcycleCatalog?.findMaintenanceProfile(reg.brand,reg.model,reg.year)||null:null;
 }
 function officialTask(reg,partId){return officialProfile(reg)?.tasks?.[partId]||null}
 function partAction(reg,partId){
@@ -732,8 +732,10 @@ else{
   const calculated=resolveServiceCycleDetails(settings,action,last,defaultInterval,officialDefault);
   let origin=calculated.origin,label={user:'사용자 설정',official:'제조사 공식',record:'정비기록 기준',legacy:'기존 설정 · 출처 미확인',default:'앱 기본값'}[origin];
   if(interval<=0&&!last&&calendar){origin='official';label='제조사 공식 · 기간 기준'}
-  if(origin==='official'&&profile?.regionalApplicabilityUnverified===true)
-   label='2026 혼다 해외형 참고 · 국내형 확인 필요';
+  if(origin==='official'&&profile?.inheritedServiceCycle===true)
+   label='인접 '+profile.sourceYear+'년형 기준 · 동일 세대 참고';
+  else if(origin==='official'&&profile?.regionalApplicabilityUnverified===true)
+   label='제조사 해외형 참고 · 국내형 확인 필요';
   sourceTag.dataset.source=origin;
   const hasKnownCycle=interval>0||!!calendar;
   sourceTag.hidden=!hasKnownCycle||origin==='unknown';
