@@ -59,7 +59,8 @@ if(Array.isArray(catalog?.researchInventory)){
    if(row.generalServiceYears?.length){
     const general=catalog.findGeneralService(row.brand,row.model,row.generalServiceYears[0]);
     const notice=document.createElement('small');notice.style.display='block';
-    notice.textContent='제조사 정기 서비스 '+general.everyKm.toLocaleString('ko-KR')+'km 또는 '+general.everyMonths+'개월 (부품별 교체주기와 별개)';
+    const periodicKm=Number.isSafeInteger(general.everyKm)?general.everyKm.toLocaleString('ko-KR')+'km 또는 ':'';
+    notice.textContent='제조사 정기 서비스 '+periodicKm+general.everyMonths+'개월 (부품별 교체주기와 별개)';
     line.appendChild(notice);
    }
    const parts=document.createElement('small');parts.style.display='block';parts.style.color='#bdd5e9';
