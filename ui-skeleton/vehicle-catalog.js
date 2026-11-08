@@ -112,6 +112,19 @@ const modelTechnicalVariants=Object.freeze({
  })
 });
 const verifiedPartApplicability=Object.freeze({
+ 'HONDA|PCX125|2025':Object.freeze({
+  source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/WW125S_A%20%28PCX%29/2025/WW125SA_OM_32K1YE00_web.pdf',
+  region:'KO 2025 WW125A',cooling:'liquid',drive:'cvt',
+  notes:'Cleanable oil strainer screen instead of a separately replaceable oil-filter cartridge.',
+  unsupported:['oil-filter','chain-sprockets']
+ }),
+ 'HONDA|PCX125|2026':Object.freeze({
+  source:'https://www.hondamotopub.com/model/NCXCAE/K1Y261',
+  region:'2026 WW125AT English manual; KR trim unconfirmed',cooling:'liquid',drive:'cvt',
+  notes:'Oil strainer screen is cleanable, not a replaceable cartridge oil filter. 2026 KO trim pending confirmation.',
+  unsupported:['oil-filter','chain-sprockets']
+ }),
+
 
  'HONDA|MONKEY125|2026':Object.freeze({
   source:'https://www.honda.co.jp/Monkey125/',
@@ -742,6 +755,34 @@ const officialProfiles=Object.freeze({
    'spark-plug':{inspectAsScheduled:true}
   }),
   actionByPart:Object.freeze({'oil-strainer':'clean','valve-clearance':'inspect'})
+ }),
+ 'HONDA|PCX125|2026':Object.freeze({
+  verified:true,coverage:'partial',region:'2026 WW125AT English manual; KR/KO trim equivalence NOT verified',
+  regionalApplicabilityUnverified:true,modelCode:'WW125AT',year:2026,
+  source:'https://www.hondamotopub.com/model/NCXCAE/K1Y261',
+  sourceText:'https://www.manuals.co.uk/honda/pcx-125-2026/manual?p=75',
+  sourceType:'Honda MotoPub 2026 PCX125 listing and 2026 English manual 32K1YJ000; KO-specific handbook still to verify',
+  sourcePages:[70,71],
+  intervals:Object.freeze({
+   oil:6000,filter:18000,'spark-plug':12000,'drive-belt':24000,
+   'oil-strainer':12000,'valve-clearance':6000
+  }),
+  tasks:Object.freeze({
+   oil:{replaceKm:6000,firstReplaceKm:1000,firstRegularOdometerKm:6000},
+   filter:{replaceKm:18000},
+   'spark-plug':{inspectKm:6000,replaceKm:12000},
+   'drive-belt':{inspectKm:12000,replaceKm:24000},
+   'oil-strainer':{cleanKm:12000},
+   'valve-clearance':{inspectKm:6000},
+   'brake-fluid':{replaceMonths:24,inspectKm:6000},
+   'gear-oil':{replaceMonths:24},
+   coolant:{replaceMonths:36,inspectKm:6000},
+   brake:{inspectKm:6000,replaceWhenWorn:true},
+   tire:{inspectKm:6000,replaceWhenWorn:true},
+   'clutch-shoe':{inspectKm:12000}
+  }),
+  actionByPart:Object.freeze({'oil-strainer':'clean','valve-clearance':'inspect'}),
+  notes:'2026 WW125AT published manual. Similar to 2025 KO intervals; do not claim Korean 2026 homologation. No replaceable engine-oil cartridge filter; clean oil strainer screen instead.'
  }),
  'HONDA|PCX125|2025':Object.freeze({
   verified:true,region:'KO',modelCode:'WW125A',year:2025,
