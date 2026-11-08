@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v2.9.141';
+const CACHE='motorcycle-maintenance-v2.9.142';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
@@ -32,8 +32,8 @@ const PRECACHE=[
   new URL('./vespa-gtv300-studio.png?v=141',ROOT).href,
   new URL('./ui-skeleton/motorcycle.svg',ROOT).href,
   new URL('./ui-skeleton/alternate-scooter.svg',ROOT).href,
-  new URL('./ui-skeleton/vehicle-catalog.js?v=zontes-both-138',ROOT).href,
-  new URL('./ui-skeleton/vehicle-data.js?v=vespa-four-141',ROOT).href,
+  new URL('./ui-skeleton/vehicle-catalog.js?v=verified-model-years-142',ROOT).href,
+  new URL('./ui-skeleton/vehicle-data.js?v=verified-parts-142',ROOT).href,
   new URL('./ui-skeleton/part-customize.js?v=accordion-order-3',ROOT).href,
   new URL('./ui-skeleton/priority-parts.js?v=priority-13-2',ROOT).href,
   new URL('./ui-skeleton/priority-images.js?v=studio-icons-4',ROOT).href,
@@ -41,7 +41,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/backup-restore.js?v=backup-check-105',ROOT).href,
   new URL('./ui-skeleton/i18n.js?v=locale-scaffold-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=fleet-140',ROOT).href,
-  new URL('./ui-skeleton/version-check.js?v=update-feedback-141',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=update-feedback-142',ROOT).href,
   new URL('./ui-skeleton/wear-library.js?v=shared-materials-1',ROOT).href,
   new URL('./ui-skeleton/bike-aging.js?v=parts-safe-2',ROOT).href,
   new URL('./icon-bike-192.jpg',ROOT).href,
