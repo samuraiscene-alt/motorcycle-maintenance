@@ -1,6 +1,6 @@
 {
-  "version": "2.9.139",
-  "cache": "motorcycle-maintenance-v2.9.139",
+  "version": "2.9.140",
+  "cache": "motorcycle-maintenance-v2.9.140",
   "released": "2026-11-08",
-  "note": "차량별 고정 호차 번호·선택 별명 표시, 동일 기종 복수 등록 구분, 정비기록 유지"
+  "note": "동일 기종 2대 이상일 때만 호차 표시; 단독 차량은 배지 숨김, 고유 식별 및 정비기록 유지"
 }
