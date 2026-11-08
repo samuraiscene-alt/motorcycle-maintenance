@@ -1,6 +1,6 @@
 {
-  "version": "2.9.159",
-  "cache": "motorcycle-maintenance-v2.9.159",
+  "version": "2.9.160",
+  "cache": "motorcycle-maintenance-v2.9.160",
   "released": "2026-11-08",
-  "note": "Vespa Sprint125/GTS300 2020 개별 사양, Suzuki BURGMAN125 2024 EX 트림 분리, Vespa 공식 정비참조 자료를 자동 주기와 별도 저장"
+  "note": "Vespa 공식 지역별 정비표를 차량 등록창 조사 현황에서 원문 확인 가능하게 연결; 국가·연식 불명확한 주기는 자동 적용 금지"
 }
