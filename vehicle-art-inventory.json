@@ -3,9 +3,9 @@
   "title": "오토바이 정비 개별 차량 이미지 제작 목록",
   "lastAudited": "2026-11-08",
   "totalModels": 44,
-  "modelsWithPreparedAssets": 21,
-  "individualImageAssetsPrepared": 23,
-  "notCreatedModels": 23,
+  "modelsWithPreparedAssets": 40,
+  "individualImageAssetsPrepared": 42,
+  "notCreatedModels": 4,
   "principles": [
     "기종/디자인 세대별 독립 이미지 1장/파일",
     "스프라이트시트 및 합본 절대 금지",
@@ -56,23 +56,53 @@
     {
       "brand": "HONDA",
       "model": "ADV350",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../honda-adv350-2025-studio.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "HONDA",
       "model": "SUPER CUB110",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../honda-super-cub110-candidate.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "HONDA",
       "model": "C125",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../honda-c125-candidate.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "HONDA",
@@ -124,16 +154,36 @@
     {
       "brand": "HONDA",
       "model": "CBR650R",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../01_HONDA_CBR650R.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "HONDA",
       "model": "REBEL500",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../02_HONDA_REBEL500.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "YAMAHA",
@@ -206,30 +256,70 @@
     {
       "brand": "YAMAHA",
       "model": "MT-03",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../03_YAMAHA_MT-03.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "YAMAHA",
       "model": "MT-07",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../04_YAMAHA_MT-07.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "YAMAHA",
       "model": "YZF-R3",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../05_YAMAHA_YZF-R3.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "YAMAHA",
       "model": "TRICITY125",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../06_YAMAHA_TRICITY125.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "SUZUKI",
@@ -275,9 +365,19 @@
     {
       "brand": "SUZUKI",
       "model": "AVENIS125",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../08_SUZUKI_AVENIS125.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "SUZUKI",
@@ -339,37 +439,87 @@
     {
       "brand": "BMW",
       "model": "G310R",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../11_BMW_G310R.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "BMW",
       "model": "R1300GS",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../12_BMW_R1300GS.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "DUCATI",
       "model": "MONSTER",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../13_DUCATI_MONSTER.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "TRIUMPH",
       "model": "SPEED400",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../14_TRIUMPH_SPEED400.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "SYM",
       "model": "JET14",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../15_SYM_JET14.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "SYM",
@@ -381,30 +531,70 @@
     {
       "brand": "SYM",
       "model": "JET X 125",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../17_SYM_JET_X_125.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "KYMCO",
       "model": "DOWNTOWN",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../18_KYMCO_DOWNTOWN.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "KYMCO",
       "model": "AK550",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../19_KYMCO_AK550.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "KYMCO",
       "model": "LIKE125",
-      "status": "not-created",
-      "generations": [],
-      "note": "연식 세대 검증 및 독립 투명 PNG 제작 필요"
+      "status": "asset-present",
+      "generations": [
+        {
+          "yearRange": [
+            2025,
+            2025
+          ],
+          "file": "../20_KYMCO_LIKE125.png",
+          "source": "User uploaded individual AI reference artwork; exact variant/year not independently verified",
+          "note": "연식 구분이 검증되지 않은 참고 이미지. 실제 앱은 기종 일치 시 표시하나 연식·트림별 정확성을 보장하지 않음"
+        }
+      ],
+      "note": "전용 PNG 경로 앱 연결 완료. 실제 형상·연식·트림 최종 검수 전. 공식 제조사 사진 아님."
     },
     {
       "brand": "VESPA",
