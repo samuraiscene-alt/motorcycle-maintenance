@@ -78,6 +78,7 @@ function refreshModels(){
  setChoices(modelSelect,[...options,['기종 직접 입력','OTHER']],'기종 선택');
  form.querySelector('.fleet-model-other').hidden=true;
  form.elements.modelOther.value='';form.elements.cc.value='';
+ refreshYears();
 }
 function refreshModelChoice(){
  const other=modelSelect.value==='OTHER';
@@ -85,9 +86,18 @@ function refreshModelChoice(){
  const found=catalog?.brands.find(x=>x.id===brandSelect.value);
  const model=found?.models.find(([name])=>name===modelSelect.value);
  form.elements.cc.value=model?String(model[1]):'';
+ refreshYears();
 }
 setChoices(brandSelect,[...(catalog?.brands||[]).map(x=>[x.label,x.id]),['기타 제조사 (직접 입력)','OTHER']],'제조사 선택');
-setChoices(yearSelect,Array.from({length:new Date().getFullYear()-1949},(_,i)=>{const y=new Date().getFullYear()-i;return[String(y)+'년',y]}),'연식 선택');
+function refreshYears(){
+ const previous=yearSelect.value;
+ const ninja500=brandSelect.value==='KAWASAKI'&&modelSelect.value==='NINJA500';
+ const currentYear=new Date().getFullYear();
+ const years=ninja500?[2026,2025,2024].filter(y=>y<=currentYear):Array.from({length:currentYear-1949},(_,i)=>currentYear-i);
+ setChoices(yearSelect,years.map(y=>[y+'년',y]),'연식 선택');
+ if(years.some(y=>String(y)===previous))yearSelect.value=previous;
+}
+refreshYears();
 brandSelect.addEventListener('change',refreshModels);
 modelSelect.addEventListener('change',refreshModelChoice);
 refreshModels();
