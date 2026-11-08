@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const CURRENT='2.9.159';
+const CURRENT='2.9.160';
 const UPDATE_PENDING_KEY='motorcycle-update-pending-v132';
 const SCRIPT=document.currentScript;
 const ROOT=new URL('../',SCRIPT?.src||location.href);
