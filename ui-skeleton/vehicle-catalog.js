@@ -166,6 +166,31 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'SUZUKI|GSX-S125|2023':Object.freeze({
+  verified:true,coverage:'partial',region:'GSX-S125XA M3 international 2023',modelCode:'GSX-S125XA M3',year:2023,
+  source:"https://d3rur0l55cri1p.cloudfront.net/uploads/sites/4/2023/03/GSX-S125-R125_M3.pdf",
+  sourceType:'Suzuki Motor Corporation GSX-S125XA/GSX-R125RLX M3 2023 owner manual, maintenance chart pp6-4–6-5',
+  sourcePages:['6-4','6-5'],
+  intervals:Object.freeze({oil:4000,'oil-filter':8000,'air-filter':12000,'spark-plug':8000,'valve-clearance':8000,'chain-sprockets':1000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:4000,firstReplaceKm:1000,firstRegularOdometerKm:4000},
+   'oil-filter':{replaceKm:8000,firstReplaceKm:1000,firstRegularOdometerKm:8000},
+   'air-filter':{inspectKm:4000,replaceKm:12000},
+   'spark-plug':{inspectKm:4000,replaceKm:8000},
+   'valve-clearance':{inspectKm:8000},
+   'chain-sprockets':{cleanKm:1000},
+   'brake-fluid':{replaceMonths:24},
+   'brake-hose':{replaceMonths:48}
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','chain-sprockets':'clean'}),
+  notes:Object.freeze({
+   coolant:'Blue Suzuki Super Long Life: 16000km/48mo; green or other coolant: 8000km/24mo. Fluid type is not stored in registration, therefore do not auto-apply one choice.',
+   oil:'Owner chart 1000km/2mo first; 4000km/12mo and 8000km/24mo subsequently. Model/year/region match required.',
+   'chain-sprockets':'Clean and lubricate every 1000km; chain replacement mileage NOT published.',
+   'oil-filter':'Engine oil filter first 1000km and at 8000km; user-set first service records must take precedence.',
+   'air-filter':'Inspect at 4000/8000 km; replace every 12000 km; never set 4000km as a replacement interval.'
+  })
+ }),
  // 2025 Yamaha XMAX125 manual BMJ-F8199-E0: only unambiguous table entries.
  // Original Yamaha chart is reproduced by a document host; link is explicitly a copy.
  'YAMAHA|XMAX125|2025':Object.freeze({
