@@ -1,6 +1,6 @@
 {
-  "version": "2.9.134",
-  "cache": "motorcycle-maintenance-v2.9.134",
+  "version": "2.9.136",
+  "cache": "motorcycle-maintenance-v2.9.136",
   "released": "2026-11-08",
-  "note": "KAWASAKI NINJA500 독립 PNG 연결, 2024~2026 이미지 매핑, 크기 및 업데이트 캐시 갱신"
+  "note": "NINJA500 연식 목록 2024·2025·2026만 제공; 다른 기종 유지, 기존 등록 데이터 변경 없음"
 }
