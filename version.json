@@ -1,6 +1,6 @@
 {
-  "version": "2.9.148",
-  "cache": "motorcycle-maintenance-v2.9.148",
+  "version": "2.9.149",
+  "cache": "motorcycle-maintenance-v2.9.149",
   "released": "2026-11-08",
-  "note": "44기종 제조사 정비·부품 조사 현황 설정 화면에 공개, 가와사키 한국어 설명서 출처 연결"
+  "note": "혼다 CT125 2026·Super Cub110 2022·Rebel500 2025 및 스즈키 Address125 2025 공식 부품 구성 검증, 체인 모델 독립 미션오일 항목 정리"
 }
