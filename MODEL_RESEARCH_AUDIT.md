@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44개 기종 공식자료 조사 현황
 
-기준일: 2026-11-08 · 앱 v2.9.158
+기준일: 2026-11-08 · 앱 v2.9.159
 
 이 문서는 **자료 조사 완료**와 **공식 정비주기 검증 완료**를 구분한다. 제조사 카탈로그의 모델 계열 정보가 있다고 해서 모든 연식/시장/트림에 그대로 적용해서는 안 된다. 누락된 정비주기나 출시·단종 연도는 임의 추정하지 않는다.
 
@@ -112,3 +112,13 @@ https://www.ducati.com/us/en/bikes/monster/monster-v2
 ## Vespa 베트남 정기 서비스표
 
 Vespa 지역 공식 사이트에는 Primavera/Sprint 125 및 GTS/GTV 300의 **차량 전체 정기 서비스 방문 일정**이 있다. 첫 1,000km 및 10,000km·20,000km 등의 점검 일정이 나오지만 모든 부품의 교체 항목표는 아니다. 연식·시장 구분 없이 개별 소모품 교체주기에 이를 복사하지 않는다. `https://www.vespa.com/vn_EN/after-sales/scheduled-maintenance/`.
+
+## Vespa 지역·연식 자료 (자동 주기와 분리)
+
+2020 EU Sprint125 i-get 공식 기술표: 공랭식/무단변속기, 2020 EU GTS300 HPE 공식 기술표: 수랭식/무단변속기. 각각 해당 연식의 부품 존재 여부만 연결했다. 베스파 UK Primavera125/150 정비 리플렛에는 첫 1,000km 엔진오일/필터, 10,000km마다 오일/필터/에어필터/구동벨트, 20,000km 점화플러그/웨이트롤러가 명시되지만 연식이 특정되지 않아 자동 앱 주기로 반영하지 않는다.
+
+- https://wlassets.vespa.com/wlassets/vespa/master/tech_spec/2020/SPRINT_125_IGET_ABS/original/SPRINT_125_IGET_ABS.pdf
+- https://wlassets.vespa.com/wlassets/vespa/master/tech_spec/2020/GTS_300_HPE/original/GTS_300_HPE.pdf
+- https://wlassets.vespa.com/wlassets/vespa/gb/maintenance_intervals/Vespa-PRIMAVERA-125-150/original/Vespa%2BPRIMAVERA%2B125%2B150.pdf
+
+SUZUKI Burgman125 2024년형 Street 125EX는 별도의 제조사 사양을 연결했으며, 앱에서 125EX 트림 확인 전까지 일반 BURGMAN125 사용자 부품을 자동으로 제거하지 않는다.
