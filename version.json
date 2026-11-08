@@ -1,6 +1,6 @@
 {
-  "version": "2.9.153",
-  "cache": "motorcycle-maintenance-v2.9.153",
+  "version": "2.9.154",
+  "cache": "motorcycle-maintenance-v2.9.154",
   "released": "2026-11-08",
-  "note": "44기종 정비 조사 상태 구분, ZONTES125G1 에어필터/오일필터 식별 오류 교정, Ducati Monster MY26 890cc 및 공식 주기 반영"
+  "note": "BMW G310R 2020 공식 138쪽 정비표 부품별 주기 반영, Triumph SPEED400 정기 서비스는 별도 참조값으로 표시"
 }
