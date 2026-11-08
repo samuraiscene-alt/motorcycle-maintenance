@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44기종 제조사 기술자료 및 공식 정비주기 조사표
 
-기준일: 2026-11-08 · 앱 v2.9.165
+기준일: 2026-11-08 · 앱 v2.9.166
 
 **기술자료 연결과 정비주기 확인은 다르다.** '검증'은 각 해당 연식·국가·세부모델에만 해당하며, 공식 정비주기가 일부만 검증된 모델도 있다. 출시·단종 연도는 공식적으로 뒷받침되는 경우에만 표기한다. 트림을 정확히 알 수 없는 기종은 기존 사용자 정비 데이터를 보존하고 자동 숨김을 적용하지 않는다.
 
@@ -13,7 +13,7 @@
 | HONDA | C125 | 2025 | 확인 연식만 | 2022, 2026 | 미확인 | 미검증 | 미검증 | [정비표](https://www.honda.co.jp/customer/motor/supercub110/faq/qa009/) / [부품 사양](https://hondanews.eu/eu/el/cars/media/pressreleases/525819/25ym-honda-super-cub-c125) |
 | HONDA | CT125 | 2026 | 확인 연식만 | 2026 | 미확인 | 미검증 | 미검증 | [정비표](https://www.honda.co.jp/customer/motor/ct125/faq/qa009/) / [부품 사양](https://www.honda.co.jp/customer/motor/ct125/faq/qa015/) |
 | HONDA | MONKEY125 | 2025, 2026 | 확인 연식만 | 2026 | 미확인 | 미검증 | 미검증 | [정비표](https://www.honda.co.jp/customer/motor/monkey125/faq/qa009/) / [부품 사양](https://www.honda.co.jp/Monkey125/) |
-| HONDA | CB125R | 2026 | 확인 연식만 | 2025 | 미확인 | 미검증 | 미검증 | [정비표](https://2rom-prd-data.hondamotopub.com/om/HMEE/CBF125NA%20%28CB125R%29/2025/CBF125NA-R_32K98B20_EN_WEB.pdf) / [부품 사양](https://hondanews.eu/eu/et/motorcycles/media/pressreleases/567258/26ym-honda-cb125r) |
+| HONDA | CB125R | 2026 | 확인 연식만 | 2025, 2024 | 미확인 | 미검증 | 미검증 | [정비표](https://2rom-prd-data.hondamotopub.com/om/HMEE/CBF125NA%20%28CB125R%29/2025/CBF125NA-R_32K98B20_EN_WEB.pdf) / [부품 사양](https://hondanews.eu/eu/et/motorcycles/media/pressreleases/567258/26ym-honda-cb125r) |
 | HONDA | CB650R | 2024 | 확인 연식만 | 2024 | 미확인 | 미검증 | 미검증 | [정비표](https://2rom-prd-data.hondamotopub.com/om/HMEE/CBR650R/2024/CB650RA_CBR650RA-R%20OM%2032MKYB20_eng_WEB.pdf) / [부품 사양](https://hondanews.eu/eu/lt/motorcycles/media/pressreleases/457025/24ym-honda-cb650r) |
 | HONDA | CBR650R | 2026 | 확인 연식만 | 2024 | 미확인 | 미검증 | 미검증 | [정비표](https://2rom-prd-data.hondamotopub.com/om/HMEE/CBR650R/2024/CB650RA_CBR650RA-R%20OM%2032MKYB20_eng_WEB.pdf) / [부품 사양](https://hondanews.eu/eu/lt/cars/media/pressreleases/548692/26ym-honda-cbr650r) |
 | HONDA | REBEL500 | 2025 | 확인 연식만 | 2025 | 미확인 | 미검증 | 미검증 | [정비표](https://2rom-prd-data.hondamotopub.com/om/HMEE/CMX500/2025/CMX500A_OM_32MLHB10_ENG_web.pdf) / [부품 사양](https://hondanews.eu/eu/lv/motorcycles/media/pressreleases/500051/25ym-honda-cmx500-rebel-press-kit) |
@@ -97,3 +97,11 @@ Yamaha YZF320-A B2X official manual (Dec 2021, English) page 6-3, 6-5, 6-6, 6-7:
 
 - Factory PDF: https://cdn2.yamaha-motor.eu/prod/owner-manuals/Motorcycles/PB2XF8199E0E.pdf
 - Yamaha Japan official owner manual listing: https://www2.yamaha-motor.co.jp/jp/manual/mc/result?ptn=01
+
+## Honda CB125R 2024 (8BJ-JC91) Japan manufacturer official maintenance
+
+Japan 8BJ-JC91 frame JC91-1100001+: 2024 CB125R engine oil 1.4L at routine change, engine capacity 1.5L; first oil change 1,000 km or 1 month, then each 6,000km or 12mo. Oil filter and valve clearance not validated for this regional variant, so no values assigned. Manufacturer: https://www.honda.co.jp/customer/motor/cb125r/faq/qa009/
+
+## Suzuki Address125 MY2025 UZ125NEWM6 EU specification
+
+Suzuki official global MY2025 product page shows 124cc SOHC air-cooled engine, CVT, front disc/rear drum CBS, front tyre 90/90-12 and rear 90/100-10. OEM physical parts only; oil replacement interval and other schedules not inferred. Manufacturer: https://www.globalsuzuki.com/motorcycle/smgs/products/2025address125/
