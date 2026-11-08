@@ -70,6 +70,14 @@ if(Array.isArray(catalog?.researchInventory)){
     :row.verifiedPartYears.length?'부품 구성: 확인 연식 '+row.verifiedPartYears.join(', ')
     :row.partEvidence?'부품 구성: 기종 계열 자료 있음 · 연식 검증 필요':'부품 구성: 추가 조사 필요';
    line.appendChild(parts);
+   if(row.regionalManualYears){
+    const range=row.regionalManualYears.segments
+     ?row.regionalManualYears.segments.map(([a,b])=>a+'~'+(b||'현재')).join(', ')
+     :row.regionalManualYears.from+'~'+(row.regionalManualYears.to||'현재');
+    const regional=document.createElement('small');regional.style.display='block';
+    regional.textContent='한국 설명서 등재 연식: '+range+' (출시·단종 범위와 다를 수 있음)';
+    line.appendChild(regional);
+   }
    const newestYear=row.verifiedYears.at(-1);
    const key=row.brand+'|'+row.model;
    const source=newestYear?catalog.findOfficialProfile(row.brand,row.model,newestYear)?.source
