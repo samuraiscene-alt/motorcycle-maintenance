@@ -147,6 +147,27 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'KAWASAKI|NINJA500|2024':Object.freeze({
+  verified:true,coverage:'partial',region:'KR EX500G/EX500J 2024 launch-generation',modelCode:'EX500G/EX500J',year:2024,
+  source:"https://kawasakikorea.com/post_file_download.cm?c=YTo1OntzOjEwOiJib2FyZF9jb2RlIjtzOjIyOiJiMjAyMjA5MjBiZDU2MzQ5NjU2NGRlIjtzOjk6InBvc3RfY29kZSI7czoyMjoicDIwMjUwMTMxMjZlYWQ0NWY1OTk4NyI7czo5OiJmaWxlX2NvZGUiO3M6MjI6InAyMDI1MDEzMTRiNzIwNzRkNjYwMTUiO3M6MTk6InBvc3RfZG93bmxvYWRfdG9rZW4iO3M6MTM6IjY5ZTQ4ZTJkNDJhODUiO3M6MTE6Im1lbWJlcl9jb2RlIjtOO30%3D",
+  sourceType:'Kawasaki Korea Ninja500 Korean official owner manual pp154-160; Kawasaki US 2024 EX500G/H/J owner centre',
+  sourcePages:[154,157,159,160],
+  intervals:Object.freeze({'chain-sprockets':1000,coolant:36000}),
+  tasks:Object.freeze({
+   'chain-sprockets':{inspectKm:1000},
+   coolant:{replaceKm:36000,replaceMonths:36},
+   'brake-fluid':{replaceMonths:24},
+   'brake-hose':{replaceMonths:48}
+  }),
+  actionByPart:Object.freeze({'chain-sprockets':'inspect'}),
+  notes:Object.freeze({
+   'chain-sprockets':'Chain tension inspect every 1000km, lubricate every 600km (manual printed p154). Never imply 1000km replacement.',
+   coolant:'Coolant, hoses and O-rings 36000km or 3 years (printed p159).',
+   'brake-fluid':'Brake fluid every 2 years and brake hoses every 4 years (printed p160).',
+   oil:'Oil and filter odometer markers are not safely recoverable from available table text; no invented interval.',
+   filter:'Air cleaner symbols not reliably readable in extracted table; interval unverified.'
+  })
+ }),
  'YAMAHA|NMAX125|2015':Object.freeze({
   verified:true,coverage:'partial',region:'EU/Indonesia GPD125-A 2DS1',modelCode:'GPD125-A',year:2015,
   source:'https://cdn2.yamaha-motor.eu/prod/owner-manuals/Scooters/P2DSF8199E0E.PDF',
@@ -611,6 +632,18 @@ const sourceAudit=Object.freeze({
 });
 // A whole-vehicle service interval must never imply a consumable replacement interval.
 const officialGeneralService=Object.freeze({
+ 'DUCATI|MONSTER|2025':Object.freeze({
+  verified:true,year:2025,region:'US Monster 937',
+  source:'https://www.ducati.com/us/en/bikes/monster/monster-937',
+  everyKm:15000,everyMonths:24,
+  notes:'Ducati 937 2025 maintenance service. Individual oil and valve service use separate confirmed task entries.'
+ }),
+ 'DUCATI|MONSTER|2026':Object.freeze({
+  verified:true,year:2026,region:'US Monster V2 890',
+  source:'https://www.ducati.com/us/en/bikes/monster/monster-v2',
+  everyKm:null,everyMonths:12,
+  notes:'Ducati 890 annual service 12 months; separate oil service 15000km or 24 months.'
+ }),
  'TRIUMPH|SPEED400|2024':Object.freeze({verified:true,year:2024,region:'Triumph T-series MY2024',
   source:'https://www.triumphmotorcycles.com/for-the-ride/news/motorcycles/t-series-q-and-a-2024-03-28',
   everyKm:16000,everyMonths:12,notes:'General periodic service; individual consumable replacement intervals remain unverified.'})
