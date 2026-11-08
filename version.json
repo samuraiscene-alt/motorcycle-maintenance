@@ -1,6 +1,6 @@
 {
-  "version": "2.9.152",
-  "cache": "motorcycle-maintenance-v2.9.152",
+  "version": "2.9.153",
+  "cache": "motorcycle-maintenance-v2.9.153",
   "released": "2026-11-08",
-  "note": "44기종 전부 부품 기술자료 연결, 마지막 6종 증빙 추가 및 ZONTES 125G1 2024 공식 정비표 일부 항목 적용, 미검증 트림 자동제외 방지"
+  "note": "44기종 정비 조사 상태 구분, ZONTES125G1 에어필터/오일필터 식별 오류 교정, Ducati Monster MY26 890cc 및 공식 주기 반영"
 }
