@@ -1,6 +1,6 @@
 {
-  "version": "2.9.151",
-  "cache": "motorcycle-maintenance-v2.9.151",
+  "version": "2.9.152",
+  "cache": "motorcycle-maintenance-v2.9.152",
   "released": "2026-11-08",
-  "note": "44기종 OEM 조사 확대: 8개 기종 연식별 부품 자료, 트림 불명확시 변경 금지, Ducati Monster 2025 공식 오일/밸브 주기 적용, Tricity 앞타이어 2개 표기"
+  "note": "44기종 전부 부품 기술자료 연결, 마지막 6종 증빙 추가 및 ZONTES 125G1 2024 공식 정비표 일부 항목 적용, 미검증 트림 자동제외 방지"
 }
