@@ -5,7 +5,7 @@
 // Candidate model names and displacement defaults; verify the exact model year when registering.
 // These entries never imply a verified maintenance interval for any model year.
 const brands=[
- {id:'HONDA',label:'HONDA',models:[['PCX125',125],['FORZA350',350],['ADV350',350],['SUPER CUB110',110],['C125',125],['CT125',125],['CB125R',125],['CB650R',649],['CBR650R',649],['REBEL500',471]]},
+ {id:'HONDA',label:'HONDA',models:[['PCX125',125],['FORZA350',350],['ADV350',350],['SUPER CUB110',110],['C125',125],['CT125',125],['MONKEY125',125],['CB125R',125],['CB650R',649],['CBR650R',649],['REBEL500',471]]},
  {id:'YAMAHA',label:'YAMAHA',models:[['NMAX125',125],['XMAX300',300],['XMAX125',125],['TMAX560',560],['MT-03',321],['MT-07',689],['YZF-R3',321],['TRICITY125',125]]},
  {id:'SUZUKI',label:'SUZUKI',models:[['BURGMAN125',125],['BURGMAN400',400],['ADDRESS125',125],['AVENIS125',125],['GSX-S125',125]]},
  {id:'KAWASAKI',label:'KAWASAKI',models:[['NINJA500',451],['Z500',451],['Z900',948]]},
@@ -21,7 +21,7 @@ const brands=[
 // A classification is not a physical dimension or an image scaling instruction.
 // Keep the standard garage asset unchanged until a model-specific graphic is available.
 const modelStyles=Object.freeze({
- HONDA:Object.freeze({'PCX125':'scooter-compact','FORZA350':'scooter-mid','ADV350':'scooter-adventure','SUPER CUB110':'underbone','C125':'underbone','CT125':'underbone-trail','CB125R':'naked-light','CB650R':'naked-mid','CBR650R':'sport-mid','REBEL500':'cruiser'}),
+ HONDA:Object.freeze({'PCX125':'scooter-compact','FORZA350':'scooter-mid','ADV350':'scooter-adventure','SUPER CUB110':'underbone','C125':'underbone','CT125':'underbone-trail','MONKEY125':'mini-bike','CB125R':'naked-light','CB650R':'naked-mid','CBR650R':'sport-mid','REBEL500':'cruiser'}),
  YAMAHA:Object.freeze({'NMAX125':'scooter-compact','XMAX300':'scooter-mid','XMAX125':'scooter-mid','TMAX560':'scooter-large','MT-03':'naked-light','MT-07':'naked-mid','YZF-R3':'sport-light','TRICITY125':'scooter-three-wheel'}),
  SUZUKI:Object.freeze({'BURGMAN125':'scooter-compact','BURGMAN400':'scooter-large','ADDRESS125':'scooter-compact','AVENIS125':'scooter-compact','GSX-S125':'naked-light'}),
  KAWASAKI:Object.freeze({'NINJA500':'sport-mid','Z500':'naked-mid','Z900':'naked-large'}),
