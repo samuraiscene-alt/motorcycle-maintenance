@@ -90,6 +90,14 @@ const modelFamilyPartEvidence=Object.freeze({
  'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
 });
 const verifiedPartApplicability=Object.freeze({
+ 'YAMAHA|XMAX125|2025':Object.freeze({source:"https://www.yamaha-motor.eu/kv/en/scooters/sport/pdp/xmax-125-2025/",region:'OEM model specification',cooling:'liquid',drive:'cvt',notes:"EU 2025 XMAX 125; automatic V-Belt transmission; confirm regional trim",unsupported:["chain-sprockets"]}),
+ 'YAMAHA|TRICITY125|2025':Object.freeze({source:"https://www.yamaha-motor.eu/gb/en/scooters/urban-mobility/pdp/tricity-125-abs/",region:'OEM model specification',cooling:'liquid',drive:'cvt',frontTyres:2,notes:"EU 2025 Tricity 125 ABS, TWO front tyres; independent left/right service history may be added later",unsupported:["chain-sprockets"]}),
+ 'SUZUKI|BURGMAN125|2026':Object.freeze({source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2026burgman-street-125ex/",region:'OEM model specification',cooling:'air',drive:'cvt',variantMatchRequired:true,notes:"Applies to Burgman Street 125EX; generic BURGMAN125 picker does not yet distinguish trim; no automatic exclusion",unsupported:[]}),
+ 'DUCATI|MONSTER|2025':Object.freeze({source:"https://www.ducati.com/us/en/bikes/monster/monster-937/insights",region:'OEM model specification',cooling:'liquid',drive:'chain',notes:"MY25 Monster 937cc. MY26 890cc changes; never extend this 2025 profile to 2026",unsupported:["drive-system-service","drive-belt","weights","slide-piece","gear-oil"]}),
+ 'SYM|JET X 125|2025':Object.freeze({source:"https://www.sym-global.com/jetx?engine=125cc",region:'OEM model specification',cooling:'liquid',drive:'cvt',notes:"SYM 2025 model catalogue JET X125, confirmed liquid cooling and CVT",unsupported:["chain-sprockets"]}),
+ 'SYM|JOYMAX|2025':Object.freeze({source:"https://www.sym-global.com/joymaxz300",region:'OEM model specification',cooling:'liquid',drive:'cvt',variantMatchRequired:true,notes:"JOYMAX Z300 specification, generic JOYMAX must identify Z300 trim before hiding parts",unsupported:[]}),
+ 'DNA MOTORS|UHR125|2025':Object.freeze({source:"https://www.dnamotors.co.kr/brand/scooter_UHR125",region:'OEM model specification',cooling:'liquid',drive:'unverified',notes:"Korean official UHR125 2025 product sheet confirms cooling, not final-drive method",unsupported:[]}),
+ 'ZONTES|125D|2025':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",region:'OEM model specification',cooling:'liquid',drive:'unverified',notes:"Korean Zontes 125D product, cooling confirmed; final drive is not explicitly specified",unsupported:[]}),
  'SUZUKI|AVENIS125|2024':Object.freeze({source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2024avenis125/",region:"Suzuki Global",cooling:'air',drive:'cvt',notes:"Global Suzuki 2024 Avenis125 technical specification, not maintenance schedule",unsupported:["coolant","chain-sprockets"]}),
  'SUZUKI|GSX-S125|2025':Object.freeze({source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2025gsx-s125/",region:"EU spec via Suzuki Global",cooling:'liquid',drive:'chain',notes:"Global Suzuki 2025 6-speed chain final-drive configuration; replacement cycles require owner manual",unsupported:["drive-system-service","drive-belt","weights","slide-piece","gear-oil"]}),
  'BMW|R1300GS|2025':Object.freeze({source:"https://www.bmw-motorrad.co.kr/ko/models/adventure/r1300gs/technicaldata.html",region:"KR model line (year mapping pending)",cooling:'mixed',drive:'shaft',notes:"Korean BMW model specification current family: Cardan shaft; 2025 model listing, drivetrain year-specific verification pending",unsupported:["chain-sprockets","drive-system-service","drive-belt","weights","slide-piece"]}),
@@ -127,6 +135,17 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'DUCATI|MONSTER|2025':Object.freeze({
+  verified:true,coverage:'partial',region:'US Monster 937 MY25',modelCode:'Monster 937',year:2025,
+  source:'https://www.ducati.com/us/en/bikes/monster/monster-937/insights',
+  sourceType:'Ducati Monster 937 MY25 manufacturer engine oil change and valve check guidance',
+  sourcePages:['Maintenance intervals','Testastretta 11 degrees'],
+  // Ducati confirms 15,000 km oil change and 30,000 km valve clearance check.
+  // 24 months is an overall SERVICE interval, not automatically an oil-change period.
+  intervals:Object.freeze({oil:15000,'valve-clearance':30000}),
+  tasks:Object.freeze({oil:{replaceKm:15000},'valve-clearance':{inspectKm:30000}}),
+  actionByPart:Object.freeze({'valve-clearance':'inspect'})
+ }),
  'HONDA|CB125R|2025':Object.freeze({
   verified:true,coverage:'partial',region:'HMEE CBF125NA 2025',modelCode:'CBF125NA',year:2025,
   source:'https://2rom-prd-data.hondamotopub.com/om/HMEE/CBF125NA%20%28CB125R%29/2025/CBF125NA-R_32K98B20_EN_WEB.pdf',
@@ -581,7 +600,11 @@ window.MotorcycleCatalog=Object.freeze({
  verifiedPartApplicability,
  modelFamilyPartEvidence,
  findModelFamilyPartEvidence(brand,model){return modelFamilyPartEvidence[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()]||null},
- findVerifiedPartApplicability(brand,model,year){return verifiedPartApplicability[profileKey(brand,model,year)]||null},
+ findVerifiedPartApplicability(brand,model,year){
+  const record=verifiedPartApplicability[profileKey(brand,model,year)]||null;
+  return record?.variantMatchRequired?null:record;
+ },
+ findPartEvidenceForYear(brand,model,year){return verifiedPartApplicability[profileKey(brand,model,year)]||null},
  getModelResearch(brand,model){return researchInventory.find(x=>x.brand===String(brand).trim().toUpperCase()&&x.model===String(model).trim().toUpperCase())||null},
  validateModelYear(brand,model,year){
   const first=knownFirstModelYears[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()];
