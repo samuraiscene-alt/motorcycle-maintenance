@@ -49,6 +49,15 @@ const brandLogos=Object.freeze({
  BMW:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_BMW_Motorrad_2021.svg',
  VESPA:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Vespa-logo.svg'
 });
+// Market-specific owner-manual listings. These are NOT global first-year restrictions
+// and may have gaps or variant differences. Do not feed them into year-picker bounds.
+const regionalManualYears=Object.freeze({
+ 'SUZUKI|GSX-S125':Object.freeze({region:'KR',from:2018,to:null,source:'https://www.suzuki.kr/manual1',note:'Korea manual list 2018 onward'}),
+ 'SUZUKI|BURGMAN400':Object.freeze({region:'KR',from:2022,to:null,source:'https://www.suzuki.kr/manual1',note:'KR manuals for 2022+; other country/model years existed earlier'}),
+ 'SUZUKI|AVENIS125':Object.freeze({region:'KR',from:2023,to:null,source:'https://www.suzuki.kr/manual1',note:'Korean listing 2023 onward'}),
+ 'SUZUKI|BURGMAN125':Object.freeze({region:'KR',from:2014,to:2021,source:'https://www.suzuki.kr/manual1',note:'KR Burgman125/200 2014-2021; 2024+ Street 125 EX is a distinct trim'}),
+ 'SUZUKI|ADDRESS125':Object.freeze({region:'KR',segments:Object.freeze([[2018,2021],[2026,null]]),source:'https://www.suzuki.kr/manual1',note:'KR manual listing 2018-2021 then 2026+; distinct generations'})
+});
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({
  'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024,'KAWASAKI|Z500':2024,'KAWASAKI|Z900':2017,'YAMAHA|NMAX125':2015,
@@ -147,6 +156,28 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'YAMAHA|MT-03|2021':Object.freeze({
+  verified:true,coverage:'partial',region:'US 2021 MT03N 321cc (cross-ref Korea listed 2021)',modelCode:'MT03N',year:2021,
+  source:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&offset=20&sk=&sw=',
+  sourceType:'Yamaha Korea MT-03 2021 official manual listing; 2021 MT03N owner manual pp7-4 to 7-6 for verified fluid/hose intervals',
+  sourcePages:['7-4','7-5','7-6'],
+  intervals:Object.freeze({}),
+  tasks:Object.freeze({
+   coolant:{replaceMonths:36},
+   'brake-fluid':{replaceMonths:24},
+   'brake-hose':{replaceMonths:48},
+   'chain-sprockets':{cleanKm:800}
+  }),
+  actionByPart:Object.freeze({'chain-sprockets':'clean'}),
+  notes:Object.freeze({
+   oil:'Oil change depends on indicator; do not invent mileage from generic Yamaha chart.',
+   'oil-filter':'Filter replacement table has uneven marks, no repeating numeric interval auto-filled.',
+   'chain-sprockets':'Clean/adjust/lubricate every 800km and after rain/washing; not a chain replacement interval.',
+   'brake-fluid':'Brake fluid changed every 2 years.',
+   'brake-hose':'Brake hose replaced every 4 years.',
+   coolant:'Coolant changed every 3 years.'
+  })
+ }),
  'KAWASAKI|NINJA500|2024':Object.freeze({
   verified:true,coverage:'partial',region:'KR EX500G/EX500J 2024 launch-generation',modelCode:'EX500G/EX500J',year:2024,
   source:"https://kawasakikorea.com/post_file_download.cm?c=YTo1OntzOjEwOiJib2FyZF9jb2RlIjtzOjIyOiJiMjAyMjA5MjBiZDU2MzQ5NjU2NGRlIjtzOjk6InBvc3RfY29kZSI7czoyMjoicDIwMjUwMTMxMjZlYWQ0NWY1OTk4NyI7czo5OiJmaWxlX2NvZGUiO3M6MjI6InAyMDI1MDEzMTRiNzIwNzRkNjYwMTUiO3M6MTk6InBvc3RfZG93bmxvYWRfdG9rZW4iO3M6MTM6IjY5ZTQ4ZTJkNDJhODUiO3M6MTE6Im1lbWJlcl9jb2RlIjtOO30%3D",
@@ -660,6 +691,7 @@ const researchInventory=Object.freeze(brands.flatMap(brand=>brand.models.map(([m
  return Object.freeze({brand:brand.id,model,verifiedYears:Object.freeze(years),manual,
   firstConfirmedYear:first,lastConfirmedYear:null,releaseSource:modelReleaseSources[key]||null,
   verifiedPartYears:Object.freeze(partYears),partEvidence:familyEvidence,
+  regionalManualYears:regionalManualYears[key]||null,
   generalServiceYears:Object.freeze(Object.keys(officialGeneralService).filter(x=>x.startsWith(key+'|')).map(x=>Number(x.slice(key.length+1))).filter(Number.isFinite).sort((a,b)=>a-b)),
   partsStatus:partYears.length?'verified-exact-year':familyEvidence?'family-reference-needs-year-check':'verification-pending',
   serviceStatus:years.length?'verified-exact-year':'verification-pending',
@@ -707,6 +739,7 @@ window.MotorcycleCatalog=Object.freeze({
  brandLogos,
  knownFirstModelYears,
  modelReleaseSources,
+ regionalManualYears,
  officialGeneralService,
  findGeneralService(brand,model,year){return officialGeneralService[profileKey(brand,model,year)]||null},
  verifiedPartApplicability,
