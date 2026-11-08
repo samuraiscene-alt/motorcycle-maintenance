@@ -65,6 +65,7 @@ const knownFirstModelYears=Object.freeze({
 });
 // These source-verified model introductions are not claims of availability in every market.
 const modelReleaseSources=Object.freeze({
+ 'HONDA|MONKEY125':'https://www.honda.co.jp/Monkey125/',
  'VESPA|PRIMAVERA125':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
  'VESPA|SPRINT125':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
  'VESPA|GTS300':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
@@ -99,6 +100,12 @@ const modelFamilyPartEvidence=Object.freeze({
  'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
 });
 const verifiedPartApplicability=Object.freeze({
+ 'HONDA|MONKEY125|2026':Object.freeze({
+  source:'https://www.honda.co.jp/Monkey125/',
+  region:'JP 2026 8BJ-JB05 (JB05-1100001 onwards)',cooling:'air',drive:'chain',
+  notes:'Honda Japan 2026 specification air-cooled engine, external chain, replaceable element-type oil filter',
+  unsupported:['coolant','drive-system-service','drive-belt','weights','slide-piece','gear-oil']
+ }),
  'DUCATI|MONSTER|2026':Object.freeze({
   source:'https://www.ducati.com/us/en/bikes/monster/monster-v2',
   region:'US MY2026 V2 890cc',cooling:'liquid',drive:'chain',
@@ -156,6 +163,24 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'HONDA|MONKEY125|2026':Object.freeze({
+  verified:true,coverage:'partial',region:'JP 8BJ-JB05 (JB05-1100001 onwards)',modelCode:'JB05',year:2026,
+  source:'https://www.honda.co.jp/customer/motor/monkey125/faq/qa009/',
+  sourceType:'Honda Japan 2026 Monkey125 model-specific FAQ qa009 engine oil and qa010 oil-filter replacement',
+  sourcePages:['Honda JP qa009','Honda JP qa010'],
+  intervals:Object.freeze({oil:3000,'oil-filter':12000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:3000,firstReplaceKm:1000,firstRegularOdometerKm:4000,replaceMonths:12,firstReplaceMonths:1},
+   'oil-filter':{replaceKm:12000,firstReplaceKm:13000,firstRegularOdometerKm:25000}
+  }),
+  specs:Object.freeze({oilChangeLiters:0.9,oilTotalLiters:1.05,chainSlackMillimeters:[30,40],frontTyreKpa:200,rearTyreKpa:200}),
+  notes:Object.freeze({
+   oil:'First oil change 1000km or 1 month, then every 3000km or 1 year. First 1-month clock is a manufacturer note until first-time date alert is implemented.',
+   'oil-filter':'First oil filter change at 13000km then every 12000km; do NOT interpret as a 12000km first change.',
+   'chain-sprockets':'Chain slack 30–40mm; daily check, no 1000km periodic replacement is specified.',
+   sparkPlug:'NGK CPR7EA-9S (model-specific part, not verified replacement cycle).'
+  })
+ }),
  'YAMAHA|MT-03|2021':Object.freeze({
   verified:true,coverage:'partial',region:'US 2021 MT03N 321cc (cross-ref Korea listed 2021)',modelCode:'MT03N',year:2021,
   source:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&offset=20&sk=&sw=',
