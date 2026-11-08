@@ -996,6 +996,34 @@ const canonicalOfficialProfiles=Object.freeze(Object.fromEntries(
    actionByPart:Object.freeze(actionByPart)})];
  })
 ));
+// Practical service-cycle inheritance: approximately five nearby model years.
+// Exact manufacturer records always win. Derived values are estimates, never
+// presented as an official manual for the requested year.
+const approximateFiveYearProfile=(brand,model,year)=>{
+ const target=Number(year);
+ if(!Number.isSafeInteger(target)||target<1990||target>2100)return null;
+ const key=[String(brand).trim().toUpperCase(),String(model).trim().toUpperCase()].join('|');
+ const matches=Object.entries(canonicalOfficialProfiles)
+  .filter(([id,p])=>id.startsWith(key+'|')&&p?.verified===true&&p.source&&
+    Array.isArray(Object.keys(p.tasks||{}))&&Object.keys(p.tasks||{}).length>0)
+  .map(([id,p])=>({year:Number(id.split('|')[2]),profile:p}))
+  .filter(x=>Number.isSafeInteger(x.year)&&Math.abs(x.year-target)<=4)
+  .sort((a,b)=>Math.abs(a.year-target)-Math.abs(b.year-target)||b.year-a.year);
+ if(!matches.length)return null;
+ const chosen=matches[0];
+ // If adjacent manuals describe different engines/model generations, refuse
+ // to pick one silently. Region ambiguity remains explicitly identified.
+ const familyCode=p=>String(p.modelCode||'').trim().toUpperCase();
+ const code=familyCode(chosen.profile);
+ if(matches.some(x=>x.year!==chosen.year && familyCode(x.profile)!==code))return null;
+ const first=knownFirstModelYears[key];
+ if(Number.isSafeInteger(first)&&target<first)return null;
+ return Object.freeze({...chosen.profile,year:target,
+  inheritedServiceCycle:true,sourceYear:chosen.year,
+  regionalApplicabilityUnverified:true,
+  coverage:'estimated-nearby-model-year',
+  inheritanceNote:'제조사 '+chosen.year+'년 자료를 가까운 연식에 참고 적용한 값. 엔진·구동계·국내 사양이 다르면 수정 필요.'});
+};
 const profileKey=(brand,model,year)=>[String(brand).trim().toUpperCase(),String(model).trim().toUpperCase(),String(year)].join('|');
 window.MotorcycleCatalog=Object.freeze({
  brands,
@@ -1039,6 +1067,10 @@ window.MotorcycleCatalog=Object.freeze({
  findOfficialProfile(brand,model,year){
   const value=canonicalOfficialProfiles[profileKey(brand,model,year)];
   return value&&value.verified===true&&value.source?value:null;
+ },
+ findMaintenanceProfile(brand,model,year){
+  const exact=this.findOfficialProfile(brand,model,year);
+  return exact||approximateFiveYearProfile(brand,model,year);
  }
 });
 })();
