@@ -732,6 +732,8 @@ else{
   const calculated=resolveServiceCycleDetails(settings,action,last,defaultInterval,officialDefault);
   let origin=calculated.origin,label={user:'사용자 설정',official:'제조사 공식',record:'정비기록 기준',legacy:'기존 설정 · 출처 미확인',default:'앱 기본값'}[origin];
   if(interval<=0&&!last&&calendar){origin='official';label='제조사 공식 · 기간 기준'}
+  if(origin==='official'&&profile?.regionalApplicabilityUnverified===true)
+   label='2026 혼다 해외형 참고 · 국내형 확인 필요';
   sourceTag.dataset.source=origin;
   const hasKnownCycle=interval>0||!!calendar;
   sourceTag.hidden=!hasKnownCycle||origin==='unknown';
