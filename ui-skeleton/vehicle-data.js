@@ -513,6 +513,7 @@ const vehicleArtwork=Object.freeze({
  'HONDA|CB650R|2024':{src:'./honda-cb650r-studio.png?v=116',alt:'Honda CB650R 2024 고화질 스튜디오 참고 이미지'},
  'HONDA|FORZA350|2025':{src:'./honda-forza350-studio.png?v=117',alt:'Honda Forza350 2025 고화질 스튜디오 참고 이미지'},
  'HONDA|FORZA350|2022':{src:'./honda-forza350-2022-studio.png?v=118',alt:'Honda Forza350 2022 디자인 세대 고화질 참고 이미지'},
+ 'ZONTES|125G1|2025':{src:'../zontes-125g1-studio.png?v=137',alt:'Zontes 125G1 독립 AI 제작 이미지 · 연식별 외형 차이 가능'},
  'KAWASAKI|NINJA500|2025':{src:'../NINJA500_GitHub_Upload.png?v=134',alt:'Kawasaki Ninja 500 2025 전용 AI 제작 스튜디오 이미지'},
  'KAWASAKI|Z900|2025':{src:'./kawasaki-z900-2025-studio.png?v=119',alt:'Kawasaki Z900 2025 AI 제작 고화질 참고 이미지'},
  'KAWASAKI|Z900|2024':{src:'./kawasaki-z900-2024-studio.png?v=124',alt:'Kawasaki Z900 2024 전용 AI 참고 이미지'},
@@ -527,7 +528,9 @@ const vehicleArtwork=Object.freeze({
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
 const modelYear=Number(r?.year);
-const generationArt=maker==='KAWASAKI'&&normalizedModel==='NINJA500'&&modelYear>=2024&&modelYear<=2026
+const generationArt=maker==='ZONTES'&&normalizedModel==='125G1'&&modelYear>=2020&&modelYear<=2026
+ ?vehicleArtwork['ZONTES|125G1|2025']
+ :maker==='KAWASAKI'&&normalizedModel==='NINJA500'&&modelYear>=2024&&modelYear<=2026
  ?vehicleArtwork['KAWASAKI|NINJA500|2025']
  :maker==='HONDA'&&normalizedModel==='MONKEY125'&&modelYear>=2018&&modelYear<=2026
  ?vehicleArtwork['HONDA|MONKEY125|2025']
@@ -570,7 +573,7 @@ const garageModelImage=activeArt.src;
 // Reference lengths: 2023 PCX125 1935mm; 2021 CB125R 2015mm.
 // An image-height correction keeps their projected lengths approximately proportional.
 const artSizeKey=maker+'|'+normalizedModel;
-const artHeightByModel={'HONDA|PCX125':'75%','HONDA|MONKEY125':'67%','HONDA|CT125':'85%','HONDA|CB125R':'87%','HONDA|CB650R':'89%','HONDA|FORZA350':'86%','KAWASAKI|NINJA500':'84%','KAWASAKI|Z900':'88%','YAMAHA|NMAX125':'77%','YAMAHA|XMAX300':'86%','YAMAHA|XMAX125':'85%','YAMAHA|TMAX560':'89%','SUZUKI|BURGMAN125':'76%','SUZUKI|BURGMAN400':'89%','DNA MOTORS|UHR125':'78%'};
+const artHeightByModel={'HONDA|PCX125':'75%','HONDA|MONKEY125':'67%','HONDA|CT125':'85%','HONDA|CB125R':'87%','HONDA|CB650R':'89%','HONDA|FORZA350':'86%','ZONTES|125G1':'85%','KAWASAKI|NINJA500':'84%','KAWASAKI|Z900':'88%','YAMAHA|NMAX125':'77%','YAMAHA|XMAX300':'86%','YAMAHA|XMAX125':'85%','YAMAHA|TMAX560':'89%','SUZUKI|BURGMAN125':'76%','SUZUKI|BURGMAN400':'89%','DNA MOTORS|UHR125':'78%'};
 centeredBike.style.setProperty('--bike-art-height',artHeightByModel[artSizeKey]||'87%');
 bikeContactShadow.hidden=!!xmaxRequested;
 centeredBike.dataset.modelSize=artSizeKey;
