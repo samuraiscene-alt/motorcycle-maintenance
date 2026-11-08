@@ -1,6 +1,6 @@
 {
-  "version": "2.9.143",
-  "cache": "motorcycle-maintenance-v2.9.143",
+  "version": "2.9.144",
+  "cache": "motorcycle-maintenance-v2.9.144",
   "released": "2026-11-08",
-  "note": "44기종 조사 관리 항목 확장, 공식 기술자료로 확인한 15개 모델 연식의 구동계·냉각계 부품 구성 연결"
+  "note": "야마하 TMAX560 2025·2026 및 스즈키 BURGMAN400 현재 공식 카탈로그 구동계·냉각계 조사 연결"
 }
