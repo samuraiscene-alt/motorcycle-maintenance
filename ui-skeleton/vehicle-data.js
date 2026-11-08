@@ -668,6 +668,13 @@ brand.setAttribute('aria-label',maker||'제조사 미정');
 counter.textContent=isLocked()?'':bikes.map((_,i)=>i===index?'●':'○').join(' ');document.body.classList.toggle('vehicle-locked',isLocked());stage.setAttribute('aria-label',isLocked()?'등록된 내 오토바이 이미지':'오토바이 이미지: 좌우 스와이프로 차량 선택');document.body.dataset.activeBike=b.id;renderParts();document.dispatchEvent(new CustomEvent('motorcycle:change',{detail:{bikeId:b.id}}))}
 function renderParts(){const reg=currentRegistration(),odo=getOdometer(),data=getVehicleData(currentBike().id);
 document.querySelectorAll('.part:not(.part-add-card)').forEach((row,i)=>{const id=row.dataset.partId||items[i]?.id;const item=items.find(x=>x.id===id)||{id,interval:Number(row.dataset.interval)||0};if(!id)return;const records=data.records&&Array.isArray(data.records[item.id])?data.records[item.id]:[];
+ // Hide only confirmed absent factory parts; preserve user-added parts and existing history.
+ const verifiedParts=reg?window.MotorcycleCatalog?.findVerifiedPartApplicability(reg.brand,reg.model,reg.year):null;
+ const cfg=reg?partSettings(currentBike().id,id):{};
+ const userConfigured=Object.keys(cfg).some(k=>k.endsWith('Source')&&cfg[k]==='user');
+ const excluded=!!verifiedParts?.unsupported?.includes(id)&&!row.classList.contains('custom-part')&&!records.length&&!userConfigured;
+ row.hidden=excluded;row.style.display=excluded?'none':'';
+ if(excluded)return;
 const action=partAction(reg,id);
 const usable=records.filter(record=>record&&valid(record.at)&&valid(record.interval)&&record.at<=odo&&(record.action||'replace')===action);
 const last=usable.length?[...usable].sort((a,b)=>a.at-b.at||String(a.date||'').localeCompare(String(b.date||'')))[usable.length-1]:null;
