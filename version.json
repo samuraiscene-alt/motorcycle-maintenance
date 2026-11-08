@@ -1,6 +1,6 @@
 {
-  "version": "2.9.155",
-  "cache": "motorcycle-maintenance-v2.9.155",
+  "version": "2.9.156",
+  "cache": "motorcycle-maintenance-v2.9.156",
   "released": "2026-11-08",
-  "note": "BMW G310R 2020 중복 정비표 제거 및 공식 항목 정정, YAMAHA NMAX125 2015 제조사 정비표 실제 주기 연결"
+  "note": "가와사키 NINJA500 2024 한국어 공식매뉴얼 체인·냉각수·브레이크 교환주기 일부 적용; Ducati Monster 937/890 정기 서비스 구분"
 }
