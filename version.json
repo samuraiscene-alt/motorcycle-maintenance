@@ -1,6 +1,6 @@
 {
-  "version": "2.9.138",
-  "cache": "motorcycle-maintenance-v2.9.138",
+  "version": "2.9.139",
+  "cache": "motorcycle-maintenance-v2.9.139",
   "released": "2026-11-08",
-  "note": "ZONTES 125G1·125D 개별 PNG 연결, 125D 신규 등록, 홈화면 업데이트 캐시 갱신"
+  "note": "차량별 고정 호차 번호·선택 별명 표시, 동일 기종 복수 등록 구분, 정비기록 유지"
 }
