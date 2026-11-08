@@ -9,6 +9,7 @@ on:
       - '*.png'
       - 'vehicle-art-inventory.json'
       - 'tools/validate_vehicle_assets.py'
+      - 'tools/check_catalog_integrity.cjs'
       - '.github/workflows/validate-motorcycle-assets.yml'
   pull_request:
     paths:
@@ -42,5 +43,7 @@ jobs:
         run: |
           node --check ui-skeleton/vehicle-catalog.js
           node --check ui-skeleton/vehicle-data.js
+      - name: Check manufacturer catalog and official year isolation
+        run: node tools/check_catalog_integrity.cjs
       - name: Parse inventory JSON
         run: python -m json.tool vehicle-art-inventory.json > /dev/null
