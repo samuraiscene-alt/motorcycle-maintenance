@@ -1,6 +1,6 @@
 {
-  "version": "2.9.166",
-  "cache": "motorcycle-maintenance-v2.9.166",
+  "version": "2.9.167",
+  "cache": "motorcycle-maintenance-v2.9.167",
   "released": "2026-11-08",
-  "note": "Honda CB125R JP JC91 2024 공식 오일 교체주기/용량 및 Suzuki Address125 2025 유럽 사양의 앞뒤 타이어·브레이크 구성 연결"
+  "note": "Suzuki Address125 2025 일본형과 유럽형 기술자료 중복키 수정, 지역별 별도 사양 보관; 기존 사용자 등록·정비주기 보호"
 }
