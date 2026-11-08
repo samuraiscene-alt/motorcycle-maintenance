@@ -672,7 +672,8 @@ document.querySelectorAll('.part:not(.part-add-card)').forEach((row,i)=>{const i
  const verifiedParts=reg?window.MotorcycleCatalog?.findVerifiedPartApplicability(reg.brand,reg.model,reg.year):null;
  const cfg=reg?partSettings(currentBike().id,id):{};
  const userConfigured=Object.keys(cfg).some(k=>k.endsWith('Source')&&cfg[k]==='user');
- const excluded=!!verifiedParts?.unsupported?.includes(id)&&!row.classList.contains('custom-part')&&!records.length&&!userConfigured;
+ const absent=verifiedParts?.unsupported?.includes(id)||verifiedParts?.drive==='chain'&&id==='gear-oil';
+ const excluded=!!absent&&!row.classList.contains('custom-part')&&!records.length&&!userConfigured;
  row.hidden=excluded;row.style.display=excluded?'none':'';
  if(excluded)return;
 const action=partAction(reg,id);
