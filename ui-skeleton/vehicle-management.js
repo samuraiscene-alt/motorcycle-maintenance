@@ -216,6 +216,9 @@ function describeYear(form){
 section.querySelector('.fleet-appearance-form').elements.year.addEventListener('input',e=>describeYear(e.target.form));
 function refresh(){
  const regs=parse(REG),db=parse(DATA),selected=localStorage.getItem(SEL);
+ const modelKey=r=>(String(r.brand||'').trim().toUpperCase()+'|'+String(r.model||'').trim().toUpperCase())||String(r.name||'').trim().toUpperCase();
+ const modelCounts=new Map();
+ for(const r of Object.values(regs)){if(!r||typeof r!=='object')continue;const key=modelKey(r);modelCounts.set(key,(modelCounts.get(key)||0)+1)}
  const appearanceForm=section.querySelector('.fleet-appearance-form'),activeReg=regs[selected];
  section.querySelector('.fleet-appearance').hidden=!activeReg;
  if(activeReg){appearanceForm.elements.year.value=activeReg.year||'';describeYear(appearanceForm)}
@@ -227,7 +230,7 @@ function refresh(){
   title.textContent=name;
    const identity=document.createElement('div');identity.className='fleet-identity';
    const number=document.createElement('span');number.className='fleet-identity-badge';number.textContent=(Number.isSafeInteger(r.fleetNumber)&&r.fleetNumber>0?r.fleetNumber:'?')+'호차';
-   identity.appendChild(number);
+   if((modelCounts.get(modelKey(r))||0)>1)identity.appendChild(number);
    if(r.alias){const alias=document.createElement('span');alias.className='fleet-identity-alias';alias.textContent=String(r.alias).slice(0,24);identity.appendChild(alias)}
    if(r.year){const year=document.createElement('span');year.className='fleet-identity-alias';year.textContent=String(r.year)+'년형';identity.appendChild(year)}
    const odo=db[id]?.odometer??r.km??0;
