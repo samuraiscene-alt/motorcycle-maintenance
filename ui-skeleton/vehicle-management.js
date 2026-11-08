@@ -56,6 +56,14 @@ if(Array.isArray(catalog?.researchInventory)){
    status.textContent=row.verifiedYears.length?'검증된 연식 '+row.verifiedYears.join(', '):
     row.manual?'제조사 자료 발견 · 주기 미확인':'공식 주기 확인 필요';
    line.appendChild(status);
+   if(row.publishedServiceVisitYears?.length){
+    const schedule=catalog.findPublishedServiceVisits(row.brand,row.model,row.publishedServiceVisitYears[0]);
+    if(schedule){
+     const note=document.createElement('small');note.style.display='block';
+     note.textContent='제조사 '+schedule.year+'년형 정기 방문 일정: '+schedule.visitKm.map(km=>km.toLocaleString('ko-KR')).join('·')+'km (부품별 교체주기 아님)';
+     line.appendChild(note);
+    }
+   }
    if(row.generalServiceYears?.length){
     const general=catalog.findGeneralService(row.brand,row.model,row.generalServiceYears[0]);
     const notice=document.createElement('small');notice.style.display='block';
