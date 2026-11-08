@@ -65,6 +65,10 @@ const modelReleaseSources=Object.freeze({
 });
 // Exact-year OEM technical specifications: physical part presence, NOT a maintenance-cycle assertion.
 const verifiedPartApplicability=Object.freeze({
+ 'YAMAHA|TMAX560|2026':Object.freeze({source:'https://www.yamaha-motor.eu/kv/en/scooters/sport/pdp/tmax/',region:'EU',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']}),
+ 'YAMAHA|TMAX560|2025':Object.freeze({source:'https://www.yamaha-motor.eu/cy/en/scooters/sport/pdp/tmax-2025/',region:'EU',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']}),
+ 'SUZUKI|BURGMAN400|2026':Object.freeze({source:'https://bikes.suzuki.co.uk/bikes/scooter/burgman-400/specs/',region:'UK',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']}),
+
  // Verified factory physical equipment; NOT permission to invent maintenance mileage.
  'HONDA|PCX125|2025':Object.freeze({source:'https://hondanews.eu/eu/en/motorcycles/media/pressreleases/503766/25ym-honda-pcx125-press-kit',region:'OEM published spec',cooling:'liquid',drive:'cvt',unsupported:["chain-sprockets"]}),
  'HONDA|FORZA350|2025':Object.freeze({source:'https://hondanews.eu/eu/lv/motorcycles/media/pressreleases/492951/25ym-honda-forza-350-press-kit',region:'OEM published spec',cooling:'liquid',drive:'cvt',unsupported:["chain-sprockets"]}),
