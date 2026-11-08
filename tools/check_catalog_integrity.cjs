@@ -143,4 +143,12 @@ assert.match(htmlSource,/\.vehicle-lines\{position:absolute;[^}]*pointer-events:
  'header must accept pointer events; the old pointer-events:none broke iPhone swiping');
 assert.match(htmlSource,/\.vehicle-lines\{position:absolute;[^}]*touch-action:pan-y/,
  'allow vertical scroll while recognizing horizontal header swipes');
+assert.ok(vehicleSource.includes('if(isLocked())return;const blocked='),
+  'registered motorcycles should not drag the legacy demo showroom track');
+assert.ok(vehicleSource.includes('if(isLocked()){if(Math.abs(delta)>=50'),
+  'garage swipe must use registered-bike switcher rather than locked demo change()');
+assert.ok(vehicleSource.includes('switchOwnedVehicle(delta<0?1:-1)'),
+  'garage horizontal swipe should switch in correct direction');
+assert.ok(vehicleSource.includes('if(isLocked())switchOwnedVehicle(1);else change(index+1)'),
+  'keyboard arrow should switch registered motorcycles too');
 console.log('PASS: ' + pairs.length + ' models, ' + keys.length + ' exact-year official profiles for ' + modelSet.size + ' models; regional isolation verified');
