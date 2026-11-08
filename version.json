@@ -1,6 +1,6 @@
 {
-  "version": "2.9.173",
-  "cache": "motorcycle-maintenance-v2.9.173",
+  "version": "2.9.174",
+  "cache": "motorcycle-maintenance-v2.9.174",
   "released": "2026-11-08",
-  "note": "상단 차량 이름 스와이프 불가 원인(pointer-events:none) 수정, 터치 입력 허용·회귀 테스트 추가"
+  "note": "정비소 오토바이 그림 좌우 스와이프 및 키보드 화살표로 소유 차량 전환; 기존 상단 전환 함수·기록 유지"
 }
