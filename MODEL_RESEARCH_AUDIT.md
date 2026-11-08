@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44기종 제조사 기술자료 및 공식 정비주기 조사표
 
-기준일: 2026-11-08 · 앱 v2.9.166
+기준일: 2026-11-08 · 앱 v2.9.167
 
 **기술자료 연결과 정비주기 확인은 다르다.** '검증'은 각 해당 연식·국가·세부모델에만 해당하며, 공식 정비주기가 일부만 검증된 모델도 있다. 출시·단종 연도는 공식적으로 뒷받침되는 경우에만 표기한다. 트림을 정확히 알 수 없는 기종은 기존 사용자 정비 데이터를 보존하고 자동 숨김을 적용하지 않는다.
 
@@ -105,3 +105,7 @@ Japan 8BJ-JC91 frame JC91-1100001+: 2024 CB125R engine oil 1.4L at routine chang
 ## Suzuki Address125 MY2025 UZ125NEWM6 EU specification
 
 Suzuki official global MY2025 product page shows 124cc SOHC air-cooled engine, CVT, front disc/rear drum CBS, front tyre 90/90-12 and rear 90/100-10. OEM physical parts only; oil replacement interval and other schedules not inferred. Manufacturer: https://www.globalsuzuki.com/motorcycle/smgs/products/2025address125/
+
+### Suzuki Address125 2025 지역별 구분 수정
+
+일본 `8BJ-EN11J` 자료와 EU `UZ125NEWM6` 자료는 같은 `SUZUKI|ADDRESS125|2025` 키에 중복 저장하면 뒤의 자료가 앞의 자료를 덮어쓴다. EU 세부 사양은 `SUZUKI|ADDRESS125|2025|EU-UZ125NEWM6` 독립 레코드로 보관했다. 등록 화면이 일본형/유럽형 선택 기능을 갖추기 전까지 EU 타이어·브레이크 상세 사양은 일반 2025 Address125에 자동 반영하지 않는다.
