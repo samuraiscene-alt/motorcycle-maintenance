@@ -507,8 +507,8 @@ const sourceAudit=Object.freeze({
  'YAMAHA|YZF-R3':Object.freeze({year:2021,url:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&idx=48&mode=view&offset=20&sk=&sw=',type:'Yamaha Korea 2021 owner manual'}),
  'YAMAHA|MT-07':Object.freeze({year:2021,url:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&idx=44&mode=view&offset=20&sk=&sw=',type:'Yamaha Korea 2021 owner manual'}),
  'YAMAHA|TMAX560':Object.freeze({year:2022,url:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&offset=20&sk=&sw=',type:'Yamaha Korea 2022–2024 owner manual listing'}),
- 'KAWASAKI|NINJA500':Object.freeze({year:2025,url:'https://www.kawasaki.com/en-us/owner-center/service-manuals/2025/EX500HSFNL',type:'Kawasaki US 2025 owner manual listing'}),
- 'KAWASAKI|Z500':Object.freeze({year:2024,url:'https://www.kawasaki.com/en-us/owner-center/service-manuals/2024/ER500ERFNL',type:'Kawasaki US 2024 owner manual listing'}),
+ 'KAWASAKI|NINJA500':Object.freeze({year:2024,url:'https://kawasakikorea.com/ownersmanual',type:'Kawasaki Korea Korean-language Ninja 500 2024+ owner manual; maintenance chart requires row-by-row verification'}),
+ 'KAWASAKI|Z500':Object.freeze({year:2024,url:'https://www.kawasaki.com/en-us/owner-center/service-manuals/2024/ER500ERFNL',type:'Kawasaki US 2024 owner manual listing; Malaysia service package is market-specific, not auto-applied'}),
  'KAWASAKI|Z900':Object.freeze({year:2025,url:'https://www.kawasaki.com/en-us/owner-center/service-manuals/2025/ZR900SSFAL',type:'Kawasaki US 2025 owner manual listing'}),
  'TRIUMPH|SPEED400':Object.freeze({year:2024,url:'https://www.triumphmotorcycles.com/for-the-ride/news/motorcycles/t-series-q-and-a-2024-03-28',type:'Triumph T-Series official general service interval 16000 km or 12 months; not a part schedule'})
 });
