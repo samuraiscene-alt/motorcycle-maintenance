@@ -1,6 +1,6 @@
 {
-  "version": "2.9.132",
-  "cache": "motorcycle-maintenance-v2.9.132",
+  "version": "2.9.133",
+  "cache": "motorcycle-maintenance-v2.9.133",
   "released": "2026-11-08",
-  "note": "업데이트 완료 체크 표시와 버전 확인 및 실패 안내 강화; 기존 차량·정비 데이터 유지"
+  "note": "HONDA MONKEY125 차량 목록 추가 및 전용 이미지 경로 준비, 소형 차체 비율 적용"
 }
