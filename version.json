@@ -1,6 +1,6 @@
 {
-  "version": "2.9.142",
-  "cache": "motorcycle-maintenance-v2.9.142",
+  "version": "2.9.143",
+  "cache": "motorcycle-maintenance-v2.9.143",
   "released": "2026-11-08",
-  "note": "베스파 4기종 제조사 확인 최초연식 제한 및 공식 기술사양 기반 부품 구성 1차 반영"
+  "note": "44기종 조사 관리 항목 확장, 공식 기술자료로 확인한 15개 모델 연식의 구동계·냉각계 부품 구성 연결"
 }
