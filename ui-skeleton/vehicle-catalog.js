@@ -90,6 +90,12 @@ const modelFamilyPartEvidence=Object.freeze({
  'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
 });
 const verifiedPartApplicability=Object.freeze({
+ 'DUCATI|MONSTER|2026':Object.freeze({
+  source:'https://www.ducati.com/us/en/bikes/monster/monster-v2',
+  region:'US MY2026 V2 890cc',cooling:'liquid',drive:'chain',
+  notes:'2026 fifth-generation 890cc V2, NOT 2025 Testastretta 937cc',
+  unsupported:['drive-system-service','drive-belt','weights','slide-piece','gear-oil']
+ }),
  'BMW|G310R|2020':Object.freeze({source:"https://manuals.bmw-motorrad.com/manuals/BA-Extern/IN/BA-INTERNET-COM/PDF/G_0G43_RM_0320_07.pdf",region:"US 2020",cooling:'liquid',drive:'chain',notes:"BMW G 310 R US MY2020 riders manual explicitly documents coolant and chain; other MY require manual",unsupported:["drive-system-service","drive-belt","weights","slide-piece","gear-oil"]}),
  'SYM|JET14|2025':Object.freeze({source:"https://www.sym-global.com/jet14evo?engine=125cc",region:"OEM specific variant",cooling:'varies',drive:'cvt',variantMatchRequired:true,notes:"SYM 2025 catalogue lists JET14 EVO air-cooled and liquid-cooled variants; generic JET14 registration cannot choose trim",unsupported:[]}),
  'KYMCO|DOWNTOWN|2015':Object.freeze({source:"https://www.kymco.com/product/downtown-350i-tcs",region:"OEM specific variant",cooling:'liquid',drive:'cvt',variantMatchRequired:true,notes:"Downtown 350i TCS 320.6cc product family, generic DOWNTOWN needs trim/year validation",unsupported:[]}),
@@ -141,14 +147,23 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'DUCATI|MONSTER|2026':Object.freeze({
+  verified:true,coverage:'partial',region:'US MY2026 890cc V2',modelCode:'Monster V2 890',year:2026,
+  source:'https://www.ducati.com/us/en/bikes/monster/monster-v2',
+  sourceType:'Ducati official MY26 Monster V2 890 oil-service / valve-check spec',
+  sourcePages:['Oil Service','Valve Clearance Check'],
+  intervals:Object.freeze({oil:15000,'valve-clearance':45000}),
+  tasks:Object.freeze({oil:{replaceKm:15000,replaceMonths:24},'valve-clearance':{inspectKm:45000}}),
+  actionByPart:Object.freeze({'valve-clearance':'inspect'})
+ }),
  'ZONTES|125G1|2024':Object.freeze({
   verified:true,coverage:'partial',region:'KR ZT125-G1/U1/GK shared manual, MY2024',modelCode:'ZT125-G1',year:2024,
   source:'https://www.zontes.co.kr/home/wp-content/uploads/mangboard/2024/08/28/F20_ZT125-G1%2C%20ZT125-U1%2C%20ZT125-GK%20%EC%82%AC%EC%9A%A9%EC%84%A4%EB%AA%85%EC%84%9C.pdf',
   sourceType:'Zontes Korea official combined 125G1 owner manual, maintenance chart page 24',
   sourcePages:[24],
-  intervals:Object.freeze({filter:10000,'oil-filter':10000,coolant:30000}),
+  intervals:Object.freeze({'air-filter':10000,'oil-filter':10000,coolant:30000}),
   tasks:Object.freeze({
-   filter:{inspectKm:5000,replaceKm:10000},
+   'air-filter':{inspectKm:5000,replaceKm:10000},
    'oil-filter':{replaceKm:10000,firstReplaceKm:1000,firstRegularOdometerKm:10000},
    coolant:{replaceKm:30000,replaceMonths:36},
    'spark-plug':{inspectKm:10000}
