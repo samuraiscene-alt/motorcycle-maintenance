@@ -48,7 +48,7 @@ const brandLogos=Object.freeze({
  VESPA:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Vespa-logo.svg'
 });
 // Known release-year restrictions: do not infer model years from the model name.
-const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022});
+const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024});
 const officialProfiles=Object.freeze({
  'HONDA|CB125R|2025':Object.freeze({
   verified:true,coverage:'partial',region:'HMEE CBF125NA 2025',modelCode:'CBF125NA',year:2025,
