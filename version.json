@@ -1,6 +1,6 @@
 {
-  "version": "2.9.154",
-  "cache": "motorcycle-maintenance-v2.9.154",
+  "version": "2.9.155",
+  "cache": "motorcycle-maintenance-v2.9.155",
   "released": "2026-11-08",
-  "note": "BMW G310R 2020 공식 138쪽 정비표 부품별 주기 반영, Triumph SPEED400 정기 서비스는 별도 참조값으로 표시"
+  "note": "BMW G310R 2020 중복 정비표 제거 및 공식 항목 정정, YAMAHA NMAX125 2015 제조사 정비표 실제 주기 연결"
 }
