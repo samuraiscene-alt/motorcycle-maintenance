@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44기종 제조사 기술자료 및 공식 정비주기 조사표
 
-기준일: 2026-11-08 · 앱 v2.9.168
+기준일: 2026-11-08 · 앱 v2.9.169
 
 **기술자료 연결과 정비주기 확인은 다르다.** '검증'은 각 해당 연식·국가·세부모델에만 해당하며, 공식 정비주기가 일부만 검증된 모델도 있다. 출시·단종 연도는 공식적으로 뒷받침되는 경우에만 표기한다. 트림을 정확히 알 수 없는 기종은 기존 사용자 정비 데이터를 보존하고 자동 숨김을 적용하지 않는다.
 
@@ -28,7 +28,7 @@
 | SUZUKI | BURGMAN125 | 2024, 2026 | 트림 확인 전 보류 · 트림 보류 2024, 2026 | 미검증 | 2014~2021 | 미검증 | 미검증 | [부품 사양](https://www.globalsuzuki.com/motorcycle/smgs/products/2026burgman-street-125ex/) |
 | SUZUKI | BURGMAN400 | 2026 | 확인 연식만 | 미검증 | 2022~현재 | 미검증 | 미검증 | [부품 사양](https://bikes.suzuki.co.uk/bikes/scooter/burgman-400/specs/) |
 | SUZUKI | ADDRESS125 | 2025 | 확인 연식만 | 미검증 | 2018~2021, 2026~현재 | 미검증 | 미검증 | [부품 사양](https://www1.suzuki.co.jp/motor/lineup/files/pdf/uz125neym6.pdf) |
-| SUZUKI | AVENIS125 | 2024 | 확인 연식만 | 미검증 | 2023~현재 | 미검증 | 미검증 | [부품 사양](https://www.globalsuzuki.com/motorcycle/smgs/products/2024avenis125/) |
+| SUZUKI | AVENIS125 | 2024 | 확인 연식만 | 2023 | 2023~현재 | 미검증 | 미검증 | [국내형 정비표](https://www.suzuki.kr/download.cm?tk=YToyOntpOjA7czoxMzoiNDQ0ZThkZTliOWM2MiI7aToxO3M6MjI6ImYyMDI0MDcyMzQ2ZjY0MjQ4Zjk0Y2MiO30%3D) / [부품 사양](https://www.globalsuzuki.com/motorcycle/smgs/products/2024avenis125/) |
 | SUZUKI | GSX-S125 | 2025 | 확인 연식만 | 2023 | 2018~현재 | 미검증 | 미검증 | [부품 사양](https://www.globalsuzuki.com/motorcycle/smgs/products/2025gsx-s125/) |
 | KAWASAKI | NINJA500 | 2024 | 확인 연식만 | 2024 | 미확인 | 2024 | 미검증 | [정비표](https://kawasakikorea.com/post_file_download.cm?c=YTo1OntzOjEwOiJib2FyZF9jb2RlIjtzOjIyOiJiMjAyMjA5MjBiZDU2MzQ5NjU2NGRlIjtzOjk6InBvc3RfY29kZSI7czoyMjoicDIwMjUwMTMxMjZlYWQ0NWY1OTk4NyI7czo5OiJmaWxlX2NvZGUiO3M6MjI6InAyMDI1MDEzMTRiNzIwNzRkNjYwMTUiO3M6MTk6InBvc3RfZG93bmxvYWRfdG9rZW4iO3M6MTM6IjY5ZTQ4ZTJkNDJhODUiO3M6MTE6Im1lbWJlcl9jb2RlIjtOO30%3D) / [부품 사양](https://content.kawasaki.com/en-us/products/ProductSpecSheetPDF/2024-ninja-500) |
 | KAWASAKI | Z500 | 2024 | 확인 연식만 | 미검증 | 미확인 | 2024 | 미검증 | [부품 사양](https://content.kawasaki.com/en-us/products/ProductSpecSheetPDF/2024-z500-abs) |
@@ -53,18 +53,19 @@
 
 ## 2026-11-08 추가 검증
 
-- YAMAHA MT-07 **태국 2023년판 MTN690**에만 제조사 소모품 정비 프로필 추가: 엔진오일 최초 1,000km, 이후 7,000km부터 6,000km 간격; 오일필터 최초 1,000km, 이후 13,000km부터 12,000km 간격; 에어필터 요소 40,000km 교체; 체인 1,000km 점검·윤활; 밸브 간극 42,000km 점검; 브레이크액 24개월, 냉각수 36개월. [제조사 영문 설명서](https://www.yamaha-motor.co.th/docs/owner-manual/bigbike/en/pbtk2u199e0e_mt07%28eng%29a3e586bc44a1400ba969bf37a7d2160a.pdf?Status=Master&sfvrsn=ac0f3df8_2). 다른 국가와 연식에는 자동 복사하지 않음.
+- YAMAHA MT-07 **태국 2023년판 MTN690**은 지역·트림 확인 없이는 앱에 자동 적용되지 않는 참고자료로 분리: 엔진오일 최초 1,000km, 이후 7,000km부터 6,000km 간격; 오일필터 최초 1,000km, 이후 13,000km부터 12,000km 간격; 에어필터 요소 40,000km 교체; 체인 1,000km 점검·윤활; 밸브 간극 42,000km 점검; 브레이크액 24개월, 냉각수 36개월. [제조사 영문 설명서](https://www.yamaha-motor.co.th/docs/owner-manual/bigbike/en/pbtk2u199e0e_mt07%28eng%29a3e586bc44a1400ba969bf37a7d2160a.pdf?Status=Master&sfvrsn=ac0f3df8_2). 한국형과 다른 연식에 자동 적용하지 않음.
+- SUZUKI AVENIS125 **한국 2023 UN125NE**에서 공식 정비주기 일부 확인 후 자동 적용: 엔진오일 첫 1,000km, 이후 4,000km 간격; 에어필터 4,000km 점검 및 12,000km 교체; 스파크플러그 4,000km 점검·8,000km 교체; 미션오일 8,000km 교체; 벨트 4,000km 점검·20,000km 교체; 오일 기름망 1,000km와 8,000km 점검 후 필요 시 청소. 통합 구동계 교체 카드에는 벨트만의 교체주기를 강제하지 않음. [스즈키코리아 한글 설명서](https://www.suzuki.kr/download.cm?tk=YToyOntpOjA7czoxMzoiNDQ0ZThkZTliOWM2MiI7aToxO3M6MjI6ImYyMDI0MDcyMzQ2ZjY0MjQ4Zjk0Y2MiO30%3D).
 - SUZUKI 국내 공식 [사용자 설명서 목록](https://www.suzuki.kr/manual1)에 AVENIS125(2023~), GSX-S125(2018~), ADDRESS125(구형 및 2026 신형) 자료가 있음을 확인. 세대·시장별 정비표 원문 검증 전까지 공식 교체·청소 주기 추측 입력 금지.
 - SYM JET14 및 KYMCO AK550/LIKE125/DOWNTOWN은 세부 트림·국가별 엔진·주기 차이 검증 필요. 자료 존재만으로 공식 정비 주기를 자동 확정하지 않음.
 
 ## 검증 요약
 
-검증 수치는 `ui-skeleton/vehicle-catalog.js`의 `officialProfiles`에서 `verified:true`이고 제조사 출처가 입력된 **서로 다른 브랜드·모델 조합 23개** 기준이다. 이 값은 전체 주기 검증 또는 모든 연식 완료를 의미하지 않는다.
+검증 수치는 `ui-skeleton/vehicle-catalog.js`의 `officialProfiles`에서 `verified:true`이고 제조사 출처가 입력된 **서로 다른 브랜드·모델 조합 24개** 기준이다. 이 값은 전체 주기 검증 또는 모든 연식 완료를 의미하지 않는다.
 
 
 - 전체 모델: 44기종.
 - 특정 연식의 기계적 부품 구성 자료가 있는 기종: 44기종. 이 중 자동 적용이 보류된 트림이 있음.
-- **공식 부품별 정비주기의 일부라도 확인된 기종: 23기종**. 이 숫자는 모든 소모품 또는 모든 연식이 완료되었다는 뜻이 아니다.
+- **공식 부품별 정비주기의 일부라도 확인된 기종: 24기종**. 이 숫자는 모든 소모품 또는 모든 연식이 완료되었다는 뜻이 아니다.
 - 세부 트림 확인 전에 자동 부품 제외를 막은 기종: 6기종.
 - 해당 연식의 실제 정비기록, 사용자가 변경한 주기, 등록 정보는 보존한다. 연식별 공식 근거가 없는 항목은 임의의 '공식값'을 생성하지 않는다.
 
