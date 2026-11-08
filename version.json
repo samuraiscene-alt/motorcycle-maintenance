@@ -1,6 +1,6 @@
 {
-  "version": "2.9.133",
-  "cache": "motorcycle-maintenance-v2.9.133",
+  "version": "2.9.134",
+  "cache": "motorcycle-maintenance-v2.9.134",
   "released": "2026-11-08",
-  "note": "HONDA MONKEY125 차량 목록 추가 및 전용 이미지 경로 준비, 소형 차체 비율 적용"
+  "note": "KAWASAKI NINJA500 독립 PNG 연결, 2024~2026 이미지 매핑, 크기 및 업데이트 캐시 갱신"
 }
