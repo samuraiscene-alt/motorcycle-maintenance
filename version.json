@@ -1,6 +1,6 @@
 {
-  "version": "2.9.136",
-  "cache": "motorcycle-maintenance-v2.9.136",
+  "version": "2.9.137",
+  "cache": "motorcycle-maintenance-v2.9.137",
   "released": "2026-11-08",
-  "note": "NINJA500 연식 목록 2024·2025·2026만 제공; 다른 기종 유지, 기존 등록 데이터 변경 없음"
+  "note": "ZONTES 125G1 차량 등록 및 전용 PNG 경로 준비, 이미지 업로드 후 표시"
 }
