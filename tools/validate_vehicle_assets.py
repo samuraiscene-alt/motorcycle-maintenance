@@ -31,11 +31,11 @@ def catalog_pairs():
 def mapped_vehicle_art():
     """Find the exact per-model image sources actively used by the garage."""
     source = VEHICLE_UI.read_text(encoding="utf-8")
-    block = source.split("const vehicleArtwork=Object.freeze({", 1)[1].split("\\n});", 1)[0]
+    block = source.split("const vehicleArtwork=Object.freeze({", 1)[1].split("});", 1)[0]
     return [
         (key, path.split("?", 1)[0])
         for key, path in re.findall(
-            r"'([^']+)':\\{src:'([^']+)'", block
+            r"'([^']+)':\{src:'([^']+)'", block
         )
     ]
 
