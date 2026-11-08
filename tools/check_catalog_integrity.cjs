@@ -124,4 +124,18 @@ assert.ok(vehicleSource.includes("' · 최초 '+actionText(action)+' (이후 정
   'initial inspection/cleaning label should not pretend to be replacement');
 assert.ok(vehicleSource.includes('const initialDue=firstService?schedule.due:interval;'),
   'all initial maintenance types must use their actual first due distance');
+
+// Registered vehicle header swipe uses the same persisted bike ID as Settings.
+assert.ok(vehicleSource.includes("const ownedBikeIds=()=>bikes.filter(b=>!!registered[b.id]).map(b=>b.id);"),
+  'header switcher must never include unregistered showroom demos');
+assert.ok(vehicleSource.includes('localStorage.setItem(chosenKey,nextId)'),
+  'header switcher must persist the selected vehicle');
+assert.ok(vehicleSource.includes('renderInfo();\n return true;'),
+  'header switcher must re-render vehicle-specific gauges and history');
+assert.ok(vehicleSource.includes("if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)*1.35)return;"),
+  'vehicle header switch must ignore vertical scrolling and accidental tiny swipes');
+assert.ok(vehicleSource.includes("const nextId=ids[(current+direction+ids.length)%ids.length];"),
+  'header switcher should wrap among registered bikes');
+assert.ok(vehicleSource.includes("headerSwipeSuppressClick=false;e.preventDefault();e.stopImmediatePropagation()"),
+  'header swipes should not open the edit-vehicle modal');
 console.log('PASS: ' + pairs.length + ' models, ' + keys.length + ' exact-year official profiles for ' + modelSet.size + ' models; regional isolation verified');
