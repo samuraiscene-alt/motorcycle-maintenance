@@ -60,11 +60,12 @@ const regionalManualYears=Object.freeze({
 });
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({
- 'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024,'KAWASAKI|Z500':2024,'KAWASAKI|Z900':2017,'YAMAHA|NMAX125':2015,
+ 'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024,'KAWASAKI|Z500':2024,'KAWASAKI|Z900':2017,'YAMAHA|NMAX125':2015,'KYMCO|AK550':2016,
  'VESPA|PRIMAVERA125':2013,'VESPA|SPRINT125':2014,'VESPA|GTS300':2008,'VESPA|GTV300':2023
 });
 // These source-verified model introductions are not claims of availability in every market.
 const modelReleaseSources=Object.freeze({
+ 'KYMCO|AK550':'https://www.kymco.com/news/brand-new-kymco-ak-550-takes-super-touring-concept-to-the-next-level',
  'HONDA|MONKEY125':'https://www.honda.co.jp/Monkey125/',
  'VESPA|PRIMAVERA125':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
  'VESPA|SPRINT125':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
@@ -747,6 +748,24 @@ const sourceAudit=Object.freeze({
 // Preserve the real list of service actions as a reference only; NEVER automatically
 // infer its market/model-year applicability or substitute a service visit for a part.
 const manufacturerScheduleReferences=Object.freeze({
+ 'SYM|JET X 125':Object.freeze({
+  source:'https://www.sym-global.com/storage/system/products/SCOOTER/24-JETX/JETX_MANUAL.pdf',
+  scope:'SYM JETX XH12WW-EU / XH12WX-EU series 125cc; manual has several 150cc/200cc variants; model year not asserted',
+  servicePointsKm:[300,1000,3000,6000,12000],
+  recurringParts:Object.freeze({oil:3000,'fuel-filter':10000,'gear-oil':5000,'drive-belt':12000,'spark-plug':12000}),
+  calendarMonths:Object.freeze({coolant:12}),
+  autoApply:false,
+  notes:'Official printed p29: first engine oil 300km then every 3000km; gear oil 300km then every 5000km or 5 months; fuel pump filter every 10000km; drive belt/roller and spark plug 12000km; coolant annually. Separate engine oil text elsewhere says first 300km then 1000km; consult market-specific manual for conflict. Do not auto-apply to all 2025 JET X 125.'
+ }),
+ 'SYM|JOYMAX':Object.freeze({
+  source:'https://www.sym-global.com/storage/system/products/SCOOTER/11-1-JOYMAXZ-PLUS/JOYMAXZ_PLUS_MANUAL.pdf',
+  scope:'SYM JOYMAX Z+ LW12W2-EU/LW25W2-EU/LW30W2-EU; catalogue JOYMAX generic does not identify trim or year',
+  servicePointsKm:[1000,5000,10000,15000],
+  recurringParts:Object.freeze({oil:5000,'air-filter':10000,'spark-plug':15000,'drive-belt':15000,'gear-oil':10000,'oil-strainer':10000}),
+  calendarMonths:Object.freeze({'brake-hose':48}),
+  autoApply:false,
+  notes:'Official printed p33: engine oil initial 1000, second 6000 then every 5000; gear oil 1000 then every 10000; paper air filter 10000; CVT belt/roller 15000; spark plug 15000; coolant row at 15000. Brake fluid 30000km or 2yrs; hoses 60000km or 4yrs. NOT valid for all JOYMAX variants.'
+ }),
  'VESPA|PRIMAVERA125':Object.freeze({
   source:'https://wlassets.vespa.com/wlassets/vespa/gb/maintenance_intervals/Vespa-PRIMAVERA-125-150/original/Vespa%2BPRIMAVERA%2B125%2B150.pdf',
   scope:'GB Primavera 125/150 leaflet; model year unspecified',
