@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44기종 제조사 기술자료 및 공식 정비주기 조사표
 
-기준일: 2026-11-08 · 앱 v2.9.161
+기준일: 2026-11-08 · 앱 v2.9.162
 
 **기술자료 연결과 정비주기 확인은 다르다.** '검증'은 각 해당 연식·국가·세부모델에만 해당하며, 공식 정비주기가 일부만 검증된 모델도 있다. 출시·단종 연도는 공식적으로 뒷받침되는 경우에만 표기한다. 트림을 정확히 알 수 없는 기종은 기존 사용자 정비 데이터를 보존하고 자동 숨김을 적용하지 않는다.
 
@@ -29,7 +29,7 @@
 | SUZUKI | BURGMAN400 | 2026 | 확인 연식만 | 미검증 | 2022~현재 | 미검증 | 미검증 | [부품 사양](https://bikes.suzuki.co.uk/bikes/scooter/burgman-400/specs/) |
 | SUZUKI | ADDRESS125 | 2025 | 확인 연식만 | 미검증 | 2018~2021, 2026~현재 | 미검증 | 미검증 | [부품 사양](https://www1.suzuki.co.jp/motor/lineup/files/pdf/uz125neym6.pdf) |
 | SUZUKI | AVENIS125 | 2024 | 확인 연식만 | 미검증 | 2023~현재 | 미검증 | 미검증 | [부품 사양](https://www.globalsuzuki.com/motorcycle/smgs/products/2024avenis125/) |
-| SUZUKI | GSX-S125 | 2025 | 확인 연식만 | 미검증 | 2018~현재 | 미검증 | 미검증 | [부품 사양](https://www.globalsuzuki.com/motorcycle/smgs/products/2025gsx-s125/) |
+| SUZUKI | GSX-S125 | 2025 | 확인 연식만 | 2023 | 2018~현재 | 미검증 | 미검증 | [부품 사양](https://www.globalsuzuki.com/motorcycle/smgs/products/2025gsx-s125/) |
 | KAWASAKI | NINJA500 | 2024 | 확인 연식만 | 2024 | 미확인 | 2024 | 미검증 | [정비표](https://kawasakikorea.com/post_file_download.cm?c=YTo1OntzOjEwOiJib2FyZF9jb2RlIjtzOjIyOiJiMjAyMjA5MjBiZDU2MzQ5NjU2NGRlIjtzOjk6InBvc3RfY29kZSI7czoyMjoicDIwMjUwMTMxMjZlYWQ0NWY1OTk4NyI7czo5OiJmaWxlX2NvZGUiO3M6MjI6InAyMDI1MDEzMTRiNzIwNzRkNjYwMTUiO3M6MTk6InBvc3RfZG93bmxvYWRfdG9rZW4iO3M6MTM6IjY5ZTQ4ZTJkNDJhODUiO3M6MTE6Im1lbWJlcl9jb2RlIjtOO30%3D) / [부품 사양](https://content.kawasaki.com/en-us/products/ProductSpecSheetPDF/2024-ninja-500) |
 | KAWASAKI | Z500 | 2024 | 확인 연식만 | 미검증 | 미확인 | 2024 | 미검증 | [부품 사양](https://content.kawasaki.com/en-us/products/ProductSpecSheetPDF/2024-z500-abs) |
 | KAWASAKI | Z900 | 2025 | 확인 연식만 | 미검증 | 미확인 | 2017 | 미검증 | [부품 사양](https://storage.kawasaki.eu/repository/be/fr-BE/Accessoires/Kawasaki_Genuine_Chain_Kits_20251121.pdf) |
@@ -72,3 +72,9 @@ Suzuki [Burgman Street 125EX MY2024](https://www.globalsuzuki.com/motorcycle/smg
 ## XMAX125 2025 Yamaha BMJ YP125RA: 직접 정비표 검토
 
 제조사 2025년형 설명서(116쪽)의 기종별 정비표를 재검토. 에어필터 12,000km, 점화플러그 6,000km 점검/12,000km 교체, 밸브간극 6,000km 점검, 미션오일 1,000km 첫 교체 후 12,000km 간격, 냉각수 3년, 브레이크액 2년, 브레이크호스 4년을 부분 적용. 엔진오일 교체와 구동벨트 교체는 설명서에 **표시등 기준**으로 되어 있으므로 다른 트림의 고정 6,000km·18,000km 주기를 가져오지 않는다. 오일 거름망 최초 1,000km 세척도 반복 1,000km로 오인하지 않도록 자동 주기에 넣지 않았다. 제조사 문서 사본 출처: https://www.notice-facile.com/en/manual/3051380/yamaha%2Bxmax125-2025
+
+## GSX-S125XA 2023 Suzuki 제조사 서비스 차트
+
+GSX-S125XA / GSX-R125 M3 공동 제조사 설명서 표 6-4~6-5 직접 확인. 엔진오일 최초 1,000km 후 4,000km/8,000km, 오일필터 최초 1,000km 후 8,000km, 에어필터 12,000km마다 교체, 점화플러그 8,000km 교체/4,000km 점검, 밸브 간극 8,000km 점검, 체인 청소·윤활 1,000km마다, 브레이크액 2년, 호스 4년. 냉각수는 파란색 Super Long Life와 다른 냉각수의 주기가 서로 달라 **사용 중인 냉각수 종류를 모르면 자동값을 입력하지 않는다.**
+
+공식 스즈키 소유자 설명서 복사본: https://d3rur0l55cri1p.cloudfront.net/uploads/sites/4/2023/03/GSX-S125-R125_M3.pdf
