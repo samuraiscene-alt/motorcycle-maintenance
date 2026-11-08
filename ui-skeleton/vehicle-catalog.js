@@ -50,7 +50,24 @@ const brandLogos=Object.freeze({
  VESPA:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Vespa-logo.svg'
 });
 // Known release-year restrictions: do not infer model years from the model name.
-const knownFirstModelYears=Object.freeze({'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024});
+const knownFirstModelYears=Object.freeze({
+ 'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024,
+ 'VESPA|PRIMAVERA125':2013,'VESPA|SPRINT125':2014,'VESPA|GTS300':2008,'VESPA|GTV300':2023
+});
+// These source-verified model introductions are not claims of availability in every market.
+const modelReleaseSources=Object.freeze({
+ 'VESPA|PRIMAVERA125':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
+ 'VESPA|SPRINT125':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
+ 'VESPA|GTS300':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
+ 'VESPA|GTV300':'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html'
+});
+// Exact-year OEM technical specifications: physical part presence, NOT a maintenance-cycle assertion.
+const verifiedPartApplicability=Object.freeze({
+ 'VESPA|PRIMAVERA125|2024':Object.freeze({source:'https://wlassets.vespa.com/wlassets/vespa/gb/tech_spec/2024/Vespa-Primavera-Tech-125/original/Vespa%2BPrimavera%2BTech%2B125.pdf',cooling:'air',drive:'cvt',unsupported:['coolant','chain-sprockets']}),
+ 'VESPA|SPRINT125|2024':Object.freeze({source:'https://wlassets.vespa.com/wlassets/vespa/master/APAC/tech_spec/2024/Sprint/Vespa_Sprint-S-125_technical_sheet_EN/original/Vespa_Sprint%2BS%2B125_technical_sheet_EN.pdf',cooling:'air',drive:'cvt',unsupported:['coolant','chain-sprockets']}),
+ 'VESPA|GTS300|2024':Object.freeze({source:'https://wlassets.vespa.com/wlassets/vespa/master/APAC/tech_spec/2024/GTS-Super-Sport/APAC_Vespa_GTS_Super-Sport_300_technical_sheet_EN/original/APAC_Vespa_GTS_Super%2BSport_300_technical_sheet_EN.pdf',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']}),
+ 'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
+});
 const officialProfiles=Object.freeze({
  'HONDA|CB125R|2025':Object.freeze({
   verified:true,coverage:'partial',region:'HMEE CBF125NA 2025',modelCode:'CBF125NA',year:2025,
@@ -494,6 +511,9 @@ window.MotorcycleCatalog=Object.freeze({
  profileKey,
  brandLogos,
  knownFirstModelYears,
+ modelReleaseSources,
+ verifiedPartApplicability,
+ findVerifiedPartApplicability(brand,model,year){return verifiedPartApplicability[profileKey(brand,model,year)]||null},
  validateModelYear(brand,model,year){
   const first=knownFirstModelYears[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()];
   return !first||!Number.isSafeInteger(year)||year>=first?null:{first,description:model+' '+year+'년형은 확인된 출시 연식보다 이전이야 ('+first+'년형부터).'};
