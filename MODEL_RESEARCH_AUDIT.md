@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44개 기종 공식자료 조사 현황
 
-기준일: 2026-11-08 · 앱 v2.9.157
+기준일: 2026-11-08 · 앱 v2.9.158
 
 이 문서는 **자료 조사 완료**와 **공식 정비주기 검증 완료**를 구분한다. 제조사 카탈로그의 모델 계열 정보가 있다고 해서 모든 연식/시장/트림에 그대로 적용해서는 안 된다. 누락된 정비주기나 출시·단종 연도는 임의 추정하지 않는다.
 
@@ -104,3 +104,11 @@ https://www.ducati.com/us/en/bikes/monster/monster-v2
 
 - Yamaha Korea는 2021 MT-03 사용자 설명서를 공식 목록에 게시. 2021 미국형 MT03N 설명서(7-4~7-6쪽)에 브레이크액 2년, 브레이크호스 4년, 냉각수 3년, 체인 장력/윤활 약 800km마다 명시. 이들 항목만 적용. 엔진오일 교환 표시의 개별 주기는 추정하지 않음. `https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&offset=20&sk=&sw=`
 - Suzuki Korea 설명서 목록 `https://www.suzuki.kr/manual1`: GSX-S125 2018~, BURGMAN400 2022~, AVENIS125 2023~, BURGMAN125/200 2014~2021, Address125 2018~2021 및 2026~가 각각 등재. 해당 **한국 설명서 등재 범위만 별도로 표시**하며 글로벌 출시 연식이나 단종 확정으로 오인하지 않는다. 특히 Burgman Street125EX 2024~는 기존 Burgman125/200과 트림 구분이 필요하다.
+
+## Honda MONKEY125 2026 (8BJ-JB05) 공식 주기 검증
+
+2026 Honda Japan JB05-1100001 이후: 엔진오일 첫 1,000km 또는 1개월, 그 뒤 3,000km 또는 1년마다. 오일필터 첫 13,000km, 이후 12,000km마다. 2026년형에만 자동 입력하며 이전 세대에는 복사 금지. `https://www.honda.co.jp/customer/motor/monkey125/faq/qa009/`, `https://www.honda.co.jp/customer/motor/monkey125/faq/qa010/`.
+
+## Vespa 베트남 정기 서비스표
+
+Vespa 지역 공식 사이트에는 Primavera/Sprint 125 및 GTS/GTV 300의 **차량 전체 정기 서비스 방문 일정**이 있다. 첫 1,000km 및 10,000km·20,000km 등의 점검 일정이 나오지만 모든 부품의 교체 항목표는 아니다. 연식·시장 구분 없이 개별 소모품 교체주기에 이를 복사하지 않는다. `https://www.vespa.com/vn_EN/after-sales/scheduled-maintenance/`.
