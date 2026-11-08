@@ -176,9 +176,10 @@ function resolveServiceCycle(settings,action,last,configured){
 // One distance schedule for the part card and the maintenance notice.
 function nextServiceDistance(reg,task,action,settings,interval,last){
  const sourceField=action==='inspect'?'inspectIntervalSource':action==='clean'?'cleanIntervalSource':'intervalSource';
- const firstEligible=action==='replace'&&reg.km===0&&settings[sourceField]!=='user'&&
-  Number.isSafeInteger(task?.firstReplaceKm)&&task.firstReplaceKm>0;
- const first=firstEligible?task.firstReplaceKm:interval;
+ const firstField=action==='inspect'?'firstInspectKm':action==='clean'?'firstCleanKm':'firstReplaceKm';
+ const firstEligible=reg.km===0&&settings[sourceField]!=='user'&&
+  Number.isSafeInteger(task?.[firstField])&&task[firstField]>0;
+ const first=firstEligible?task[firstField]:interval;
  const firstRegular=Number.isSafeInteger(task?.firstRegularOdometerKm)&&task.firstRegularOdometerKm>first
   ?task.firstRegularOdometerKm:0;
  if(!last)return {due:firstEligible?first:reg.km+interval,base:reg.km,firstEligible};
