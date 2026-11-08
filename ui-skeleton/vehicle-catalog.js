@@ -101,21 +101,18 @@ const modelFamilyPartEvidence=Object.freeze({
  'ZONTES|125G1':Object.freeze({source:"https://www.zontes.co.kr/home/125g1/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"6 speed 125G1; chain final drive not validated by provided page"}),
  'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
 });
+// Distinct regional technical variant records are NOT auto-applied to the bare
+// catalogue model. Preserve original JP Address entry and EU technical details.
+const modelTechnicalVariants=Object.freeze({
+ 'SUZUKI|ADDRESS125|2025|EU-UZ125NEWM6':Object.freeze({
+  source:'https://www.globalsuzuki.com/motorcycle/smgs/products/2025address125/',
+  region:'EU General MY2025',cooling:'air',drive:'cvt',
+  technicalSpec:Object.freeze({engineCc:124,frontTire:'90/90-12 44J',rearTire:'90/100-10 53J',frontBrake:'disc',rearBrake:'drum',brakeSystem:'CBS',oilCapacityLiters:0.8}),
+  notes:'Not auto-applied to Japan 8BJ-EN11J variant; registered catalogue currently lacks region/trim field.'
+ })
+});
 const verifiedPartApplicability=Object.freeze({
- 'SUZUKI|ADDRESS125|2025':Object.freeze({
-  source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2025address125/",region:'EU General UZ125NEWM6 MY2025 official specification',
-  cooling:'air',drive:'cvt',
-  technicalSpec:Object.freeze({engineCc:124,frontTire:'90/90-12 44J',rearTire:'90/100-10 53J',
-   frontBrake:'disc',rearBrake:'drum',brakeSystem:'combined brake CBS',oilCapacityLiters:0.8}),
-  notes:'Suzuki 2025 product catalogue confirms SOHC air-cooled CVT, rear drum and different front/rear tyre sizes. This is not a manufacturer maintenance interval.',
-  unsupported:['coolant','chain-sprockets']
- }),
- 'VESPA|PRIMAVERA125|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'Vespa EU range brochure 11/2022, PRIMAVERA125',cooling:'air',drive:'cvt',technicalSpec:Object.freeze({frontTire:'110/70-12',rearTire:'120/70-12',frontBrake:'disc',rearBrake:'drum'}),notes:'Manufacturer 2022 EU 125/300 specification. Maintenance visit packages are not part-specific replacement intervals.',unsupported:["coolant","chain-sprockets"]}),
- 'VESPA|SPRINT125|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'Vespa EU range brochure 11/2022, SPRINT125',cooling:'air',drive:'cvt',technicalSpec:Object.freeze({frontTire:'110/70-12',rearTire:'120/70-12',frontBrake:'disc',rearBrake:'drum'}),notes:'Manufacturer 2022 EU 125/300 specification. Maintenance visit packages are not part-specific replacement intervals.',unsupported:["coolant","chain-sprockets"]}),
- 'VESPA|GTS300|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'Vespa EU range brochure 11/2022, GTS300',cooling:'liquid',drive:'cvt',technicalSpec:Object.freeze({frontTire:'120/70-12',rearTire:'130/70-12',frontBrake:'disc',rearBrake:'disc'}),notes:'Manufacturer 2022 EU 125/300 specification. Maintenance visit packages are not part-specific replacement intervals.',unsupported:["chain-sprockets"]}),
- 'VESPA|SPRINT125|2020':Object.freeze({source:"https://wlassets.vespa.com/wlassets/vespa/master/tech_spec/2020/SPRINT_125_IGET_ABS/original/SPRINT_125_IGET_ABS.pdf",region:"EU SPRINT 125 i-get ABS 2020",cooling:'air',drive:'cvt',notes:"Vespa official year-specific 2020 i-get 124.5cc air-cooled CVT technical specification; not a maintenance interval.",unsupported:["coolant","chain-sprockets"]}),
- 'VESPA|GTS300|2020':Object.freeze({source:"https://wlassets.vespa.com/wlassets/vespa/master/tech_spec/2020/GTS_300_HPE/original/GTS_300_HPE.pdf",region:"EU GTS 300 HPE 2020",cooling:'liquid',drive:'cvt',notes:"Vespa 2020 278.3cc liquid-cooled HPE CVT and dual disc brakes; not a service schedule.",unsupported:["chain-sprockets"]}),
- 'SUZUKI|BURGMAN125|2024':Object.freeze({source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2024burgman-street-125ex/",region:"EU Burgman Street 125EX 2024",cooling:'air',drive:'cvt',variantMatchRequired:true,notes:"The 2024 125EX is not always identical to the generic BURGMAN125 catalogue model; no auto-hiding until trim confirmed.",unsupported:[]}),
+
  'HONDA|MONKEY125|2026':Object.freeze({
   source:'https://www.honda.co.jp/Monkey125/',
   region:'JP 2026 8BJ-JB05 (JB05-1100001 onwards)',cooling:'air',drive:'chain',
@@ -941,6 +938,8 @@ window.MotorcycleCatalog=Object.freeze({
  findGeneralService(brand,model,year){return officialGeneralService[profileKey(brand,model,year)]||null},
  verifiedPartApplicability,
  modelFamilyPartEvidence,
+ modelTechnicalVariants,
+ findModelTechnicalVariant(brand,model,year,variant){return modelTechnicalVariants[profileKey(brand,model,year)+'|'+String(variant).trim().toUpperCase()]||null},
  findModelFamilyPartEvidence(brand,model){return modelFamilyPartEvidence[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()]||null},
  findVerifiedPartApplicability(brand,model,year){
   const record=verifiedPartApplicability[profileKey(brand,model,year)]||null;
