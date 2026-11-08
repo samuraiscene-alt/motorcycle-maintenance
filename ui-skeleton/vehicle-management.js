@@ -56,6 +56,12 @@ if(Array.isArray(catalog?.researchInventory)){
    status.textContent=row.verifiedYears.length?'검증된 연식 '+row.verifiedYears.join(', '):
     row.manual?'제조사 자료 발견 · 주기 미확인':'공식 주기 확인 필요';
    line.appendChild(status);
+   if(row.generalServiceYears?.length){
+    const general=catalog.findGeneralService(row.brand,row.model,row.generalServiceYears[0]);
+    const notice=document.createElement('small');notice.style.display='block';
+    notice.textContent='제조사 정기 서비스 '+general.everyKm.toLocaleString('ko-KR')+'km 또는 '+general.everyMonths+'개월 (부품별 교체주기와 별개)';
+    line.appendChild(notice);
+   }
    const parts=document.createElement('small');parts.style.display='block';parts.style.color='#bdd5e9';
    const variantYears=row.verifiedPartYears.filter(year=>catalog.findPartEvidenceForYear?.(row.brand,row.model,year)?.variantMatchRequired);
    parts.textContent=variantYears.length
