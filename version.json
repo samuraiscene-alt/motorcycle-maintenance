@@ -1,6 +1,6 @@
 {
-  "version": "2.9.158",
-  "cache": "motorcycle-maintenance-v2.9.158",
+  "version": "2.9.159",
+  "cache": "motorcycle-maintenance-v2.9.159",
   "released": "2026-11-08",
-  "note": "Honda Monkey125 2026 JB05 제조사 FAQ 엔진오일·오일필터 주기 검증 반영; Vespa/Vietnam 정기점검표 검증 대기"
+  "note": "Vespa Sprint125/GTS300 2020 개별 사양, Suzuki BURGMAN125 2024 EX 트림 분리, Vespa 공식 정비참조 자료를 자동 주기와 별도 저장"
 }
