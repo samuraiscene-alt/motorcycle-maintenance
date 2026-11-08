@@ -719,7 +719,7 @@ else{
  const interval=resolveServiceCycle(settings,action,last,defaultInterval);
  const schedule=nextServiceDistance(reg,task,action,settings,interval,last);
  const knownBase=schedule.base,firstService=schedule.firstEligible;
- const initialDue=firstService?task.firstReplaceKm:interval;
+ const initialDue=firstService?schedule.due:interval;
  const due=schedule.due;
  const span=Math.max(1,due-knownBase);
  const calendar=dateBasedStatus(reg,id,records);
@@ -758,14 +758,14 @@ else{
  }else{
   const used=Math.max(0,odo-knownBase),percent=Math.floor(used/span*100),ratio=Math.min(100,percent);
   const overdue=odo>due;
-  const distanceLabel=overdue?'교체 기준 '+fmt(due)+'km · '+fmt(odo-due)+'km 초과':fmt(used)+' / '+fmt(span)+'km · '+fmt(percent)+'%';
+  const distanceLabel=overdue?actionText(action)+' 기준 '+fmt(due)+'km · '+fmt(odo-due)+'km 초과':fmt(used)+' / '+fmt(span)+'km · '+fmt(percent)+'%';
   const inspectLabel=action!=='inspect'&&actionInterval(reg,id,'inspect')>0?' · 점검 '+fmt(actionInterval(reg,id,'inspect'))+'km 주기':'';
   text.textContent=calendar&&!calendar.missing
    ?distanceLabel+' · '+(calendar.days<0?'날짜 '+Math.abs(calendar.days)+'일 초과':calendar.days<=30?'날짜 '+calendar.days+'일 남음':'날짜 '+calendar.due)
    :distanceLabel;
   text.textContent+=(overdue?' · 정비기록 확인 필요':' · 다음 '+fmt(due)+'km')+inspectLabel;
   if(firstService&&!last&&due===initialDue&&initialDue>0&&interval>0&&initialDue!==interval){
-   text.textContent+=' · 최초 교체 (이후 정기 '+fmt(interval)+'km)';
+   text.textContent+=' · 최초 '+actionText(action)+' (이후 정기 '+fmt(interval)+'km)';
   }
   bar.style.width=ratio+'%';row.classList.remove('part-unregistered');
   const color=calendar&&!calendar.missing&&calendar.days<0?'red':calendar&&!calendar.missing&&calendar.days<=30?'amber':percent<=50?'blue':percent<=80?'amber':'red';
