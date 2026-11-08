@@ -16,7 +16,7 @@ const brands=[
  {id:'KYMCO',label:'KYMCO',models:[['DOWNTOWN',350],['AK550',550],['LIKE125',125]]},
  {id:'VESPA',label:'VESPA',models:[['PRIMAVERA125',125],['GTS300',300],['SPRINT125',125],['GTV300',300]]},
  {id:'DNA MOTORS',label:'DNA MOTORS',models:[['UHR125',125]]},
- {id:'ZONTES',label:'ZONTES',models:[['125G1',125]]}
+ {id:'ZONTES',label:'ZONTES',models:[['125G1',125],['125D',125]]}
 ];
 
 // A classification is not a physical dimension or an image scaling instruction.
@@ -33,7 +33,7 @@ const modelStyles=Object.freeze({
  KYMCO:Object.freeze({'DOWNTOWN':'scooter-mid','AK550':'scooter-large','LIKE125':'scooter-compact'}),
  VESPA:Object.freeze({'PRIMAVERA125':'scooter-classic','GTS300':'scooter-classic-large','SPRINT125':'scooter-classic','GTV300':'scooter-classic-large'}),
  'DNA MOTORS':Object.freeze({'UHR125':'scooter-compact'}),
- ZONTES:Object.freeze({'125G1':'scrambler-light'})
+ ZONTES:Object.freeze({'125G1':'scrambler-light','125D':'scooter-mid'})
 });
 // Verified dimensions are tied to region and model year, never extrapolated to all years.
 // Values measure the real vehicle's envelope (mm), not its drawn asset bounding box.
@@ -430,6 +430,7 @@ const expandedOfficialProfiles=Object.freeze({
 // or manufacturer statement exists, NOT that its replacement/inspection chart has
 // been validated. Only exact brand|model|year keys in officialProfiles are automatable.
 const sourceAudit=Object.freeze({
+ 'ZONTES|125D':Object.freeze({year:2025,url:'https://www.zontes.co.kr/home/125d/',type:'Zontes Korea official specifications; maintenance intervals not verified'}),
  'ZONTES|125G1':Object.freeze({year:2024,url:'https://www.zontes.co.kr/home/downloads/?order_by=fn_hit&order_type=asc&vid=1',type:'Zontes Korea combined G1/U1/GK manual; exact-year maintenance not verified'}),
  'DNA MOTORS|UHR125':Object.freeze({year:2025,url:'https://www.dnamotors.co.kr/brand/scooter_UHR125',type:'DNA Motors official product specifications; maintenance schedule not verified'}),
  'HONDA|CB125R':Object.freeze({year:2025,url:'https://www.hondamotopub.com/om/HMEE/CBF125NA%20%28CB125R%29/2025',type:'Honda owner manual listing'}),
