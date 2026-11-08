@@ -1,6 +1,6 @@
 {
-  "version": "2.9.131",
-  "cache": "motorcycle-maintenance-v2.9.131",
+  "version": "2.9.132",
+  "cache": "motorcycle-maintenance-v2.9.132",
   "released": "2026-11-08",
-  "note": "Honda CT125 2026 독립 PNG 연결 및 2023~2026 참고 외형 매핑, 홈화면 캐시 갱신"
+  "note": "업데이트 완료 체크 표시와 버전 확인 및 실패 안내 강화; 기존 차량·정비 데이터 유지"
 }
