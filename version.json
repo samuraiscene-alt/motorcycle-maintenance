@@ -1,6 +1,6 @@
 {
-  "version": "2.9.146",
-  "cache": "motorcycle-maintenance-v2.9.146",
+  "version": "2.9.147",
+  "cache": "motorcycle-maintenance-v2.9.147",
   "released": "2026-11-08",
-  "note": "잔여 21개 기종 제조사 기술사양 자료·냉각·구동계 조사표 연결; 연식 미검증은 자동 교체주기/부품 숨김 금지"
+  "note": "KAWASAKI NINJA500·Z500 2024 공식 기술사양 PDF 확인, 수랭·체인 구성 출처 갱신"
 }
