@@ -147,6 +147,29 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'BMW|G310R|2020':Object.freeze({
+  verified:true,coverage:'partial',region:'EU 2020 0G41',modelCode:'G310R 0G41',year:2020,
+  source:'https://manuals.bmw-motorrad.com/manuals/BA-Extern/IN/BA-INTERNET-COM/PDF/G_0G41_RM_0320_01.pdf',
+  sourceType:'BMW 2020 G310R official rider manual, maintenance schedule on printed p138',
+  sourcePages:[136,138],
+  intervals:Object.freeze({oil:10000,'oil-filter':10000,'air-filter':20000,'spark-plug':20000,'valve-clearance':20000,'fork-oil':20000,'fuel-filter':40000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:10000,replaceMonths:12},
+   'oil-filter':{replaceKm:10000,replaceMonths:12},
+   'air-filter':{replaceKm:20000},
+   'spark-plug':{replaceKm:20000},
+   'valve-clearance':{inspectKm:20000},
+   'fork-oil':{replaceKm:20000},
+   'fuel-filter':{replaceKm:40000,replaceMonths:48},
+   'brake-fluid':{replaceMonths:24}
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect'}),
+  notes:Object.freeze({
+   oil:'First running-in check with oil change at 500-1200 km, not assigned an invented fixed 1000 km event.',
+   'brake-fluid':'First brake-fluid change at one year, then every two years. Calendar-first event not auto-filled.',
+   'fuel-filter':'Fuel filter and hoses 40000 km or 48 months.'
+  })
+ }),
  'DUCATI|MONSTER|2026':Object.freeze({
   verified:true,coverage:'partial',region:'US MY2026 890cc V2',modelCode:'Monster V2 890',year:2026,
   source:'https://www.ducati.com/us/en/bikes/monster/monster-v2',
@@ -580,6 +603,12 @@ const sourceAudit=Object.freeze({
  'KAWASAKI|Z900':Object.freeze({year:2025,url:'https://www.kawasaki.com/en-us/owner-center/service-manuals/2025/ZR900SSFAL',type:'Kawasaki US 2025 owner manual listing'}),
  'TRIUMPH|SPEED400':Object.freeze({year:2024,url:'https://www.triumphmotorcycles.com/for-the-ride/news/motorcycles/t-series-q-and-a-2024-03-28',type:'Triumph T-Series official general service interval 16000 km or 12 months; not a part schedule'})
 });
+// A whole-vehicle service interval must never imply a consumable replacement interval.
+const officialGeneralService=Object.freeze({
+ 'TRIUMPH|SPEED400|2024':Object.freeze({verified:true,year:2024,region:'Triumph T-series MY2024',
+  source:'https://www.triumphmotorcycles.com/for-the-ride/news/motorcycles/t-series-q-and-a-2024-03-28',
+  everyKm:16000,everyMonths:12,notes:'General periodic service; individual consumable replacement intervals remain unverified.'})
+});
 const researchInventory=Object.freeze(brands.flatMap(brand=>brand.models.map(([model])=>{
  const key=brand.id+'|'+model;
  const years=Object.keys(expandedOfficialProfiles).filter(x=>x.startsWith(key+'|'))
@@ -592,6 +621,7 @@ const researchInventory=Object.freeze(brands.flatMap(brand=>brand.models.map(([m
  return Object.freeze({brand:brand.id,model,verifiedYears:Object.freeze(years),manual,
   firstConfirmedYear:first,lastConfirmedYear:null,releaseSource:modelReleaseSources[key]||null,
   verifiedPartYears:Object.freeze(partYears),partEvidence:familyEvidence,
+  generalServiceYears:Object.freeze(Object.keys(officialGeneralService).filter(x=>x.startsWith(key+'|')).map(x=>Number(x.slice(key.length+1))).filter(Number.isFinite).sort((a,b)=>a-b)),
   partsStatus:partYears.length?'verified-exact-year':familyEvidence?'family-reference-needs-year-check':'verification-pending',
   serviceStatus:years.length?'verified-exact-year':'verification-pending',
   status:years.length?'verified-year-profiles':manual?'manual-found-not-verified':'verification-pending'});
@@ -638,6 +668,8 @@ window.MotorcycleCatalog=Object.freeze({
  brandLogos,
  knownFirstModelYears,
  modelReleaseSources,
+ officialGeneralService,
+ findGeneralService(brand,model,year){return officialGeneralService[profileKey(brand,model,year)]||null},
  verifiedPartApplicability,
  modelFamilyPartEvidence,
  findModelFamilyPartEvidence(brand,model){return modelFamilyPartEvidence[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()]||null},
