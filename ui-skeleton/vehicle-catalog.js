@@ -166,6 +166,34 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ // 2025 Yamaha XMAX125 manual BMJ-F8199-E0: only unambiguous table entries.
+ // Original Yamaha chart is reproduced by a document host; link is explicitly a copy.
+ 'YAMAHA|XMAX125|2025':Object.freeze({
+  verified:true,coverage:'partial',region:'EU BMJ YP125RA base XMAX125 (NOT Tech MAX)',modelCode:'YP125RA BMJ',year:2025,
+  source:'https://www.notice-facile.com/en/manual/3051380/yamaha%2Bxmax125-2025',
+  sourceType:'2025 Yamaha YP125RA XMAX125 116-page owner-manual reproduction, maintenance chart',
+  sourcePages:['9-2','9-3','9-4','brake-fluid section'],
+  intervals:Object.freeze({'air-filter':12000,'spark-plug':12000,'valve-clearance':6000,'gear-oil':12000}),
+  tasks:Object.freeze({
+   'air-filter':{replaceKm:12000},
+   'spark-plug':{inspectKm:6000,replaceKm:12000},
+   'valve-clearance':{inspectKm:6000},
+   'gear-oil':{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
+   'brake-fluid':{replaceMonths:24},
+   'brake-hose':{replaceMonths:48},
+   coolant:{replaceMonths:36},
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','oil-strainer':'clean'}),
+  notes:Object.freeze({
+   oil:'Change at first 1000km and when oil-change indicator flashes. The manual does not state a reliable fixed repeated 6000km replacement interval for base XMAX125.',
+   'oil-filter':'Manual describes oil filter element but maintenance chart does not clearly show recurring element replacement mileage; no invented value.',
+   'drive-belt':'Replace when V-belt replacement indicator illuminates; no fixed 18000km imported from Tech MAX without validating base model.',
+   'air-filter':'Engine intake air filter: replace at 12000km and 24000km; V-belt case air filter is a different part.',
+   'oil-strainer':'Initial 1000km clean only (one-time); app does not support one-time clean due vs recurring 1000km, so cleanKm is a reference only.',
+   'brake-fluid':'Change every 2 years; brake hoses every 4 years.',
+   'gear-oil':'Final transmission oil change at 1000km, 12000km, 24000km.'
+  })
+ }),
  'HONDA|MONKEY125|2026':Object.freeze({
   verified:true,coverage:'partial',region:'JP 8BJ-JB05 (JB05-1100001 onwards)',modelCode:'JB05',year:2026,
   source:'https://www.honda.co.jp/customer/motor/monkey125/faq/qa009/',
