@@ -65,6 +65,9 @@ const modelReleaseSources=Object.freeze({
 });
 // Exact-year OEM technical specifications: physical part presence, NOT a maintenance-cycle assertion.
 const verifiedPartApplicability=Object.freeze({
+ 'YAMAHA|MT-03|2025':Object.freeze({source:'https://www.yamaha-motor.eu/al/en/motorcycles/hyper-naked/pdp/mt-03-2025/',region:'EU',cooling:'liquid',drive:'chain',unsupported:['drive-system-service','drive-belt','weights','slide-piece']}),
+ 'YAMAHA|YZF-R3|2026':Object.freeze({source:'https://www.yamaha-motor.eu/cy/en/motorcycles/supersport/pdp/r3/',region:'EU',cooling:'liquid',drive:'chain',unsupported:['drive-system-service','drive-belt','weights','slide-piece']}),
+
  'YAMAHA|TMAX560|2026':Object.freeze({source:'https://www.yamaha-motor.eu/kv/en/scooters/sport/pdp/tmax/',region:'EU',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']}),
  'YAMAHA|TMAX560|2025':Object.freeze({source:'https://www.yamaha-motor.eu/cy/en/scooters/sport/pdp/tmax-2025/',region:'EU',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']}),
  'SUZUKI|BURGMAN400|2026':Object.freeze({source:'https://bikes.suzuki.co.uk/bikes/scooter/burgman-400/specs/',region:'UK',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']}),
