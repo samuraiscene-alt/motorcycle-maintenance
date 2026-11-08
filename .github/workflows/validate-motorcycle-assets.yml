@@ -1,0 +1,46 @@
+name: Validate motorcycle catalog and artwork
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ui-skeleton/vehicle-catalog.js'
+      - 'ui-skeleton/vehicle-data.js'
+      - 'ui-skeleton/*.png'
+      - '*.png'
+      - 'vehicle-art-inventory.json'
+      - 'tools/validate_vehicle_assets.py'
+      - '.github/workflows/validate-motorcycle-assets.yml'
+  pull_request:
+    paths:
+      - 'ui-skeleton/vehicle-catalog.js'
+      - 'ui-skeleton/vehicle-data.js'
+      - 'ui-skeleton/*.png'
+      - '*.png'
+      - 'vehicle-art-inventory.json'
+      - 'tools/validate_vehicle_assets.py'
+      - '.github/workflows/validate-motorcycle-assets.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Python runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image validation tools
+        run: python -m pip install Pillow==11.3.0
+      - name: Validate image list and files
+        run: python tools/validate_vehicle_assets.py
+      - name: JavaScript syntax checks
+        run: |
+          node --check ui-skeleton/vehicle-catalog.js
+          node --check ui-skeleton/vehicle-data.js
+      - name: Parse inventory JSON
+        run: python -m json.tool vehicle-art-inventory.json > /dev/null
