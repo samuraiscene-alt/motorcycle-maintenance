@@ -70,7 +70,7 @@
 @media(prefers-reduced-motion:reduce){.showroom-check,.showroom-track{transition:none!important}.showroom-tint.flash{animation:none}}
 /* Vehicle identity: brand changes with slide; model title stays centered across the complete info bar */
 .vehicle{position:relative}
-.vehicle-lines{position:absolute;inset:0 10px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:5px;width:auto;pointer-events:none}
+.vehicle-lines{position:absolute;inset:0 10px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:5px;width:auto;pointer-events:auto;z-index:2;touch-action:pan-y}
 .bike-model{max-width:calc(100% - 132px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bike-meta{max-width:calc(100% - 132px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .brand-slot{position:relative;z-index:1}
