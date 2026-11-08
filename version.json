@@ -1,6 +1,6 @@
 {
-  "version": "2.9.160",
-  "cache": "motorcycle-maintenance-v2.9.160",
+  "version": "2.9.161",
+  "cache": "motorcycle-maintenance-v2.9.161",
   "released": "2026-11-08",
-  "note": "Vespa 공식 지역별 정비표를 차량 등록창 조사 현황에서 원문 확인 가능하게 연결; 국가·연식 불명확한 주기는 자동 적용 금지"
+  "note": "YAMAHA XMAX125 2025 제조사 설명서 부품별 필터·점화플러그·미션오일 및 냉각수·브레이크 주기 일부 반영; 표시등 기준 오일·벨트는 주행거리 임의값 제외"
 }
