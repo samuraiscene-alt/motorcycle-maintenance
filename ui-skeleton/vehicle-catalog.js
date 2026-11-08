@@ -51,7 +51,7 @@ const brandLogos=Object.freeze({
 });
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({
- 'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024,
+ 'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024,'KAWASAKI|Z500':2024,'KAWASAKI|Z900':2017,
  'VESPA|PRIMAVERA125':2013,'VESPA|SPRINT125':2014,'VESPA|GTS300':2008,'VESPA|GTV300':2023
 });
 // These source-verified model introductions are not claims of availability in every market.
@@ -59,10 +59,28 @@ const modelReleaseSources=Object.freeze({
  'VESPA|PRIMAVERA125':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
  'VESPA|SPRINT125':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
  'VESPA|GTS300':'https://press.piaggiogroup.com/en_EN/post/show/109335/storia-vespa-1946-2024.html',
- 'VESPA|GTV300':'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html'
+ 'VESPA|GTV300':'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',
+ 'KAWASAKI|Z500':'https://storage.kawasaki.eu/repository/be/fr-BE/Accessoires/Kawasaki_Genuine_Chain_Kits_20251121.pdf',
+ 'KAWASAKI|Z900':'https://storage.kawasaki.eu/repository/be/fr-BE/Accessoires/Kawasaki_Genuine_Chain_Kits_20251121.pdf'
 });
 // Exact-year OEM technical specifications: physical part presence, NOT a maintenance-cycle assertion.
 const verifiedPartApplicability=Object.freeze({
+ // Verified factory physical equipment; NOT permission to invent maintenance mileage.
+ 'HONDA|PCX125|2025':Object.freeze({source:'https://hondanews.eu/eu/en/motorcycles/media/pressreleases/503766/25ym-honda-pcx125-press-kit',region:'OEM published spec',cooling:'liquid',drive:'cvt',unsupported:["chain-sprockets"]}),
+ 'HONDA|FORZA350|2025':Object.freeze({source:'https://hondanews.eu/eu/lv/motorcycles/media/pressreleases/492951/25ym-honda-forza-350-press-kit',region:'OEM published spec',cooling:'liquid',drive:'cvt',unsupported:["chain-sprockets"]}),
+ 'HONDA|ADV350|2025':Object.freeze({source:'https://hondanews.eu/gb/en/motorcycles/media/pressreleases/506410/25ym-honda-adv350-press-kit',region:'OEM published spec',cooling:'liquid',drive:'cvt',unsupported:["chain-sprockets"]}),
+ 'HONDA|C125|2025':Object.freeze({source:'https://hondanews.eu/eu/el/cars/media/pressreleases/525819/25ym-honda-super-cub-c125',region:'OEM published spec',cooling:'air',drive:'chain',unsupported:["coolant","drive-system-service","drive-belt","weights","slide-piece"]}),
+ 'HONDA|MONKEY125|2025':Object.freeze({source:'https://hondanews.eu/gb/en/cars/media/pressreleases/526071/25ym-honda-monkey-125',region:'OEM published spec',cooling:'air',drive:'chain',unsupported:["coolant","drive-system-service","drive-belt","weights","slide-piece"]}),
+ 'HONDA|CB125R|2026':Object.freeze({source:'https://hondanews.eu/eu/et/motorcycles/media/pressreleases/567258/26ym-honda-cb125r',region:'OEM published spec',cooling:'liquid',drive:'chain',unsupported:["drive-system-service","drive-belt","weights","slide-piece"]}),
+ 'HONDA|CB650R|2024':Object.freeze({source:'https://hondanews.eu/eu/lt/motorcycles/media/pressreleases/457025/24ym-honda-cb650r',region:'OEM published spec',cooling:'liquid',drive:'chain',unsupported:["drive-system-service","drive-belt","weights","slide-piece"]}),
+ 'HONDA|CBR650R|2026':Object.freeze({source:'https://hondanews.eu/eu/lt/cars/media/pressreleases/548692/26ym-honda-cbr650r',region:'OEM published spec',cooling:'liquid',drive:'chain',unsupported:["drive-system-service","drive-belt","weights","slide-piece"]}),
+ 'YAMAHA|NMAX125|2025':Object.freeze({source:'https://www.yamaha-motor.eu/is/en/scooters/sport/pdp/nmax-125-2025/',region:'OEM published spec',cooling:'liquid',drive:'cvt',unsupported:["chain-sprockets"]}),
+ 'YAMAHA|XMAX300|2025':Object.freeze({source:'https://www.yamaha-motor.eu/is/en/scooters/sport/pdp/xmax-300-2025/',region:'OEM published spec',cooling:'liquid',drive:'cvt',unsupported:["chain-sprockets"]}),
+ 'YAMAHA|MT-07|2025':Object.freeze({source:'https://www.yamaha-motor.eu/kv/en/motorcycles/hyper-naked/pdp/mt-07-2025/',region:'OEM published spec',cooling:'liquid',drive:'chain',unsupported:["drive-system-service","drive-belt","weights","slide-piece"]}),
+ 'KAWASAKI|NINJA500|2024':Object.freeze({source:'https://storage.kawasaki.eu/repository/be/fr-BE/Accessoires/Kawasaki_Genuine_Chain_Kits_20251121.pdf',region:'OEM published spec',cooling:'unverified',drive:'chain',unsupported:["drive-system-service","drive-belt","weights","slide-piece"]}),
+ 'KAWASAKI|Z500|2024':Object.freeze({source:'https://storage.kawasaki.eu/repository/be/fr-BE/Accessoires/Kawasaki_Genuine_Chain_Kits_20251121.pdf',region:'OEM published spec',cooling:'unverified',drive:'chain',unsupported:["drive-system-service","drive-belt","weights","slide-piece"]}),
+ 'KAWASAKI|Z900|2025':Object.freeze({source:'https://storage.kawasaki.eu/repository/be/fr-BE/Accessoires/Kawasaki_Genuine_Chain_Kits_20251121.pdf',region:'OEM published spec',cooling:'unverified',drive:'chain',unsupported:["drive-system-service","drive-belt","weights","slide-piece"]}),
+ 'TRIUMPH|SPEED400|2025':Object.freeze({source:'https://www.triumphmotorcycles.com/motorcycles/classic/speed-400/specification',region:'OEM published spec',cooling:'liquid',drive:'chain',unsupported:["drive-system-service","drive-belt","weights","slide-piece"]}),
  'VESPA|PRIMAVERA125|2024':Object.freeze({source:'https://wlassets.vespa.com/wlassets/vespa/gb/tech_spec/2024/Vespa-Primavera-Tech-125/original/Vespa%2BPrimavera%2BTech%2B125.pdf',cooling:'air',drive:'cvt',unsupported:['coolant','chain-sprockets']}),
  'VESPA|SPRINT125|2024':Object.freeze({source:'https://wlassets.vespa.com/wlassets/vespa/master/APAC/tech_spec/2024/Sprint/Vespa_Sprint-S-125_technical_sheet_EN/original/Vespa_Sprint%2BS%2B125_technical_sheet_EN.pdf',cooling:'air',drive:'cvt',unsupported:['coolant','chain-sprockets']}),
  'VESPA|GTS300|2024':Object.freeze({source:'https://wlassets.vespa.com/wlassets/vespa/master/APAC/tech_spec/2024/GTS-Super-Sport/APAC_Vespa_GTS_Super-Sport_300_technical_sheet_EN/original/APAC_Vespa_GTS_Super%2BSport_300_technical_sheet_EN.pdf',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']}),
@@ -467,7 +485,13 @@ const researchInventory=Object.freeze(brands.flatMap(brand=>brand.models.map(([m
  const years=Object.keys(expandedOfficialProfiles).filter(x=>x.startsWith(key+'|'))
   .map(x=>Number(x.slice(key.length+1))).filter(Number.isFinite).sort((a,b)=>a-b);
  const manual=sourceAudit[key]||null;
+ const partYears=Object.keys(verifiedPartApplicability).filter(x=>x.startsWith(key+'|'))
+  .map(x=>Number(x.slice(key.length+1))).filter(Number.isFinite).sort((a,b)=>a-b);
+ const first=knownFirstModelYears[key]||null;
  return Object.freeze({brand:brand.id,model,verifiedYears:Object.freeze(years),manual,
+  firstConfirmedYear:first,lastConfirmedYear:null,releaseSource:modelReleaseSources[key]||null,
+  verifiedPartYears:Object.freeze(partYears),partsStatus:partYears.length?'verified-exact-year':'verification-pending',
+  serviceStatus:years.length?'verified-exact-year':'verification-pending',
   status:years.length?'verified-year-profiles':manual?'manual-found-not-verified':'verification-pending'});
 })));
 // Canonical app part IDs: 'filter' is the visible AIR filter card and
@@ -514,6 +538,7 @@ window.MotorcycleCatalog=Object.freeze({
  modelReleaseSources,
  verifiedPartApplicability,
  findVerifiedPartApplicability(brand,model,year){return verifiedPartApplicability[profileKey(brand,model,year)]||null},
+ getModelResearch(brand,model){return researchInventory.find(x=>x.brand===String(brand).trim().toUpperCase()&&x.model===String(model).trim().toUpperCase())||null},
  validateModelYear(brand,model,year){
   const first=knownFirstModelYears[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()];
   return !first||!Number.isSafeInteger(year)||year>=first?null:{first,description:model+' '+year+'년형은 확인된 출시 연식보다 이전이야 ('+first+'년형부터).'};
