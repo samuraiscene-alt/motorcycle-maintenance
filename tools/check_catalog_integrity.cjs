@@ -54,7 +54,26 @@ assert.equal(catalog.findOfficialProfile('YAMAHA', 'MT-07', 2023), null,
 assert.equal(catalog.findScheduleReference('YAMAHA','MT-07')?.autoApply, false,
   'Thai-market MT-07 data must remain a non-automatic reference');
 
+const pcx26 = catalog.findOfficialProfile('HONDA','PCX125',2026);
+assert.equal(pcx26?.regionalApplicabilityUnverified, true,
+  '2026 PCX must retain explicit overseas-reference caveat');
+assert.equal(pcx26?.tasks?.oil?.firstReplaceKm,1000,'2026 PCX first oil change');
+assert.equal(pcx26?.tasks?.oil?.firstRegularOdometerKm,6000,'2026 PCX next oil milestone');
+assert.equal(pcx26?.tasks?.filter?.replaceKm,18000,'2026 PCX air-cleaner element');
+assert.equal(pcx26?.tasks?.['drive-belt']?.inspectKm,12000,'2026 PCX belt inspection');
+assert.equal(pcx26?.tasks?.['drive-belt']?.replaceKm,24000,'2026 PCX belt replacement');
+assert.equal(pcx26?.tasks?.['oil-strainer']?.cleanKm,12000,'2026 PCX oil screen cleaning');
+assert.equal(pcx26?.tasks?.['gear-oil']?.replaceMonths,24,'2026 PCX final-drive oil');
+assert.equal(pcx26?.tasks?.['brake-fluid']?.replaceMonths,24,'2026 PCX brake fluid');
+assert.equal(pcx26?.tasks?.coolant?.replaceMonths,36,'2026 PCX coolant');
+assert.equal(pcx26?.tasks?.['oil-filter'],undefined,'no false PCX cartridge oil filter');
+assert.ok(catalog.findVerifiedPartApplicability('HONDA','PCX125',2026)?.unsupported.includes('oil-filter'),
+  'hide only confirmed absent factory oil filter, retaining user records');
+assert.ok(catalog.findOfficialProfile('HONDA','PCX125',2025),
+  '2025 Korean profile preserved');
 const vehicleSource = fs.readFileSync(path.join(root,'ui-skeleton/vehicle-data.js'),'utf8');
+assert.ok(vehicleSource.includes("label='2026 혼다 해외형 참고 · 국내형 확인 필요'"),
+  '2026 overseas manual must be clearly labeled in maintenance cards');
 const funcStart=vehicleSource.indexOf('function nextServiceDistance(');
 const funcEnd=vehicleSource.indexOf('function actionCycleStatus(',funcStart);
 assert.ok(funcStart>=0 && funcEnd>funcStart,'service cycle calculator must exist');
