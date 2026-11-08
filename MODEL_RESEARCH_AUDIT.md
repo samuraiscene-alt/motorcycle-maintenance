@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44기종 제조사 기술자료 및 공식 정비주기 조사표
 
-기준일: 2026-11-08 · 앱 v2.9.164
+기준일: 2026-11-08 · 앱 v2.9.165
 
 **기술자료 연결과 정비주기 확인은 다르다.** '검증'은 각 해당 연식·국가·세부모델에만 해당하며, 공식 정비주기가 일부만 검증된 모델도 있다. 출시·단종 연도는 공식적으로 뒷받침되는 경우에만 표기한다. 트림을 정확히 알 수 없는 기종은 기존 사용자 정비 데이터를 보존하고 자동 숨김을 적용하지 않는다.
 
@@ -23,7 +23,7 @@
 | YAMAHA | TMAX560 | 2025, 2026 | 확인 연식만 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.yamaha-motor.eu/kv/en/scooters/sport/pdp/tmax/) |
 | YAMAHA | MT-03 | 2025 | 확인 연식만 | 2021 | 미확인 | 미검증 | 미검증 | [정비표](https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&offset=20&sk=&sw=) / [부품 사양](https://www.yamaha-motor.eu/al/en/motorcycles/hyper-naked/pdp/mt-03-2025/) |
 | YAMAHA | MT-07 | 2025 | 확인 연식만 | 2021 | 미확인 | 미검증 | 미검증 | [정비표](https://library.ymcapps.net/library/om/contents/html/10/BAT-28199-10_02/7-4.html) / [부품 사양](https://www.yamaha-motor.eu/kv/en/motorcycles/hyper-naked/pdp/mt-07-2025/) |
-| YAMAHA | YZF-R3 | 2026 | 확인 연식만 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.yamaha-motor.eu/cy/en/motorcycles/supersport/pdp/r3/) |
+| YAMAHA | YZF-R3 | 2026 | 확인 연식만 | 2022 | 2022~2023, 2025~현재 | 미검증 | 미검증 | [부품 사양](https://www.yamaha-motor.eu/cy/en/motorcycles/supersport/pdp/r3/) |
 | YAMAHA | TRICITY125 | 2025 | 확인 연식만 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.yamaha-motor.eu/gb/en/scooters/urban-mobility/pdp/tricity-125-abs/) |
 | SUZUKI | BURGMAN125 | 2024, 2026 | 트림 확인 전 보류 · 트림 보류 2024, 2026 | 미검증 | 2014~2021 | 미검증 | 미검증 | [부품 사양](https://www.globalsuzuki.com/motorcycle/smgs/products/2026burgman-street-125ex/) |
 | SUZUKI | BURGMAN400 | 2026 | 확인 연식만 | 미검증 | 2022~현재 | 미검증 | 미검증 | [부품 사양](https://bikes.suzuki.co.uk/bikes/scooter/burgman-400/specs/) |
@@ -90,3 +90,10 @@ KYMCO AK550은 제조사 2021년 공식 발표문에 2016년 최초 소개라고
 ## 베스파 2022 유럽 공식 모델 카탈로그 검증
 
 [베스파 공식 2022년 11월 카탈로그](https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf): Primavera 125 i-get과 Sprint 125 i-get은 공랭·CVT, 앞 타이어 110/70-12, 뒤 120/70-12, 앞 디스크/뒤 드럼 브레이크. GTS300 HPE는 수랭·CVT, 앞 타이어 120/70-12, 뒤 130/70-12, 앞뒤 디스크 브레이크. X-Care+ 유지보수 상품에 등장하는 정비소 방문 주기는 Primavera 125 1,000·5,000·10,000·15,000·20,000·25,000·30,000km, GTS300 1,000·10,000·20,000·30,000km(4년 패키지). **방문 시점만으로 특정 소모품의 교체주기를 추정하지 않음.** 연식 2022 사양만 부품 구성에 사용.
+
+## Yamaha YZF-R3 2022 B2X factory service chart verified
+
+Yamaha YZF320-A B2X official manual (Dec 2021, English) page 6-3, 6-5, 6-6, 6-7: air filter every 20,000km, oil filter first 1,000km then 20,000km, spark plug inspection 10,000km and replacement 20,000km, valve clearance check 40,000km, chain clean/adjust/lubricate 800km, coolant every 36 months, brake fluid every 24 months, brake hoses every 48 months. Engine oil depends on oil-change indicator, so do **not** put an invented fixed mileage in official profile. Yamaha Japan owner manuals list 2022 B2XB and 2023 B2XM under YZF320-A and also later 2025 BRA6; listing is not a global production range.
+
+- Factory PDF: https://cdn2.yamaha-motor.eu/prod/owner-manuals/Motorcycles/PB2XF8199E0E.pdf
+- Yamaha Japan official owner manual listing: https://www2.yamaha-motor.co.jp/jp/manual/mc/result?ptn=01
