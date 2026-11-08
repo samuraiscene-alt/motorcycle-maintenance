@@ -90,6 +90,11 @@ const modelFamilyPartEvidence=Object.freeze({
  'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
 });
 const verifiedPartApplicability=Object.freeze({
+ 'HONDA|CT125|2026':Object.freeze({source:'https://www.honda.co.jp/customer/motor/ct125/faq/qa015/',region:'JP',cooling:'air',drive:'chain',notes:"JP 8BJ-JA65; 2026 chain 428-108; air cooled 2026 technical sheet",unsupported:["drive-system-service","drive-belt","weights","slide-piece","gear-oil","coolant"]}),
+ 'HONDA|SUPER CUB110|2022':Object.freeze({source:'https://www.honda.co.jp/customer/motor/supercub110/faq/qa015/',region:'JP',cooling:'air',drive:'chain',notes:"JP JA59 2022 chain 428-100; air cooled Honda 2022 technical specification",unsupported:["drive-system-service","drive-belt","weights","slide-piece","gear-oil","coolant"]}),
+ 'HONDA|REBEL500|2025':Object.freeze({source:'https://hondanews.eu/eu/lv/motorcycles/media/pressreleases/500051/25ym-honda-cmx500-rebel-press-kit',region:'EU',cooling:'liquid',drive:'chain',notes:"EU 2025 Honda CMX500 manufacturer technical specification",unsupported:["drive-system-service","drive-belt","weights","slide-piece","gear-oil"]}),
+ 'SUZUKI|ADDRESS125|2025':Object.freeze({source:'https://www1.suzuki.co.jp/motor/lineup/files/pdf/uz125neym6.pdf',region:'JP 8BJ-EN11J',cooling:'air',drive:'cvt',notes:"JP 8BJ-EN11J AF26 Suzuki official environmental sheet; regional trim difference",unsupported:["chain-sprockets","coolant"]}),
+
  'YAMAHA|MT-03|2025':Object.freeze({source:'https://www.yamaha-motor.eu/al/en/motorcycles/hyper-naked/pdp/mt-03-2025/',region:'EU',cooling:'liquid',drive:'chain',unsupported:['drive-system-service','drive-belt','weights','slide-piece']}),
  'YAMAHA|YZF-R3|2026':Object.freeze({source:'https://www.yamaha-motor.eu/cy/en/motorcycles/supersport/pdp/r3/',region:'EU',cooling:'liquid',drive:'chain',unsupported:['drive-system-service','drive-belt','weights','slide-piece']}),
 
