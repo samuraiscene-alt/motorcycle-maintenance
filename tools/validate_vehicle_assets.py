@@ -13,6 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "vehicle-art-inventory.json"
 CATALOG = ROOT / "ui-skeleton" / "vehicle-catalog.js"
+VEHICLE_UI = ROOT / "ui-skeleton" / "vehicle-data.js"
 APP_DIR = ROOT / "ui-skeleton"
 
 
@@ -26,6 +27,44 @@ def catalog_pairs():
         for model in re.findall(r"\['([^']+)',\d+\]", models):
             found.add((brand, model))
     return found
+
+def mapped_vehicle_art():
+    """Find the exact per-model image sources actively used by the garage."""
+    source = VEHICLE_UI.read_text(encoding="utf-8")
+    block = source.split("const vehicleArtwork=Object.freeze({", 1)[1].split("\\n});", 1)[0]
+    return [
+        (key, path.split("?", 1)[0])
+        for key, path in re.findall(
+            r"'([^']+)':\\{src:'([^']+)'", block
+        )
+    ]
+
+
+def normalize_art_path(raw):
+    """Inventory paths resolve relative to ui-skeleton, matching active UI sources."""
+    return (APP_DIR / raw).resolve()
+
+
+def check_art_mapping(models, failures):
+    listed = set()
+    for item in models:
+        for gen in item.get("generations", []):
+            path = normalize_art_path(gen["file"])
+            listed.add((item["brand"], item["model"], path))
+
+    for key, raw in mapped_vehicle_art():
+        # Ignore the deliberate generic PCX illustration; exact image files
+        # are tracked independently in the manifest.
+        if not raw.lower().endswith((".png", ".webp", ".jpg", ".jpeg")):
+            continue
+        tokens = key.split("|")
+        if len(tokens) < 2:
+            failures.append(f"INVALID ART KEY: {key}")
+            continue
+        brand, model = tokens[:2]
+        resolved = normalize_art_path(raw)
+        if (brand, model, resolved) not in listed:
+            failures.append(f"APP IMAGE NOT INVENTORIED: {key} -> {raw}")
 
 
 def main():
@@ -57,6 +96,8 @@ def main():
     if images != data.get("individualImageAssetsPrepared"):
         failures.append("individualImageAssetsPrepared mismatch")
 
+    check_art_mapping(models, failures)
+
     count = 0
     for item in models:
         generations = item.get("generations", [])
@@ -65,7 +106,7 @@ def main():
         for gen in generations:
             count += 1
             # Explicit relative paths can reference the existing root-level PNGs.
-            path = (APP_DIR / gen["file"]).resolve()
+            path = normalize_art_path(gen["file"])
             if not path.is_relative_to(ROOT) or not path.is_file():
                 failures.append(f"MISSING or OUTSIDE REPO: {gen['file']}")
                 continue
