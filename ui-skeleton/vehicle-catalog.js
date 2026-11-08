@@ -64,6 +64,31 @@ const modelReleaseSources=Object.freeze({
  'KAWASAKI|Z900':'https://storage.kawasaki.eu/repository/be/fr-BE/Accessoires/Kawasaki_Genuine_Chain_Kits_20251121.pdf'
 });
 // Exact-year OEM technical specifications: physical part presence, NOT a maintenance-cycle assertion.
+// Research evidence for remaining catalog models. Family references NEVER silently
+// disable parts on a specific model year. Exact-year applicability remains separate.
+const modelFamilyPartEvidence=Object.freeze({
+ 'HONDA|SUPER CUB110':Object.freeze({source:"https://www.honda.co.jp/SUPERCUB/",cooling:'air',drive:'chain',scope:'model-family-reference',notes:"110cc JPN model; no cross-market interval"}),
+ 'HONDA|CT125':Object.freeze({source:"https://www.honda.co.jp/CT125/",cooling:'air',drive:'chain',scope:'model-family-reference',notes:"JA65 generation"}),
+ 'HONDA|REBEL500':Object.freeze({source:"https://hondanews.eu/eu/lv/motorcycles/media/pressreleases/500051/25ym-honda-cmx500-rebel-press-kit",cooling:'liquid',drive:'chain',scope:'model-family-reference',notes:"2025 CMX500 Rebel press specification"}),
+ 'YAMAHA|XMAX125':Object.freeze({source:"https://www.yamaha-motor.eu/kv/en/scooters/sport/pdp/xmax-125-2025/",cooling:'liquid',drive:'cvt',scope:'model-family-reference',notes:"EU XMAX 125; variant/market verify"}),
+ 'YAMAHA|TRICITY125':Object.freeze({source:"https://www.yamaha-motor.eu/gb/en/scooters/urban-mobility/pdp/tricity-125-abs/",cooling:'liquid',drive:'cvt',scope:'model-family-reference',notes:"three wheel model; do not unify front-tire count"}),
+ 'SUZUKI|BURGMAN125':Object.freeze({source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2026burgman-street-125ex/",cooling:'air',drive:'cvt',scope:'model-family-reference',notes:"Burgman Street 125EX; verify EX variant"}),
+ 'SUZUKI|ADDRESS125':Object.freeze({source:"https://www.suzukimotorcycle.co.in/product-details/all-new-access-125-bluetooth-enabled/price",cooling:'air',drive:'cvt',scope:'model-family-reference',notes:"Indian Access 125 is NOT same as global Address 125; REFERENCE ONLY"}),
+ 'SUZUKI|AVENIS125':Object.freeze({source:"https://www.suzukimotorcycle.co.in/product-details/avenis/accessories",cooling:'air',drive:'cvt',scope:'model-family-reference',notes:"India Avenis 125 product"}),
+ 'SUZUKI|GSX-S125':Object.freeze({source:"https://bikes.suzuki.co.uk/bikes/street/gsx-s125/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"engine cooling documented; final-drive confirmation pending"}),
+ 'BMW|G310R':Object.freeze({source:"https://manuals.bmw-motorrad.com/manuals/BA-Extern/IN/BA-INTERNET-COM/PDF/G_0G41_RM_0320_01.pdf",cooling:'liquid',drive:'chain',scope:'model-family-reference',notes:"BMW 2020 owner manual; may differ 2025"}),
+ 'BMW|R1300GS':Object.freeze({source:"https://www.bmw-motorrad.co.kr/ko/models/adventure/r1300gs/technicaldata.html",cooling:'mixed',drive:'shaft',scope:'model-family-reference',notes:"cardan shaft; NOT chain, not CVT"}),
+ 'DUCATI|MONSTER':Object.freeze({source:"https://www.ducati.com/us/en/bikes/monster/monster-sp",cooling:'liquid',drive:'chain',scope:'model-family-reference',notes:"937cc Monster; 2026 890cc variant differs"}),
+ 'SYM|JET14':Object.freeze({source:"https://www.sym-global.com/jet14-liquid-e5",cooling:'liquid',drive:'cvt',scope:'model-family-reference',notes:"JET14 125 liquid variant; air variant ALSO exists"}),
+ 'SYM|JOYMAX':Object.freeze({source:"https://www.sym-global.com/joymaxz300",cooling:'liquid',drive:'cvt',scope:'model-family-reference',notes:"JOYMAX Z 300 spec; verify JOYMAX trim"}),
+ 'SYM|JET X 125':Object.freeze({source:"https://www.sym-global.com/jetx",cooling:'liquid',drive:'cvt',scope:'model-family-reference',notes:"JET X 125 technical spec"}),
+ 'KYMCO|DOWNTOWN':Object.freeze({source:"https://www.kymco.com/product/downtown-350i-tcs",cooling:'liquid',drive:'cvt',scope:'model-family-reference',notes:"Downtown 350i 320.6cc; catalog says 350cc nominal"}),
+ 'KYMCO|AK550':Object.freeze({source:"https://www.kymco.com/uploads/new8/AK550%2055th/AK550_55th_PRESS%20INFORMATION.pdf",cooling:'liquid',drive:'cvt',scope:'model-family-reference',notes:"AK550 55th; CVT with secondary drive variant differences"}),
+ 'KYMCO|LIKE125':Object.freeze({source:"https://www.kymco.com/uploads/new8/Like%20S/Like_S_PRESS%20INFORMATION.pdf",cooling:'air',drive:'cvt',scope:'model-family-reference',notes:"Like S 125 variant; normal Like125 may differ"}),
+ 'DNA MOTORS|UHR125':Object.freeze({source:"https://www.dnamotors.co.kr/brand/scooter_UHR125",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"CVT suspected but official page only confirms liquid cooling"}),
+ 'ZONTES|125G1':Object.freeze({source:"https://www.zontes.co.kr/home/125g1/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"6 speed 125G1; chain final drive not validated by provided page"}),
+ 'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
+});
 const verifiedPartApplicability=Object.freeze({
  'YAMAHA|MT-03|2025':Object.freeze({source:'https://www.yamaha-motor.eu/al/en/motorcycles/hyper-naked/pdp/mt-03-2025/',region:'EU',cooling:'liquid',drive:'chain',unsupported:['drive-system-service','drive-belt','weights','slide-piece']}),
  'YAMAHA|YZF-R3|2026':Object.freeze({source:'https://www.yamaha-motor.eu/cy/en/motorcycles/supersport/pdp/r3/',region:'EU',cooling:'liquid',drive:'chain',unsupported:['drive-system-service','drive-belt','weights','slide-piece']}),
@@ -492,12 +517,14 @@ const researchInventory=Object.freeze(brands.flatMap(brand=>brand.models.map(([m
  const years=Object.keys(expandedOfficialProfiles).filter(x=>x.startsWith(key+'|'))
   .map(x=>Number(x.slice(key.length+1))).filter(Number.isFinite).sort((a,b)=>a-b);
  const manual=sourceAudit[key]||null;
+ const familyEvidence=modelFamilyPartEvidence[key]||null;
  const partYears=Object.keys(verifiedPartApplicability).filter(x=>x.startsWith(key+'|'))
   .map(x=>Number(x.slice(key.length+1))).filter(Number.isFinite).sort((a,b)=>a-b);
  const first=knownFirstModelYears[key]||null;
  return Object.freeze({brand:brand.id,model,verifiedYears:Object.freeze(years),manual,
   firstConfirmedYear:first,lastConfirmedYear:null,releaseSource:modelReleaseSources[key]||null,
-  verifiedPartYears:Object.freeze(partYears),partsStatus:partYears.length?'verified-exact-year':'verification-pending',
+  verifiedPartYears:Object.freeze(partYears),partEvidence:familyEvidence,
+  partsStatus:partYears.length?'verified-exact-year':familyEvidence?'family-reference-needs-year-check':'verification-pending',
   serviceStatus:years.length?'verified-exact-year':'verification-pending',
   status:years.length?'verified-year-profiles':manual?'manual-found-not-verified':'verification-pending'});
 })));
@@ -544,6 +571,8 @@ window.MotorcycleCatalog=Object.freeze({
  knownFirstModelYears,
  modelReleaseSources,
  verifiedPartApplicability,
+ modelFamilyPartEvidence,
+ findModelFamilyPartEvidence(brand,model){return modelFamilyPartEvidence[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()]||null},
  findVerifiedPartApplicability(brand,model,year){return verifiedPartApplicability[profileKey(brand,model,year)]||null},
  getModelResearch(brand,model){return researchInventory.find(x=>x.brand===String(brand).trim().toUpperCase()&&x.model===String(model).trim().toUpperCase())||null},
  validateModelYear(brand,model,year){
