@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44기종 제조사 기술자료 및 공식 정비주기 조사표
 
-기준일: 2026-11-08 · 앱 v2.9.160
+기준일: 2026-11-08 · 앱 v2.9.161
 
 **기술자료 연결과 정비주기 확인은 다르다.** '검증'은 각 해당 연식·국가·세부모델에만 해당하며, 공식 정비주기가 일부만 검증된 모델도 있다. 출시·단종 연도는 공식적으로 뒷받침되는 경우에만 표기한다. 트림을 정확히 알 수 없는 기종은 기존 사용자 정비 데이터를 보존하고 자동 숨김을 적용하지 않는다.
 
@@ -19,7 +19,7 @@
 | HONDA | REBEL500 | 2025 | 확인 연식만 | 2025 | 미확인 | 미검증 | 미검증 | [정비표](https://2rom-prd-data.hondamotopub.com/om/HMEE/CMX500/2025/CMX500A_OM_32MLHB10_ENG_web.pdf) / [부품 사양](https://hondanews.eu/eu/lv/motorcycles/media/pressreleases/500051/25ym-honda-cmx500-rebel-press-kit) |
 | YAMAHA | NMAX125 | 2025 | 확인 연식만 | 2015, 2022, 2025 | 미확인 | 2015 | 미검증 | [정비표](https://www.ysk.co.kr/support/manual.php?boardid=manual&idx=62&mode=view) / [부품 사양](https://www.yamaha-motor.eu/is/en/scooters/sport/pdp/nmax-125-2025/) |
 | YAMAHA | XMAX300 | 2025 | 확인 연식만 | 2025 | 미확인 | 미검증 | 미검증 | [정비표](https://www.ysk.co.kr/support/manual.php?boardid=manual&idx=64&mNum=5&mode=view&sNum=7) / [부품 사양](https://www.yamaha-motor.eu/is/en/scooters/sport/pdp/xmax-300-2025/) |
-| YAMAHA | XMAX125 | 2025 | 확인 연식만 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.yamaha-motor.eu/kv/en/scooters/sport/pdp/xmax-125-2025/) |
+| YAMAHA | XMAX125 | 2025 | 확인 연식만 | 2025 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.yamaha-motor.eu/kv/en/scooters/sport/pdp/xmax-125-2025/) |
 | YAMAHA | TMAX560 | 2025, 2026 | 확인 연식만 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.yamaha-motor.eu/kv/en/scooters/sport/pdp/tmax/) |
 | YAMAHA | MT-03 | 2025 | 확인 연식만 | 2021 | 미확인 | 미검증 | 미검증 | [정비표](https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&offset=20&sk=&sw=) / [부품 사양](https://www.yamaha-motor.eu/al/en/motorcycles/hyper-naked/pdp/mt-03-2025/) |
 | YAMAHA | MT-07 | 2025 | 확인 연식만 | 2021 | 미확인 | 미검증 | 미검증 | [정비표](https://library.ymcapps.net/library/om/contents/html/10/BAT-28199-10_02/7-4.html) / [부품 사양](https://www.yamaha-motor.eu/kv/en/motorcycles/hyper-naked/pdp/mt-07-2025/) |
@@ -68,3 +68,7 @@ Vespa [Primavera 125/150 공식 정비 리플렛](https://wlassets.vespa.com/wla
 Suzuki [Burgman Street 125EX MY2024](https://www.globalsuzuki.com/motorcycle/smgs/products/2024burgman-street-125ex/)는 기존 BURGMAN125 모델명과 반드시 같은 세부 사양이 아니다. 차종 등록창에서 트림을 구별할 수 있기 전까지 다른 트림의 부품을 제거하지 않는다.
 
 잔여 과제: 44개 모든 기종의 국가별·연식별 **전체 정비표**, 엔진·구동계 트림 식별, 출시·단종 연도, 단독 투명 PNG가 없는 기종·부품 이미지 개별 제작, 아이폰 PWA 실기기 테스트. 모든 과제를 완료했다고 표현하지 않는다.
+
+## XMAX125 2025 Yamaha BMJ YP125RA: 직접 정비표 검토
+
+제조사 2025년형 설명서(116쪽)의 기종별 정비표를 재검토. 에어필터 12,000km, 점화플러그 6,000km 점검/12,000km 교체, 밸브간극 6,000km 점검, 미션오일 1,000km 첫 교체 후 12,000km 간격, 냉각수 3년, 브레이크액 2년, 브레이크호스 4년을 부분 적용. 엔진오일 교체와 구동벨트 교체는 설명서에 **표시등 기준**으로 되어 있으므로 다른 트림의 고정 6,000km·18,000km 주기를 가져오지 않는다. 오일 거름망 최초 1,000km 세척도 반복 1,000km로 오인하지 않도록 자동 주기에 넣지 않았다. 제조사 문서 사본 출처: https://www.notice-facile.com/en/manual/3051380/yamaha%2Bxmax125-2025
