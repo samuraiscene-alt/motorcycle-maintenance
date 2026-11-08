@@ -552,7 +552,26 @@ const vehicleArtwork=Object.freeze({
  'YAMAHA|TMAX560|2022':{src:'./yamaha-tmax560-studio.png?v=125',alt:'Yamaha TMAX560 2022 이후 독립 AI 참고 이미지'},
  'SUZUKI|BURGMAN125|2023':{src:'./suzuki-burgman125-studio.png?v=126',alt:'Suzuki Burgman Street 125 계열 AI 참고 이미지, 상세 모델 확인 필요'},
  'SUZUKI|BURGMAN400|2024':{src:'./suzuki-burgman400-studio.png?v=128',alt:'Suzuki Burgman 400 2024 외형 계열 독립 AI 참고 이미지'},
- 'DNA MOTORS|UHR125|2025':{src:'./dna-motors-uhr125-studio.png?v=130',alt:'DNA Motors UHR125 고화질 AI 참고 이미지 · 연식별 세부 외형 차이 가능'}
+ 'DNA MOTORS|UHR125|2025':{src:'./dna-motors-uhr125-studio.png?v=130',alt:'DNA Motors UHR125 고화질 AI 참고 이미지 · 연식별 세부 외형 차이 가능'},
+ 'HONDA|ADV350':{src:'../honda-adv350-2025-studio.png?v=168',alt:'HONDA ADV350 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'HONDA|SUPER CUB110':{src:'../honda-super-cub110-candidate.png?v=168',alt:'HONDA SUPER CUB110 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'HONDA|C125':{src:'../honda-c125-candidate.png?v=168',alt:'HONDA C125 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'HONDA|CBR650R':{src:'../01_HONDA_CBR650R.png?v=168',alt:'HONDA CBR650R 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'HONDA|REBEL500':{src:'../02_HONDA_REBEL500.png?v=168',alt:'HONDA REBEL500 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'YAMAHA|MT-03':{src:'../03_YAMAHA_MT-03.png?v=168',alt:'YAMAHA MT-03 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'YAMAHA|MT-07':{src:'../04_YAMAHA_MT-07.png?v=168',alt:'YAMAHA MT-07 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'YAMAHA|YZF-R3':{src:'../05_YAMAHA_YZF-R3.png?v=168',alt:'YAMAHA YZF-R3 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'YAMAHA|TRICITY125':{src:'../06_YAMAHA_TRICITY125.png?v=168',alt:'YAMAHA TRICITY125 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'SUZUKI|AVENIS125':{src:'../08_SUZUKI_AVENIS125.png?v=168',alt:'SUZUKI AVENIS125 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'BMW|G310R':{src:'../11_BMW_G310R.png?v=168',alt:'BMW G310R 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'BMW|R1300GS':{src:'../12_BMW_R1300GS.png?v=168',alt:'BMW R1300GS 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'DUCATI|MONSTER':{src:'../13_DUCATI_MONSTER.png?v=168',alt:'DUCATI MONSTER 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'TRIUMPH|SPEED400':{src:'../14_TRIUMPH_SPEED400.png?v=168',alt:'TRIUMPH SPEED400 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'SYM|JET14':{src:'../15_SYM_JET14.png?v=168',alt:'SYM JET14 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'SYM|JET X 125':{src:'../17_SYM_JET_X_125.png?v=168',alt:'SYM JET X 125 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'KYMCO|DOWNTOWN':{src:'../18_KYMCO_DOWNTOWN.png?v=168',alt:'KYMCO DOWNTOWN 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'KYMCO|AK550':{src:'../19_KYMCO_AK550.png?v=168',alt:'KYMCO AK550 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'},
+ 'KYMCO|LIKE125':{src:'../20_KYMCO_LIKE125.png?v=168',alt:'KYMCO LIKE125 독립 AI 참고 이미지 · 연식·트림·실차 외형 검수 전'}
 });
 const artKey=maker+'|'+normalizedModel+'|'+String(r?.year||'');
 // Match the same body generation for nearby years; unknown models use a neutral silhouette.
