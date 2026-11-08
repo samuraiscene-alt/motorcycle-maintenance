@@ -1,6 +1,6 @@
 {
-  "version": "2.9.163",
-  "cache": "motorcycle-maintenance-v2.9.163",
+  "version": "2.9.164",
+  "cache": "motorcycle-maintenance-v2.9.164",
   "released": "2026-11-08",
-  "note": "SYM JET X125 및 JOYMAX Z+ 공식 설명서 정비표 원문·부품별 주기를 모델별 참고자료로 추가; 연식/세부 트림 미확정 자동적용 금지; KYMCO AK550 공식 첫 출시 연도 정정"
+  "note": "베스파 공식 2022 카탈로그에서 Primavera125/Sprint125/GTS300 연식별 타이어·브레이크 구성 검증, 정기점검 방문 일정은 교체주기와 분리"
 }
