@@ -176,6 +176,31 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'SUZUKI|AVENIS125|2023':Object.freeze({
+  verified:true,coverage:'partial',region:'KR Suzuki UN125NE, Korean-market Avenis125 2023 manual',
+  modelCode:'UN125NE',year:2023,
+  source:'https://www.suzuki.kr/download.cm?tk=YToyOntpOjA7czoxMzoiNDQ0ZThkZTliOWM2MiI7aToxO3M6MjI6ImYyMDI0MDcyMzQ2ZjY0MjQ4Zjk0Y2MiO30%3D',
+  sourceType:'Suzuki Korea official AVENIS125 UN125NE Korean-language owner manual',
+  sourcePages:['3-6','3-7','3-20','3-25','3-30'],
+  intervals:Object.freeze({
+   oil:4000,'air-filter':12000,'spark-plug':8000,'gear-oil':8000,
+   'drive-belt':20000,'oil-strainer':8000,'valve-clearance':4000
+  }),
+  tasks:Object.freeze({
+   oil:{replaceKm:4000,firstReplaceKm:1000,firstRegularOdometerKm:4000},
+   'air-filter':{inspectKm:4000,replaceKm:12000},
+   'spark-plug':{inspectKm:4000,replaceKm:8000},
+   'gear-oil':{replaceKm:8000},
+   'drive-belt':{inspectKm:4000,replaceKm:20000},
+   'oil-strainer':{inspectKm:8000,firstInspectKm:1000,firstRegularOdometerKm:8000},
+   'valve-clearance':{inspectKm:4000,firstInspectKm:1000,firstRegularOdometerKm:4000},
+   'brake-fluid':{replaceMonths:24},'brake-hose':{replaceMonths:48},
+   brake:{replaceWhenWorn:true},tire:{replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({'oil-strainer':'inspect','valve-clearance':'inspect','drive-belt':'inspect'}),
+  notes:'Oil strainer: inspect first at 1000 km and then at 8000 km checkpoints; clean if required, not mandatory scheduled replacement. Avenis uses oil strainer, not a replaceable oil filter. CVT belt: inspect every 4000 km, replace at 20000 km. The combined belt/roller card is not automatically assigned the belt-only replacement interval.'
+ }),
+
  'HONDA|CB125R|2024':Object.freeze({
   verified:true,coverage:'partial',region:'JP 8BJ-JC91 (JC91-1100001 onwards)',modelCode:'JC91',year:2024,
   source:"https://www.honda.co.jp/customer/motor/cb125r/faq/qa009/",
@@ -456,29 +481,6 @@ const officialProfiles=Object.freeze({
   actionByPart:Object.freeze({'valve-clearance':'inspect','chain-sprockets':'inspect'})
  }),
  
- 'YAMAHA|MT-07|2023':Object.freeze({
-  verified:true,coverage:'partial',region:'TH (Thai market), Yamaha MTN690 BTK first edition Jan 2023',
-  modelCode:'MTN690',year:2023,
-  source:'https://www.yamaha-motor.co.th/docs/owner-manual/bigbike/en/pbtk2u199e0e_mt07%28eng%29a3e586bc44a1400ba969bf37a7d2160a.pdf?Status=Master&sfvrsn=ac0f3df8_2',
-  sourceType:'Yamaha factory MT-07 MTN690 BTK-2U199-E0 January 2023 Thai-market English owner manual',
-  sourcePages:['8-3','8-4','8-5','8-6'],
-  intervals:Object.freeze({oil:6000,'oil-filter':12000,'air-filter':40000,'spark-plug':19000,
-    'valve-clearance':42000,'chain-sprockets':1000}),
-  tasks:Object.freeze({
-   oil:{replaceKm:6000,firstReplaceKm:1000,firstRegularOdometerKm:7000},
-   'oil-filter':{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:13000},
-   'air-filter':{replaceKm:40000},
-   'spark-plug':{replaceKm:19000},
-   'valve-clearance':{inspectKm:42000},
-   'chain-sprockets':{inspectKm:1000},
-   'brake-fluid':{replaceMonths:24},
-   'brake-hose':{replaceMonths:48},
-   coolant:{replaceMonths:36},
-   brake:{replaceWhenWorn:true},tire:{replaceWhenWorn:true}
-  }),
-  actionByPart:Object.freeze({'valve-clearance':'inspect','chain-sprockets':'inspect'}),
-  notes:'Initial oil at 1000 km then 7000/13000/19000/25000; oil filter at 1000/13000/25000. Air-filter check-hose cleaning is a separate task, not the filter-element replacement.'
- }),
 'YAMAHA|MT-07|2021':Object.freeze({
   verified:true,coverage:'partial',region:'US MT07M/MT07MC Yamaha 2021',modelCode:'MT07M',year:2021,
   source:'https://library.ymcapps.net/library/om/contents/html/10/BAT-28199-10_02/7-4.html',
@@ -824,6 +826,16 @@ const sourceAudit=Object.freeze({
 // Preserve the real list of service actions as a reference only; NEVER automatically
 // infer its market/model-year applicability or substitute a service visit for a part.
 const manufacturerScheduleReferences=Object.freeze({
+ 'YAMAHA|MT-07':Object.freeze({
+  source:'https://www.yamaha-motor.co.th/docs/owner-manual/bigbike/en/pbtk2u199e0e_mt07%28eng%29a3e586bc44a1400ba969bf37a7d2160a.pdf?Status=Master&sfvrsn=ac0f3df8_2',
+  scope:'Thailand market MTN690 BTK 2023 English manual; not verified for Korean-market MT-07',
+  servicePointsKm:[1000,7000,13000,19000,25000],
+  recurringParts:Object.freeze({oil:6000,'oil-filter':12000,'air-filter':40000,'spark-plug':19000,'valve-clearance':42000,'chain-sprockets':1000}),
+  calendarMonths:Object.freeze({'brake-fluid':24,'brake-hose':48,coolant:36}),
+  autoApply:false,
+  notes:'Thailand regional interval reference only; user registration has no market/trim selection. Never auto-apply to all MT-07 vehicles for 2023.'
+ }),
+
  'SYM|JET X 125':Object.freeze({
   source:'https://www.sym-global.com/storage/system/products/SCOOTER/24-JETX/JETX_MANUAL.pdf',
   scope:'SYM JETX XH12WW-EU / XH12WX-EU series 125cc; manual has several 150cc/200cc variants; model year not asserted',
