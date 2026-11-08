@@ -43,7 +43,7 @@ if(Array.isArray(catalog?.researchInventory)){
  const info=document.createElement('p');
  const confirmedParts=all.filter(x=>x.verifiedPartYears.length).length;
  const variantPending=all.filter(x=>x.verifiedPartYears.some(year=>catalog.findPartEvidenceForYear?.(x.brand,x.model,year)?.variantMatchRequired)).length;
- info.textContent='전체 '+all.length+'기종 기술자료 연결 · 정비주기 일부 검증 '+verified+'기종 · 연식별 부품자료 '+confirmedParts+'기종 · 세부 트림 확인 필요 '+variantPending+'기종. 연식별 정비주기와 단종 연도는 별도로 검증 중이며, 자료만 있다고 교체주기를 자동 생성하지 않아.';
+ info.textContent='전체 '+all.length+'기종 기술자료 연결 · 정비주기 일부 검증 '+verified+'기종 · 특정 연식 부품자료 '+confirmedParts+'기종 · 세부 트림 확인 필요 '+variantPending+'기종. 자료가 있어도 국가·세부 트림·정비표 연식이 일치하지 않으면 교체주기를 자동 생성하지 않아.';
  report.appendChild(info);
  for(const brandGroup of catalog.brands){
   const group=document.createElement('details');group.className='fleet-research-group';
@@ -70,6 +70,16 @@ if(Array.isArray(catalog?.researchInventory)){
     :row.verifiedPartYears.length?'부품 구성: 확인 연식 '+row.verifiedPartYears.join(', ')
     :row.partEvidence?'부품 구성: 기종 계열 자료 있음 · 연식 검증 필요':'부품 구성: 추가 조사 필요';
    line.appendChild(parts);
+   const reference=catalog.findScheduleReference?.(row.brand,row.model);
+   if(reference){
+    const note=document.createElement('small');note.style.display='block';
+    note.textContent='제조사 정비표 참고 · 세부 연식 미확인 (자동 주기 미적용)';
+    line.appendChild(note);
+    if(typeof reference.source==='string'&&reference.source.startsWith('https://')){
+     const a=document.createElement('a');a.href=reference.source;a.target='_blank';a.rel='noopener noreferrer';
+     a.textContent='정비표 원문';line.appendChild(a);
+    }
+   }
    if(row.regionalManualYears){
     const range=row.regionalManualYears.segments
      ?row.regionalManualYears.segments.map(([a,b])=>a+'~'+(b||'현재')).join(', ')
