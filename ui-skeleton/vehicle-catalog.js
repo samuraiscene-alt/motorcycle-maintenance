@@ -90,6 +90,12 @@ const modelFamilyPartEvidence=Object.freeze({
  'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
 });
 const verifiedPartApplicability=Object.freeze({
+ 'BMW|G310R|2020':Object.freeze({source:"https://manuals.bmw-motorrad.com/manuals/BA-Extern/IN/BA-INTERNET-COM/PDF/G_0G43_RM_0320_07.pdf",region:"US 2020",cooling:'liquid',drive:'chain',notes:"BMW G 310 R US MY2020 riders manual explicitly documents coolant and chain; other MY require manual",unsupported:["drive-system-service","drive-belt","weights","slide-piece","gear-oil"]}),
+ 'SYM|JET14|2025':Object.freeze({source:"https://www.sym-global.com/jet14evo?engine=125cc",region:"OEM specific variant",cooling:'varies',drive:'cvt',variantMatchRequired:true,notes:"SYM 2025 catalogue lists JET14 EVO air-cooled and liquid-cooled variants; generic JET14 registration cannot choose trim",unsupported:[]}),
+ 'KYMCO|DOWNTOWN|2015':Object.freeze({source:"https://www.kymco.com/product/downtown-350i-tcs",region:"OEM specific variant",cooling:'liquid',drive:'cvt',variantMatchRequired:true,notes:"Downtown 350i TCS 320.6cc product family, generic DOWNTOWN needs trim/year validation",unsupported:[]}),
+ 'KYMCO|AK550|2018':Object.freeze({source:"https://www.kymco.com/uploads/new8/AK550%2055th/AK550_55th_PRESS%20INFORMATION.pdf",region:"OEM specific variant",cooling:'liquid',drive:'cvt',variantMatchRequired:true,notes:"KYMCO AK550 55th Edition product specification, not unqualified base AK550",unsupported:[]}),
+ 'KYMCO|LIKE125|2018':Object.freeze({source:"https://www.kymco.com/uploads/new8/Like%20S/Like_S_PRESS%20INFORMATION.pdf",region:"OEM specific variant",cooling:'air',drive:'cvt',variantMatchRequired:true,notes:"KYMCO Like S 125 variant not necessarily same as generic Like 125",unsupported:[]}),
+ 'ZONTES|125G1|2024':Object.freeze({source:"https://www.zontes.co.kr/home/downloads/?vid=1",region:"KR manual 2024",cooling:'liquid',drive:'chain',notes:"ZONTES Korea combined 2024 ZT125-G1/U1/GK riders manual identifies chain and liquid cooling",unsupported:["drive-system-service","drive-belt","weights","slide-piece","gear-oil"]}),
  'YAMAHA|XMAX125|2025':Object.freeze({source:"https://www.yamaha-motor.eu/kv/en/scooters/sport/pdp/xmax-125-2025/",region:'OEM model specification',cooling:'liquid',drive:'cvt',notes:"EU 2025 XMAX 125; automatic V-Belt transmission; confirm regional trim",unsupported:["chain-sprockets"]}),
  'YAMAHA|TRICITY125|2025':Object.freeze({source:"https://www.yamaha-motor.eu/gb/en/scooters/urban-mobility/pdp/tricity-125-abs/",region:'OEM model specification',cooling:'liquid',drive:'cvt',frontTyres:2,notes:"EU 2025 Tricity 125 ABS, TWO front tyres; independent left/right service history may be added later",unsupported:["chain-sprockets"]}),
  'SUZUKI|BURGMAN125|2026':Object.freeze({source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2026burgman-street-125ex/",region:'OEM model specification',cooling:'air',drive:'cvt',variantMatchRequired:true,notes:"Applies to Burgman Street 125EX; generic BURGMAN125 picker does not yet distinguish trim; no automatic exclusion",unsupported:[]}),
@@ -135,6 +141,26 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'ZONTES|125G1|2024':Object.freeze({
+  verified:true,coverage:'partial',region:'KR ZT125-G1/U1/GK shared manual, MY2024',modelCode:'ZT125-G1',year:2024,
+  source:'https://www.zontes.co.kr/home/wp-content/uploads/mangboard/2024/08/28/F20_ZT125-G1%2C%20ZT125-U1%2C%20ZT125-GK%20%EC%82%AC%EC%9A%A9%EC%84%A4%EB%AA%85%EC%84%9C.pdf',
+  sourceType:'Zontes Korea official combined 125G1 owner manual, maintenance chart page 24',
+  sourcePages:[24],
+  intervals:Object.freeze({filter:10000,'oil-filter':10000,coolant:30000}),
+  tasks:Object.freeze({
+   filter:{inspectKm:5000,replaceKm:10000},
+   'oil-filter':{replaceKm:10000,firstReplaceKm:1000,firstRegularOdometerKm:10000},
+   coolant:{replaceKm:30000,replaceMonths:36},
+   'spark-plug':{inspectKm:10000}
+  }),
+  notes:Object.freeze({
+   oil:'Manual chart: replace at 1000km and 5000km; 10000km cell is blank. Do not infer recurring oil mileage from incomplete chart.',
+   chain:'Inspect at 1000km and 5000km; lubricate continuously. No inferred repeated mileage stored.',
+   'brake-fluid':'Chart has ambiguous repeated brake-hose captions; 24mo/20000km instruction requires cross-check before auto-fill.',
+   'valve-clearance':'Chart text says 150cc/200cc despite ZT125-G1 cover: do not auto-fill valve interval.'
+  }),
+  actionByPart:Object.freeze({'spark-plug':'inspect'})
+ }),
  'DUCATI|MONSTER|2025':Object.freeze({
   verified:true,coverage:'partial',region:'US Monster 937 MY25',modelCode:'Monster 937',year:2025,
   source:'https://www.ducati.com/us/en/bikes/monster/monster-937/insights',
