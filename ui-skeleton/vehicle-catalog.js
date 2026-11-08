@@ -52,6 +52,7 @@ const brandLogos=Object.freeze({
 // Market-specific owner-manual listings. These are NOT global first-year restrictions
 // and may have gaps or variant differences. Do not feed them into year-picker bounds.
 const regionalManualYears=Object.freeze({
+ 'YAMAHA|YZF-R3':Object.freeze({region:'JP',segments:Object.freeze([[2022,2023],[2025,null]]),source:'https://www2.yamaha-motor.co.jp/jp/manual/mc/result?ptn=01',note:'Japan YZF320-A official manual listing 2022 B2XB, 2023 B2XM and 2025 BRA6; not proof of gaps/discontinuation.'}),
  'SUZUKI|GSX-S125':Object.freeze({region:'KR',from:2018,to:null,source:'https://www.suzuki.kr/manual1',note:'Korea manual list 2018 onward'}),
  'SUZUKI|BURGMAN400':Object.freeze({region:'KR',from:2022,to:null,source:'https://www.suzuki.kr/manual1',note:'KR manuals for 2022+; other country/model years existed earlier'}),
  'SUZUKI|AVENIS125':Object.freeze({region:'KR',from:2023,to:null,source:'https://www.suzuki.kr/manual1',note:'Korean listing 2023 onward'}),
@@ -170,6 +171,35 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ // Yamaha 2022 YZF320-A B2X: owner manual Dec 2021, factory pages 6-3,6-5,6-6,6-7.
+ // Yamaha Japan 2022 YZF-R3 uses B2XB; this exact profile is B2X regional/manual spec.
+ 'YAMAHA|YZF-R3|2022':Object.freeze({
+  verified:true,coverage:'partial',region:'Indonesia/EU 2022 YZF320-A B2X',modelCode:'YZF320-A B2X',year:2022,
+  source:"https://cdn2.yamaha-motor.eu/prod/owner-manuals/Motorcycles/PB2XF8199E0E.pdf",
+  sourceType:'Yamaha official R3 YZF320-A English owner manual B2X-F8199-E0, Dec 2021; periodic maintenance charts pp6-3,6-5,6-6,6-7',
+  sourcePages:['6-3','6-5','6-6','6-7'],
+  intervals:Object.freeze({'air-filter':20000,'oil-filter':20000,'spark-plug':20000,'valve-clearance':40000,'chain-sprockets':800}),
+  tasks:Object.freeze({
+   'air-filter':{replaceKm:20000},
+   'oil-filter':{replaceKm:20000,firstReplaceKm:1000,firstRegularOdometerKm:20000},
+   'spark-plug':{inspectKm:10000,replaceKm:20000},
+   'valve-clearance':{inspectKm:40000},
+   'chain-sprockets':{cleanKm:800},
+   coolant:{replaceMonths:36},
+   'brake-fluid':{replaceMonths:24},
+   'brake-hose':{replaceMonths:48}
+  }),
+  actionByPart:Object.freeze({'chain-sprockets':'clean','valve-clearance':'inspect'}),
+  notes:Object.freeze({
+   oil:'Engine oil first interval then oil change indicator; no arbitrary fixed repeating km replacement interval.',
+   'oil-filter':'Filter cartridge replace at first 1000km, then 20000 and 40000km.',
+   'air-filter':'Air filter replaces at 20000km and 40000km.',
+   'spark-plug':'Inspect/clean at 10000km and 30000km, replace at 20000km/40000km.',
+   'valve-clearance':'Inspect/adjust every 40000km.',
+   'chain-sprockets':'Clean/adjust/lubricate every 800km and after rain/washing; never treat as replacement.',
+   coolant:'Replace every 3 years; brake fluid every 2 years; brake hoses every 4 years.'
+  })
+ }),
  'SUZUKI|GSX-S125|2023':Object.freeze({
   verified:true,coverage:'partial',region:'GSX-S125XA M3 international 2023',modelCode:'GSX-S125XA M3',year:2023,
   source:"https://d3rur0l55cri1p.cloudfront.net/uploads/sites/4/2023/03/GSX-S125-R125_M3.pdf",
