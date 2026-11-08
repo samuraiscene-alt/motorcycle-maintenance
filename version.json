@@ -1,6 +1,6 @@
 {
-  "version": "2.9.144",
-  "cache": "motorcycle-maintenance-v2.9.144",
+  "version": "2.9.145",
+  "cache": "motorcycle-maintenance-v2.9.145",
   "released": "2026-11-08",
-  "note": "야마하 TMAX560 2025·2026 및 스즈키 BURGMAN400 현재 공식 카탈로그 구동계·냉각계 조사 연결"
+  "note": "야마하 MT-03 2025 및 YZF-R3 2026 공식 사양 기반 체인·냉각 계통 구성 연결"
 }
