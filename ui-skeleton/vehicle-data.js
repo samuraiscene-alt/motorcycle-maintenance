@@ -986,7 +986,43 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!recordMask.hidd
 stage.addEventListener('pointerdown',e=>{if(animating||isLocked()||!regMask.hidden||!recordMask.hidden||!e.isPrimary||e.button!==0)return;pointer={id:e.pointerId,start:e.clientX,y:e.clientY,at:Date.now(),vertical:false};moved=false;try{stage.setPointerCapture(e.pointerId)}catch{}});
 stage.addEventListener('pointermove',e=>{if(!pointer||e.pointerId!==pointer.id||animating)return;const dx=e.clientX-pointer.start,dy=e.clientY-pointer.y;if(Math.abs(dy)>Math.abs(dx)*1.5&&Math.abs(dy)>12){pointer.vertical=true;return}if(pointer.vertical)return;moved=moved||Math.abs(dx)>9;const blocked=(index===0&&dx>0)||(index===bikes.length-1&&dx<0);position(blocked?dx*.25:dx,false)});
 function finish(e,cancel){if(!pointer||e.pointerId!==pointer.id)return;const delta=e.clientX-pointer.start,vertical=e.clientY-pointer.y,elapsed=Date.now()-pointer.at,wasMoved=moved,wasVertical=pointer.vertical;pointer=null;if(cancel||wasVertical){position(0,true);return}if(Math.abs(delta)>=48||(Math.abs(delta)>22&&elapsed<220)){const next=index+(delta<0?1:-1);if(next>=0&&next<bikes.length){change(next);return}}position(0,true);if(!wasMoved&&Math.abs(delta)<9&&Math.abs(vertical)<12)hideCheck()}
-const vehicleCard=document.querySelector('.vehicle');vehicleCard.tabIndex=0;vehicleCard.setAttribute('role','button');vehicleCard.setAttribute('aria-label','오토바이 정보 등록 또는 수정');vehicleCard.addEventListener('click',()=>{if(regMask.hidden&&recordMask.hidden)openReg()});vehicleCard.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&regMask.hidden&&recordMask.hidden){e.preventDefault();openReg()}});
+// Vehicle-header swipe: switch only among the user's registered motorcycles.
+// The garage remains locked to prevent accidental showroom/demo switching.
+const headerSwipeArea=document.querySelector('.vehicle-lines');
+const ownedBikeIds=()=>bikes.filter(b=>!!registered[b.id]).map(b=>b.id);
+let headerSwipeStart=null,headerSwipeSuppressClick=false;
+function switchOwnedVehicle(direction){
+ const ids=ownedBikeIds();
+ if(ids.length<2||animating||!regMask.hidden||!recordMask.hidden)return false;
+ const current=ids.indexOf(currentBike().id);
+ if(current<0)return false;
+ const nextId=ids[(current+direction+ids.length)%ids.length];
+ const nextIndex=bikes.findIndex(b=>b.id===nextId);
+ if(nextIndex<0||nextIndex===index)return false;
+ index=nextIndex;
+ try{localStorage.setItem(chosenKey,nextId)}catch(err){console.warn('차량 선택 저장 실패',err)}
+ position(0,false);
+ renderInfo();
+ return true;
+}
+if(headerSwipeArea){
+ headerSwipeArea.style.touchAction='pan-y';
+ headerSwipeArea.addEventListener('pointerdown',e=>{
+  if(e.button!==0||!e.isPrimary||ownedBikeIds().length<2||animating||!regMask.hidden||!recordMask.hidden)return;
+  headerSwipeStart={id:e.pointerId,x:e.clientX,y:e.clientY};
+  try{headerSwipeArea.setPointerCapture(e.pointerId)}catch{}
+ });
+ headerSwipeArea.addEventListener('pointerup',e=>{
+  if(!headerSwipeStart||e.pointerId!==headerSwipeStart.id)return;
+  const dx=e.clientX-headerSwipeStart.x,dy=e.clientY-headerSwipeStart.y;
+  headerSwipeStart=null;
+  if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)*1.35)return;
+  if(switchOwnedVehicle(dx<0?1:-1))headerSwipeSuppressClick=true;
+ });
+ headerSwipeArea.addEventListener('pointercancel',()=>{headerSwipeStart=null});
+ headerSwipeArea.setAttribute('aria-label','차량 이름 · 좌우로 밀어서 보유 차량 전환');
+}
+const vehicleCard=document.querySelector('.vehicle');vehicleCard.tabIndex=0;vehicleCard.setAttribute('role','button');vehicleCard.setAttribute('aria-label','오토바이 정보 등록 또는 수정');vehicleCard.addEventListener('click',e=>{if(headerSwipeSuppressClick){headerSwipeSuppressClick=false;e.preventDefault();e.stopImmediatePropagation()}},true);vehicleCard.addEventListener('click',()=>{if(regMask.hidden&&recordMask.hidden)openReg()});vehicleCard.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&regMask.hidden&&recordMask.hidden){e.preventDefault();openReg()}});
 const vehicleTab=[...document.querySelectorAll('.tabs .tab')].find(el=>el.textContent.trim()==='차량정보');if(vehicleTab){vehicleTab.tabIndex=0;vehicleTab.setAttribute('role','button');vehicleTab.addEventListener('click',openReg);vehicleTab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openReg()}})}
 const consumablesTab=[...document.querySelectorAll('.tabs .tab')].find(el=>el.textContent.trim()==='소모품');if(consumablesTab){consumablesTab.tabIndex=0;consumablesTab.setAttribute('role','button');consumablesTab.addEventListener('click',()=>document.querySelector('.rows')?.scrollIntoView({behavior:'smooth',block:'start'}));consumablesTab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();document.querySelector('.rows')?.scrollIntoView({behavior:'smooth',block:'start'})}})}
 stage.addEventListener('pointerup',e=>finish(e,false));stage.addEventListener('pointercancel',e=>finish(e,true));
