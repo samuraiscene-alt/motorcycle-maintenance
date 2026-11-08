@@ -102,6 +102,14 @@ const modelFamilyPartEvidence=Object.freeze({
  'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
 });
 const verifiedPartApplicability=Object.freeze({
+ 'SUZUKI|ADDRESS125|2025':Object.freeze({
+  source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2025address125/",region:'EU General UZ125NEWM6 MY2025 official specification',
+  cooling:'air',drive:'cvt',
+  technicalSpec:Object.freeze({engineCc:124,frontTire:'90/90-12 44J',rearTire:'90/100-10 53J',
+   frontBrake:'disc',rearBrake:'drum',brakeSystem:'combined brake CBS',oilCapacityLiters:0.8}),
+  notes:'Suzuki 2025 product catalogue confirms SOHC air-cooled CVT, rear drum and different front/rear tyre sizes. This is not a manufacturer maintenance interval.',
+  unsupported:['coolant','chain-sprockets']
+ }),
  'VESPA|PRIMAVERA125|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'Vespa EU range brochure 11/2022, PRIMAVERA125',cooling:'air',drive:'cvt',technicalSpec:Object.freeze({frontTire:'110/70-12',rearTire:'120/70-12',frontBrake:'disc',rearBrake:'drum'}),notes:'Manufacturer 2022 EU 125/300 specification. Maintenance visit packages are not part-specific replacement intervals.',unsupported:["coolant","chain-sprockets"]}),
  'VESPA|SPRINT125|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'Vespa EU range brochure 11/2022, SPRINT125',cooling:'air',drive:'cvt',technicalSpec:Object.freeze({frontTire:'110/70-12',rearTire:'120/70-12',frontBrake:'disc',rearBrake:'drum'}),notes:'Manufacturer 2022 EU 125/300 specification. Maintenance visit packages are not part-specific replacement intervals.',unsupported:["coolant","chain-sprockets"]}),
  'VESPA|GTS300|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'Vespa EU range brochure 11/2022, GTS300',cooling:'liquid',drive:'cvt',technicalSpec:Object.freeze({frontTire:'120/70-12',rearTire:'130/70-12',frontBrake:'disc',rearBrake:'disc'}),notes:'Manufacturer 2022 EU 125/300 specification. Maintenance visit packages are not part-specific replacement intervals.',unsupported:["chain-sprockets"]}),
@@ -171,6 +179,20 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
+ 'HONDA|CB125R|2024':Object.freeze({
+  verified:true,coverage:'partial',region:'JP 8BJ-JC91 (JC91-1100001 onwards)',modelCode:'JC91',year:2024,
+  source:"https://www.honda.co.jp/customer/motor/cb125r/faq/qa009/",
+  sourceType:'Honda Japan CB125R 2024 8BJ-JC91 model-specific customer oil maintenance FAQ',
+  sourcePages:['Honda JP QA009'],
+  intervals:Object.freeze({oil:6000}),
+  tasks:Object.freeze({oil:{replaceKm:6000,replaceMonths:12,firstReplaceKm:1000,firstRegularOdometerKm:7000,firstReplaceMonths:1}}),
+  specs:Object.freeze({oilChangeLiters:1.4,oilTotalLiters:1.5}),
+  notes:Object.freeze({
+   oil:'First 1000km/1 month, then every 6000km/12 months. Interval is from latest oil service; first 7000km odometer is a model arithmetic illustration and service odometer may be irregular.',
+   'oil-filter':'Honda Japan source does not state oil-filter replacement period, so none inferred.',
+   'valve-clearance':'Official JP maintenance table not yet verified; no replacement or inspection number invented.'
+  })
+ }),
  // Yamaha 2022 YZF320-A B2X: owner manual Dec 2021, factory pages 6-3,6-5,6-6,6-7.
  // Yamaha Japan 2022 YZF-R3 uses B2XB; this exact profile is B2X regional/manual spec.
  'YAMAHA|YZF-R3|2022':Object.freeze({
