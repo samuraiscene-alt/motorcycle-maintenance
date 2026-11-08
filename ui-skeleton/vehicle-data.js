@@ -8,6 +8,27 @@ const items=[{id:'oil',interval:3000},{id:'brake',interval:12000},{id:'tire',int
 const regKey='motorcycle-skeleton-registrations-v1',dataKey='motorcycle-skeleton-maintenance-v1',chosenKey='motorcycle-skeleton-selected-vehicle-v1';
 function load(key){try{const x=JSON.parse(localStorage.getItem(key)||'{}');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}catch{return {}}}
 let registered=load(regKey),database=load(dataKey),index=0,chosen=-1,pointer=null,moved=false,animating=false,checkTimer=0,formTimer=0,returnFocus=null,editingItem=null;
+// Assign persistent per-model fleet numbers to existing registrations, once.
+const fleetKey=r=>String(r?.brand||'').trim().toUpperCase()+'|'+String(r?.model||'').trim().toUpperCase();
+function nextFleetNumber(regs,brand,model){
+ const key=String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase();
+ return Math.max(0,...Object.values(regs).filter(r=>fleetKey(r)===key).map(r=>Number.isSafeInteger(r.fleetNumber)&&r.fleetNumber>0?r.fleetNumber:0))+1;
+}
+function ensureFleetNumbers(){
+ const used=new Map();let changed=false;
+ for(const [id,r] of Object.entries(registered)){
+  if(!r||typeof r!=='object')continue;
+  const key=fleetKey(r),taken=used.get(key)||new Set(),num=r.fleetNumber;
+  let result=num;
+  if(!Number.isSafeInteger(num)||num<1||taken.has(num)){
+   result=1;while(taken.has(result)||Object.values(registered).some((other)=>other!==r&&fleetKey(other)===key&&other.fleetNumber===result))result++;
+   registered[id]={...r,fleetNumber:result};changed=true;
+  }
+  taken.add(result);used.set(key,taken);
+ }
+ if(changed){try{localStorage.setItem(regKey,JSON.stringify(registered))}catch(e){console.warn('차량번호 저장 실패',e)}}
+}
+ensureFleetNumbers();
 function appendVehicleView(bike){
  if(bikes.some(x=>x.id===bike.id))return;
  bikes.push(bike);
@@ -220,7 +241,7 @@ document.addEventListener('motorcycle:register-new-vehicle',event=>{
  const verifiedProfile=window.MotorcycleCatalog?.findOfficialProfile(info.brand,info.model,info.year)||null;
  const firstUseDate=String(info.firstUseDate||'').trim();
  if(firstUseDate&&(!validMaintenanceDate(firstUseDate)||firstUseDate>todayLocal()||Number(firstUseDate.slice(0,4))<info.year))return;
- const nextReg={...registered,[id]:{name,brand:String(info.brand).trim(),model:String(info.model).trim(),cc:info.cc,km:at,year:Number.isSafeInteger(info.year)?info.year:null,firstUseDate,wear:'auto',maintenanceProfileStatus:verifiedProfile?'official':'unverified',maintenanceProfileSource:verifiedProfile?.source||null}};
+ const nextReg={...registered,[id]:{name,brand:String(info.brand).trim(),model:String(info.model).trim(),fleetNumber:nextFleetNumber(registered,info.brand,info.model),alias:String(info.alias||'').trim().slice(0,24),cc:info.cc,km:at,year:Number.isSafeInteger(info.year)?info.year:null,firstUseDate,wear:'auto',maintenanceProfileStatus:verifiedProfile?'official':'unverified',maintenanceProfileSource:verifiedProfile?.source||null}};
  const nextData={...database,[id]:{odometer:at,records:{},odometerHistory:[{at,date:new Date().toISOString()}]}};
  try{
   write(regKey,nextReg);write(dataKey,nextData);
@@ -256,7 +277,10 @@ document.addEventListener('motorcycle:update-vehicle',event=>{
   maintenanceProfileStatus:newProfile?'official':'unverified',
   maintenanceProfileSource:newProfile?.source||null
  }:{};
- const next={...registered,[id]:{...prior,name:display,brand:brandName,model:modelName,cc:d.cc,year:d.year,km:d.km,firstUseDate,wear:'auto',...profileFields}};
+ const alias=String(d.alias??prior.alias??'').trim().slice(0,24);
+ const changingModel=fleetKey(prior)!==fleetKey({brand:brandName,model:modelName});
+ const fleetNumber=changingModel?nextFleetNumber(Object.fromEntries(Object.entries(registered).filter(([key])=>key!==id)),brandName,modelName):prior.fleetNumber;
+ const next={...registered,[id]:{...prior,name:display,brand:brandName,model:modelName,fleetNumber,alias,cc:d.cc,year:d.year,km:d.km,firstUseDate,wear:'auto',...profileFields}};
  try{
   if(changedProfile){
    const key='motorcycle-skeleton-part-appearance-v1',all=load(key),existing=all[id]||{},updated={};
