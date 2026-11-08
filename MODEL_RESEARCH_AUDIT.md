@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44개 기종 공식자료 조사 현황
 
-기준일: 2026-11-08 · 앱 v2.9.155
+기준일: 2026-11-08 · 앱 v2.9.156
 
 이 문서는 **자료 조사 완료**와 **공식 정비주기 검증 완료**를 구분한다. 제조사 카탈로그의 모델 계열 정보가 있다고 해서 모든 연식/시장/트림에 그대로 적용해서는 안 된다. 누락된 정비주기나 출시·단종 연도는 임의 추정하지 않는다.
 
@@ -85,3 +85,17 @@ Yamaha GPD125-A (2DS-F8199-E0, 2015) 공식 매뉴얼 6-2~6-5쪽: 엔진오일 �
 ## BMW G310R 2020 중복 정의 제거
 
 기존 동일 key가 두 번 정의되어 뒤쪽 표가 앞쪽 정비 수치를 덮는 문제가 있었다. 단일 항목으로 통합했으며 엔진오일/오일필터 10,000km 또는 12개월, 포크오일 20,000km, 연료필터 40,000km 또는 48개월을 추가했다. 최초 길들이기 범위 500~1,200km는 고정 1,000km로 처리하지 않는다.
+
+## Kawasaki NINJA500 2024 최초 검증
+
+Kawasaki Korea 공식 Ninja500 한글 사용자설명서(차종 EX500G/J), 인쇄 154~160쪽: 체인 장력 1,000km마다 확인, 윤활 600km마다; 냉각수/호스/O링 36,000km 또는 3년마다 교체, 브레이크 오일 2년, 브레이크 호스 4년. 체인 자체를 1,000km마다 교체하는 것으로 표시하지 않으며, PDF 표에서 기호가 판독 불가한 엔진오일·에어필터 주기는 입력하지 않는다. Kawasaki USA 2024 EX500G/H/J 설명서 목록과 교차 확인했지만 지역별 서비스 주기는 달라질 수 있다.
+
+공식 제조사 자료: https://kawasakikorea.com/post_file_download.cm?c=YTo1OntzOjEwOiJib2FyZF9jb2RlIjtzOjIyOiJiMjAyMjA5MjBiZDU2MzQ5NjU2NGRlIjtzOjk6InBvc3RfY29kZSI7czoyMjoicDIwMjUwMTMxMjZlYWQ0NWY1OTk4NyI7czo5OiJmaWxlX2NvZGUiO3M6MjI6InAyMDI1MDEzMTRiNzIwNzRkNjYwMTUiO3M6MTk6InBvc3RfZG93bmxvYWRfdG9rZW4iO3M6MTM6IjY5ZTQ4ZTJkNDJhODUiO3M6MTE6Im1lbWJlcl9jb2RlIjtOO30%3D
+
+## Ducati Monster 2025·2026 정기 서비스 구분
+
+937cc MY2025: 15,000km 또는 24개월 정기 서비스; 890cc MY2026: 12개월 연간점검과 15,000km 또는 24개월 오일 서비스는 별개. 부품별 실제 교환표와 전체 정비 주기를 혼동하지 않는다.
+
+https://www.ducati.com/us/en/bikes/monster/monster-937
+
+https://www.ducati.com/us/en/bikes/monster/monster-v2
