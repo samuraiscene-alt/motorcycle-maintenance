@@ -100,6 +100,9 @@ const modelFamilyPartEvidence=Object.freeze({
  'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
 });
 const verifiedPartApplicability=Object.freeze({
+ 'VESPA|SPRINT125|2020':Object.freeze({source:"https://wlassets.vespa.com/wlassets/vespa/master/tech_spec/2020/SPRINT_125_IGET_ABS/original/SPRINT_125_IGET_ABS.pdf",region:"EU SPRINT 125 i-get ABS 2020",cooling:'air',drive:'cvt',notes:"Vespa official year-specific 2020 i-get 124.5cc air-cooled CVT technical specification; not a maintenance interval.",unsupported:["coolant","chain-sprockets"]}),
+ 'VESPA|GTS300|2020':Object.freeze({source:"https://wlassets.vespa.com/wlassets/vespa/master/tech_spec/2020/GTS_300_HPE/original/GTS_300_HPE.pdf",region:"EU GTS 300 HPE 2020",cooling:'liquid',drive:'cvt',notes:"Vespa 2020 278.3cc liquid-cooled HPE CVT and dual disc brakes; not a service schedule.",unsupported:["chain-sprockets"]}),
+ 'SUZUKI|BURGMAN125|2024':Object.freeze({source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2024burgman-street-125ex/",region:"EU Burgman Street 125EX 2024",cooling:'air',drive:'cvt',variantMatchRequired:true,notes:"The 2024 125EX is not always identical to the generic BURGMAN125 catalogue model; no auto-hiding until trim confirmed.",unsupported:[]}),
  'HONDA|MONKEY125|2026':Object.freeze({
   source:'https://www.honda.co.jp/Monkey125/',
   region:'JP 2026 8BJ-JB05 (JB05-1100001 onwards)',cooling:'air',drive:'chain',
@@ -687,6 +690,37 @@ const sourceAudit=Object.freeze({
  'TRIUMPH|SPEED400':Object.freeze({year:2024,url:'https://www.triumphmotorcycles.com/for-the-ride/news/motorcycles/t-series-q-and-a-2024-03-28',type:'Triumph T-Series official general service interval 16000 km or 12 months; not a part schedule'})
 });
 // A whole-vehicle service interval must never imply a consumable replacement interval.
+// Non-year-specific official Vespa maintenance leaflet (published 2020).
+// Preserve the real list of service actions as a reference only; NEVER automatically
+// infer its market/model-year applicability or substitute a service visit for a part.
+const manufacturerScheduleReferences=Object.freeze({
+ 'VESPA|PRIMAVERA125':Object.freeze({
+  source:'https://wlassets.vespa.com/wlassets/vespa/gb/maintenance_intervals/Vespa-PRIMAVERA-125-150/original/Vespa%2BPRIMAVERA%2B125%2B150.pdf',
+  scope:'GB Primavera 125/150 leaflet; model year unspecified',
+  servicePointsKm:[1000,10000,20000,30000],
+  recurringParts:Object.freeze({oil:10000,'oil-filter':10000,'air-filter':10000,'drive-belt':10000,'spark-plug':20000,weights:20000}),
+  calendarMonths:Object.freeze({oil:12,'oil-filter':12,'brake-fluid':24}),
+  autoApply:false,
+  notes:'Manufacturer leaflet shows 1000km first oil and filter, 10000km oil/filter/belt/air, 20000km adds spark plug and sliders/rollers. Not automatically valid for every model year.'
+ }),
+ 'VESPA|SPRINT125':Object.freeze({
+  source:'https://www.vespa.com/vn_EN/after-sales/scheduled-maintenance/',
+  scope:'VN Primavera / Sprint 125 whole-vehicle scheduled visits; model year unspecified',
+  visitKm:[1000,5000,10000,15000,20000,25000,30000],
+  autoApply:false,
+  notes:'Service visit is NOT individual part replacement.'
+ }),
+ 'VESPA|GTS300':Object.freeze({
+  source:'https://www.vespa.com/vn_EN/after-sales/scheduled-maintenance/',
+  scope:'VN GTS/GTV300 visit schedule; year unspecified',visitKm:[1000,10000,20000,30000,40000],
+  autoApply:false,notes:'Regular service visits only; not a specific part change.'
+ }),
+ 'VESPA|GTV300':Object.freeze({
+  source:'https://www.vespa.com/vn_EN/after-sales/scheduled-maintenance/',
+  scope:'VN GTS/GTV300 visit schedule; year unspecified',visitKm:[1000,10000,20000,30000,40000],
+  autoApply:false,notes:'Regular service visits only; not a specific part change.'
+ })
+});
 const officialGeneralService=Object.freeze({
  'DUCATI|MONSTER|2025':Object.freeze({
   verified:true,year:2025,region:'US Monster 937',
@@ -764,6 +798,8 @@ window.MotorcycleCatalog=Object.freeze({
  brandLogos,
  knownFirstModelYears,
  modelReleaseSources,
+ manufacturerScheduleReferences,
+ findScheduleReference(brand,model){return manufacturerScheduleReferences[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()]||null},
  regionalManualYears,
  officialGeneralService,
  findGeneralService(brand,model,year){return officialGeneralService[profileKey(brand,model,year)]||null},
