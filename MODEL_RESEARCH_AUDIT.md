@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44기종 제조사 기술자료 및 공식 정비주기 조사표
 
-기준일: 2026-11-08 · 앱 v2.9.162
+기준일: 2026-11-08 · 앱 v2.9.163
 
 **기술자료 연결과 정비주기 확인은 다르다.** '검증'은 각 해당 연식·국가·세부모델에만 해당하며, 공식 정비주기가 일부만 검증된 모델도 있다. 출시·단종 연도는 공식적으로 뒷받침되는 경우에만 표기한다. 트림을 정확히 알 수 없는 기종은 기존 사용자 정비 데이터를 보존하고 자동 숨김을 적용하지 않는다.
 
@@ -41,7 +41,7 @@
 | SYM | JOYMAX | 2025 | 트림 확인 전 보류 · 트림 보류 2025 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.sym-global.com/joymaxz300) |
 | SYM | JET X 125 | 2025 | 확인 연식만 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.sym-global.com/jetx?engine=125cc) |
 | KYMCO | DOWNTOWN | 2015 | 트림 확인 전 보류 · 트림 보류 2015 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.kymco.com/product/downtown-350i-tcs) |
-| KYMCO | AK550 | 2018 | 트림 확인 전 보류 · 트림 보류 2018 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.kymco.com/uploads/new8/AK550%2055th/AK550_55th_PRESS%20INFORMATION.pdf) |
+| KYMCO | AK550 | 2018 | 트림 확인 전 보류 · 트림 보류 2018 | 미검증 | 미확인 | 2016 | 미검증 | [부품 사양](https://www.kymco.com/uploads/new8/AK550%2055th/AK550_55th_PRESS%20INFORMATION.pdf) |
 | KYMCO | LIKE125 | 2018 | 트림 확인 전 보류 · 트림 보류 2018 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.kymco.com/uploads/new8/Like%20S/Like_S_PRESS%20INFORMATION.pdf) |
 | VESPA | PRIMAVERA125 | 2024 | 확인 연식만 | 미검증 | 미확인 | 2013 | 미검증 | [부품 사양](https://wlassets.vespa.com/wlassets/vespa/gb/tech_spec/2024/Vespa-Primavera-Tech-125/original/Vespa%2BPrimavera%2BTech%2B125.pdf) / [정비 참고](https://wlassets.vespa.com/wlassets/vespa/gb/maintenance_intervals/Vespa-PRIMAVERA-125-150/original/Vespa%2BPRIMAVERA%2B125%2B150.pdf) |
 | VESPA | GTS300 | 2020, 2024 | 확인 연식만 | 미검증 | 미확인 | 2008 | 미검증 | [부품 사양](https://wlassets.vespa.com/wlassets/vespa/master/APAC/tech_spec/2024/GTS-Super-Sport/APAC_Vespa_GTS_Super-Sport_300_technical_sheet_EN/original/APAC_Vespa_GTS_Super%2BSport_300_technical_sheet_EN.pdf) / [정비 참고](https://www.vespa.com/vn_EN/after-sales/scheduled-maintenance/) |
@@ -78,3 +78,11 @@ Suzuki [Burgman Street 125EX MY2024](https://www.globalsuzuki.com/motorcycle/smg
 GSX-S125XA / GSX-R125 M3 공동 제조사 설명서 표 6-4~6-5 직접 확인. 엔진오일 최초 1,000km 후 4,000km/8,000km, 오일필터 최초 1,000km 후 8,000km, 에어필터 12,000km마다 교체, 점화플러그 8,000km 교체/4,000km 점검, 밸브 간극 8,000km 점검, 체인 청소·윤활 1,000km마다, 브레이크액 2년, 호스 4년. 냉각수는 파란색 Super Long Life와 다른 냉각수의 주기가 서로 달라 **사용 중인 냉각수 종류를 모르면 자동값을 입력하지 않는다.**
 
 공식 스즈키 소유자 설명서 복사본: https://d3rur0l55cri1p.cloudfront.net/uploads/sites/4/2023/03/GSX-S125-R125_M3.pdf
+
+## SYM JET X 125 / JOYMAX Z+ 공식 설명서 세부 정비표 (자동 적용 보류)
+
+JET X 125 SYM 공식 사용자설명서 XH12WW-EU 및 XH12WX-EU 공용, 인쇄 29쪽: 엔진오일 첫 300km 후 정비표 3,000km 주기, 기어오일 첫 300km 후 5,000km/5개월, 연료 펌프필터 10,000km, 구동벨트·웨이트롤러·점화플러그 12,000km, 냉각수 12개월 등. 설명서 본문에는 별도로 오일 1,000km마다 교체 문구가 있어 원인 확인 전 일괄 자동 적용 금지. 출처: https://www.sym-global.com/storage/system/products/SCOOTER/24-JETX/JETX_MANUAL.pdf
+
+JOYMAX Z+ (LW12W2-EU/LW25W2-EU/LW30W2-EU) 인쇄 33쪽: 엔진오일 첫 1,000km, 두 번째 6,000km, 이후 5,000km; 기어오일 최초 1,000km 후 10,000km; 에어필터 10,000km, 점화플러그 15,000km, 벨트/롤러 15,000km. 브레이크액 30,000km/2년, 호스 60,000km/4년. 앱의 JOYMAX는 배기량·세대·Z+ 트림을 아직 구별하지 않으므로 사용자 등록 차량의 주기를 자동 변경하지 않음. 출처: https://www.sym-global.com/storage/system/products/SCOOTER/11-1-JOYMAXZ-PLUS/JOYMAXZ_PLUS_MANUAL.pdf
+
+KYMCO AK550은 제조사 2021년 공식 발표문에 2016년 최초 소개라고 명시되어, 최소 출시연도를 2016년으로 제한. 시장별 최초 모델연식과 동일함을 단정하지 않음. https://www.kymco.com/news/brand-new-kymco-ak-550-takes-super-touring-concept-to-the-next-level
