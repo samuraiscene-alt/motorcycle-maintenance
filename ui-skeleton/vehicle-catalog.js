@@ -455,7 +455,31 @@ const officialProfiles=Object.freeze({
   }),
   actionByPart:Object.freeze({'valve-clearance':'inspect','chain-sprockets':'inspect'})
  }),
- 'YAMAHA|MT-07|2021':Object.freeze({
+ 
+ 'YAMAHA|MT-07|2023':Object.freeze({
+  verified:true,coverage:'partial',region:'TH (Thai market), Yamaha MTN690 BTK first edition Jan 2023',
+  modelCode:'MTN690',year:2023,
+  source:'https://www.yamaha-motor.co.th/docs/owner-manual/bigbike/en/pbtk2u199e0e_mt07%28eng%29a3e586bc44a1400ba969bf37a7d2160a.pdf?Status=Master&sfvrsn=ac0f3df8_2',
+  sourceType:'Yamaha factory MT-07 MTN690 BTK-2U199-E0 January 2023 Thai-market English owner manual',
+  sourcePages:['8-3','8-4','8-5','8-6'],
+  intervals:Object.freeze({oil:6000,'oil-filter':12000,'air-filter':40000,'spark-plug':19000,
+    'valve-clearance':42000,'chain-sprockets':1000}),
+  tasks:Object.freeze({
+   oil:{replaceKm:6000,firstReplaceKm:1000,firstRegularOdometerKm:7000},
+   'oil-filter':{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:13000},
+   'air-filter':{replaceKm:40000},
+   'spark-plug':{replaceKm:19000},
+   'valve-clearance':{inspectKm:42000},
+   'chain-sprockets':{inspectKm:1000},
+   'brake-fluid':{replaceMonths:24},
+   'brake-hose':{replaceMonths:48},
+   coolant:{replaceMonths:36},
+   brake:{replaceWhenWorn:true},tire:{replaceWhenWorn:true}
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','chain-sprockets':'inspect'}),
+  notes:'Initial oil at 1000 km then 7000/13000/19000/25000; oil filter at 1000/13000/25000. Air-filter check-hose cleaning is a separate task, not the filter-element replacement.'
+ }),
+'YAMAHA|MT-07|2021':Object.freeze({
   verified:true,coverage:'partial',region:'US MT07M/MT07MC Yamaha 2021',modelCode:'MT07M',year:2021,
   source:'https://library.ymcapps.net/library/om/contents/html/10/BAT-28199-10_02/7-4.html',
   sourceText:'https://www.ysk.co.kr/support/manual.php?boardid=manual&category=&idx=44&mode=view&offset=20&sk=&sw=',
