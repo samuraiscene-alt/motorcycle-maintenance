@@ -1,6 +1,6 @@
 {
-  "version": "2.9.137",
-  "cache": "motorcycle-maintenance-v2.9.137",
+  "version": "2.9.138",
+  "cache": "motorcycle-maintenance-v2.9.138",
   "released": "2026-11-08",
-  "note": "ZONTES 125G1 차량 등록 및 전용 PNG 경로 준비, 이미지 업로드 후 표시"
+  "note": "ZONTES 125G1·125D 개별 PNG 연결, 125D 신규 등록, 홈화면 업데이트 캐시 갱신"
 }
