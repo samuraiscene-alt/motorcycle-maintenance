@@ -101,6 +101,9 @@ const modelFamilyPartEvidence=Object.freeze({
  'ZONTES|125D':Object.freeze({source:"https://www.zontes.co.kr/home/125d/",cooling:'liquid',drive:'unverified',scope:'model-family-reference',notes:"scooter type; final drive not validated"}),
 });
 const verifiedPartApplicability=Object.freeze({
+ 'VESPA|PRIMAVERA125|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'Vespa EU range brochure 11/2022, PRIMAVERA125',cooling:'air',drive:'cvt',technicalSpec:Object.freeze({frontTire:'110/70-12',rearTire:'120/70-12',frontBrake:'disc',rearBrake:'drum'}),notes:'Manufacturer 2022 EU 125/300 specification. Maintenance visit packages are not part-specific replacement intervals.',unsupported:["coolant","chain-sprockets"]}),
+ 'VESPA|SPRINT125|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'Vespa EU range brochure 11/2022, SPRINT125',cooling:'air',drive:'cvt',technicalSpec:Object.freeze({frontTire:'110/70-12',rearTire:'120/70-12',frontBrake:'disc',rearBrake:'drum'}),notes:'Manufacturer 2022 EU 125/300 specification. Maintenance visit packages are not part-specific replacement intervals.',unsupported:["coolant","chain-sprockets"]}),
+ 'VESPA|GTS300|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'Vespa EU range brochure 11/2022, GTS300',cooling:'liquid',drive:'cvt',technicalSpec:Object.freeze({frontTire:'120/70-12',rearTire:'130/70-12',frontBrake:'disc',rearBrake:'disc'}),notes:'Manufacturer 2022 EU 125/300 specification. Maintenance visit packages are not part-specific replacement intervals.',unsupported:["chain-sprockets"]}),
  'VESPA|SPRINT125|2020':Object.freeze({source:"https://wlassets.vespa.com/wlassets/vespa/master/tech_spec/2020/SPRINT_125_IGET_ABS/original/SPRINT_125_IGET_ABS.pdf",region:"EU SPRINT 125 i-get ABS 2020",cooling:'air',drive:'cvt',notes:"Vespa official year-specific 2020 i-get 124.5cc air-cooled CVT technical specification; not a maintenance interval.",unsupported:["coolant","chain-sprockets"]}),
  'VESPA|GTS300|2020':Object.freeze({source:"https://wlassets.vespa.com/wlassets/vespa/master/tech_spec/2020/GTS_300_HPE/original/GTS_300_HPE.pdf",region:"EU GTS 300 HPE 2020",cooling:'liquid',drive:'cvt',notes:"Vespa 2020 278.3cc liquid-cooled HPE CVT and dual disc brakes; not a service schedule.",unsupported:["chain-sprockets"]}),
  'SUZUKI|BURGMAN125|2024':Object.freeze({source:"https://www.globalsuzuki.com/motorcycle/smgs/products/2024burgman-street-125ex/",region:"EU Burgman Street 125EX 2024",cooling:'air',drive:'cvt',variantMatchRequired:true,notes:"The 2024 125EX is not always identical to the generic BURGMAN125 catalogue model; no auto-hiding until trim confirmed.",unsupported:[]}),
@@ -793,6 +796,12 @@ const manufacturerScheduleReferences=Object.freeze({
   autoApply:false,notes:'Regular service visits only; not a specific part change.'
  })
 });
+// Manufacturer 2022 brochure lists package service VISIT milestones, not specific parts.
+const publishedModelVisitSchedule=Object.freeze({
+ 'VESPA|PRIMAVERA125|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'EU range 11/2022',year:2022,visitKm:Object.freeze([1000,5000,10000,15000,20000,25000,30000]),scope:'X-Care+ 4-year package, scheduled SERVICE VISITS (not individual part replacements)',autoApplyParts:false}),
+ 'VESPA|SPRINT125|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'EU range 11/2022',year:2022,visitKm:Object.freeze([1000,5000,10000,15000,20000,25000,30000]),scope:'X-Care+ 4-year package, scheduled SERVICE VISITS (not individual part replacements)',autoApplyParts:false}),
+ 'VESPA|GTS300|2022':Object.freeze({source:"https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf",region:'EU range 11/2022',year:2022,visitKm:Object.freeze([1000,10000,20000,30000]),scope:'X-Care+ 4-year package, scheduled SERVICE VISITS (not individual part replacements)',autoApplyParts:false}),
+});
 const officialGeneralService=Object.freeze({
  'DUCATI|MONSTER|2025':Object.freeze({
   verified:true,year:2025,region:'US Monster 937',
@@ -823,6 +832,7 @@ const researchInventory=Object.freeze(brands.flatMap(brand=>brand.models.map(([m
   firstConfirmedYear:first,lastConfirmedYear:null,releaseSource:modelReleaseSources[key]||null,
   verifiedPartYears:Object.freeze(partYears),partEvidence:familyEvidence,
   regionalManualYears:regionalManualYears[key]||null,
+  publishedServiceVisitYears:Object.freeze(Object.keys(publishedModelVisitSchedule).filter(x=>x.startsWith(key+'|')).map(x=>Number(x.slice(key.length+1))).filter(Number.isFinite).sort((a,b)=>a-b)),
   generalServiceYears:Object.freeze(Object.keys(officialGeneralService).filter(x=>x.startsWith(key+'|')).map(x=>Number(x.slice(key.length+1))).filter(Number.isFinite).sort((a,b)=>a-b)),
   partsStatus:partYears.length?'verified-exact-year':familyEvidence?'family-reference-needs-year-check':'verification-pending',
   serviceStatus:years.length?'verified-exact-year':'verification-pending',
@@ -871,6 +881,8 @@ window.MotorcycleCatalog=Object.freeze({
  knownFirstModelYears,
  modelReleaseSources,
  manufacturerScheduleReferences,
+ publishedModelVisitSchedule,
+ findPublishedServiceVisits(brand,model,year){return publishedModelVisitSchedule[profileKey(brand,model,year)]||null},
  findScheduleReference(brand,model){return manufacturerScheduleReferences[String(brand).trim().toUpperCase()+'|'+String(model).trim().toUpperCase()]||null},
  regionalManualYears,
  officialGeneralService,
