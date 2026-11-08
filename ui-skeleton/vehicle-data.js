@@ -1008,6 +1008,7 @@ function switchOwnedVehicle(direction){
 if(headerSwipeArea){
  headerSwipeArea.style.touchAction='pan-y';
  headerSwipeArea.addEventListener('pointerdown',e=>{
+  headerSwipeSuppressClick=false;
   if(e.button!==0||!e.isPrimary||ownedBikeIds().length<2||animating||!regMask.hidden||!recordMask.hidden)return;
   headerSwipeStart={id:e.pointerId,x:e.clientX,y:e.clientY};
   try{headerSwipeArea.setPointerCapture(e.pointerId)}catch{}
