@@ -51,7 +51,7 @@ const brandLogos=Object.freeze({
 });
 // Known release-year restrictions: do not infer model years from the model name.
 const knownFirstModelYears=Object.freeze({
- 'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024,'KAWASAKI|Z500':2024,'KAWASAKI|Z900':2017,
+ 'BMW|R1300GS':2024,'DNA MOTORS|UHR125':2022,'KAWASAKI|NINJA500':2024,'KAWASAKI|Z500':2024,'KAWASAKI|Z900':2017,'YAMAHA|NMAX125':2015,
  'VESPA|PRIMAVERA125':2013,'VESPA|SPRINT125':2014,'VESPA|GTS300':2008,'VESPA|GTV300':2023
 });
 // These source-verified model introductions are not claims of availability in every market.
@@ -147,28 +147,34 @@ const verifiedPartApplicability=Object.freeze({
  'VESPA|GTV300|2023':Object.freeze({source:'https://press.piaggiogroup.com/en_EN/post/show/253279/new-vespa-gtv.html',cooling:'liquid',drive:'cvt',unsupported:['chain-sprockets']})
 });
 const officialProfiles=Object.freeze({
- 'BMW|G310R|2020':Object.freeze({
-  verified:true,coverage:'partial',region:'EU 2020 0G41',modelCode:'G310R 0G41',year:2020,
-  source:'https://manuals.bmw-motorrad.com/manuals/BA-Extern/IN/BA-INTERNET-COM/PDF/G_0G41_RM_0320_01.pdf',
-  sourceType:'BMW 2020 G310R official rider manual, maintenance schedule on printed p138',
-  sourcePages:[136,138],
-  intervals:Object.freeze({oil:10000,'oil-filter':10000,'air-filter':20000,'spark-plug':20000,'valve-clearance':20000,'fork-oil':20000,'fuel-filter':40000}),
+ 'YAMAHA|NMAX125|2015':Object.freeze({
+  verified:true,coverage:'partial',region:'EU/Indonesia GPD125-A 2DS1',modelCode:'GPD125-A',year:2015,
+  source:'https://cdn2.yamaha-motor.eu/prod/owner-manuals/Scooters/P2DSF8199E0E.PDF',
+  sourceType:'Yamaha original April 2015 GPD125-A NMAX125 owner manual; service tables pp6-2 to 6-5',
+  sourcePages:['6-2','6-3','6-4','6-5'],
+  intervals:Object.freeze({oil:6000,'air-filter':18000,'spark-plug':12000,'valve-clearance':6000,'drive-system-service':18000,'drive-belt':18000,'gear-oil':12000}),
   tasks:Object.freeze({
-   oil:{replaceKm:10000,replaceMonths:12},
-   'oil-filter':{replaceKm:10000,replaceMonths:12},
-   'air-filter':{replaceKm:20000},
-   'spark-plug':{replaceKm:20000},
-   'valve-clearance':{inspectKm:20000},
-   'fork-oil':{replaceKm:20000},
-   'fuel-filter':{replaceKm:40000,replaceMonths:48},
-   'brake-fluid':{replaceMonths:24}
+   oil:{replaceKm:6000,firstReplaceKm:1000,firstRegularOdometerKm:6000},
+   'air-filter':{replaceKm:18000},
+   'spark-plug':{inspectKm:6000,replaceKm:12000},
+   'valve-clearance':{inspectKm:6000},
+   'drive-system-service':{replaceKm:18000},
+   'drive-belt':{replaceKm:18000},
+   'gear-oil':{replaceKm:12000,firstReplaceKm:1000,firstRegularOdometerKm:12000},
+   coolant:{replaceMonths:36},
+   'brake-fluid':{replaceMonths:24},
+   'steering-bearing':{inspectKm:6000},
+   brake:{replaceWhenWorn:true},tire:{replaceWhenWorn:true}
   }),
-  actionByPart:Object.freeze({'valve-clearance':'inspect'}),
   notes:Object.freeze({
-   oil:'First running-in check with oil change at 500-1200 km, not assigned an invented fixed 1000 km event.',
-   'brake-fluid':'First brake-fluid change at one year, then every two years. Calendar-first event not auto-filled.',
-   'fuel-filter':'Fuel filter and hoses 40000 km or 48 months.'
-  })
+   oil:'Engine oil first 1000km, then 6000km, and 6000km steps thereafter; initial 1000 to 6000 is 5000km.',
+   'oil-strainer':'Oil strainer cleaned at initial 1000km; no uniform recurring replacement inferred.',
+   'drive-belt':'V-belt replacement at 18000km indicated by dedicated belt indicator.',
+   'steering-bearing':'Lubrication at 24000km, inspection at 1000 and every 6000; do not label grease as replacement.',
+   'gear-oil':'Change at 1000km, 12000km and 24000km. Inspection at other listed steps.',
+   'brake-fluid':'Change every two years; brake hoses every four years.'
+  }),
+  actionByPart:Object.freeze({'valve-clearance':'inspect','steering-bearing':'inspect'})
  }),
  'DUCATI|MONSTER|2026':Object.freeze({
   verified:true,coverage:'partial',region:'US MY2026 890cc V2',modelCode:'Monster V2 890',year:2026,
@@ -300,11 +306,11 @@ const officialProfiles=Object.freeze({
   verified:true,coverage:'partial',region:'BMW international 03/2020 rider manual',modelCode:'0G41',year:2020,
   source:'https://manuals.bmw-motorrad.com/manuals/BA-Extern/IN/BA-INTERNET-COM/PDF/G_0G41_RM_0320_01.pdf',
   sourceType:'BMW G 310 R riders manual revision 03/2020: service schedule',sourcePages:[136,137,138],
-  intervals:Object.freeze({oil:10000,filter:10000,'oil-filter':10000,'air-filter':20000,'spark-plug':20000,'valve-clearance':20000}),
+  intervals:Object.freeze({oil:10000,'oil-filter':10000,'air-filter':20000,'spark-plug':20000,'valve-clearance':20000,'fork-oil':20000,'fuel-filter':40000}),
   tasks:Object.freeze({
-   oil:{replaceKm:10000},filter:{replaceKm:10000},'oil-filter':{replaceKm:10000},
+   oil:{replaceKm:10000,replaceMonths:12},'oil-filter':{replaceKm:10000,replaceMonths:12},
    'air-filter':{replaceKm:20000},'spark-plug':{replaceKm:20000},
-   'valve-clearance':{inspectKm:20000},'brake-fluid':{replaceMonths:24}
+   'valve-clearance':{inspectKm:20000},'fork-oil':{replaceKm:20000},'fuel-filter':{replaceKm:40000,replaceMonths:48},'brake-fluid':{replaceMonths:24}
   }),
   specs:Object.freeze({runningInServiceKmRange:[500,1200]}),
   notes:Object.freeze({initialService:'500~1200km 최초 길들이기 정비, 오일 포함; 정비시점 범위로 자동 단일 교체값 미설정',initialBrakeFluid:'first after one year, then every two years; first-year calendar not auto calculated'}),
