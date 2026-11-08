@@ -674,6 +674,11 @@ document.querySelectorAll('.part:not(.part-add-card)').forEach((row,i)=>{const i
  const userConfigured=Object.keys(cfg).some(k=>k.endsWith('Source')&&cfg[k]==='user');
  const absent=verifiedParts?.unsupported?.includes(id)||verifiedParts?.drive==='chain'&&id==='gear-oil';
  const excluded=!!absent&&!row.classList.contains('custom-part')&&!records.length&&!userConfigured;
+ if(id==='front-tire'){
+  const label=row.querySelector('.part-line strong');
+  if(label&&['앞타이어','앞타이어 (2개)'].includes(label.textContent))
+   label.textContent=verifiedParts?.frontTyres===2?'앞타이어 (2개)':'앞타이어';
+ }
  row.hidden=excluded;row.style.display=excluded?'none':'';
  if(excluded)return;
 const action=partAction(reg,id);
