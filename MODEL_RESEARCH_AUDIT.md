@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44기종 제조사 기술자료 및 공식 정비주기 조사표
 
-기준일: 2026-11-08 · 앱 v2.9.163
+기준일: 2026-11-08 · 앱 v2.9.164
 
 **기술자료 연결과 정비주기 확인은 다르다.** '검증'은 각 해당 연식·국가·세부모델에만 해당하며, 공식 정비주기가 일부만 검증된 모델도 있다. 출시·단종 연도는 공식적으로 뒷받침되는 경우에만 표기한다. 트림을 정확히 알 수 없는 기종은 기존 사용자 정비 데이터를 보존하고 자동 숨김을 적용하지 않는다.
 
@@ -86,3 +86,7 @@ JET X 125 SYM 공식 사용자설명서 XH12WW-EU 및 XH12WX-EU 공용, 인쇄 2
 JOYMAX Z+ (LW12W2-EU/LW25W2-EU/LW30W2-EU) 인쇄 33쪽: 엔진오일 첫 1,000km, 두 번째 6,000km, 이후 5,000km; 기어오일 최초 1,000km 후 10,000km; 에어필터 10,000km, 점화플러그 15,000km, 벨트/롤러 15,000km. 브레이크액 30,000km/2년, 호스 60,000km/4년. 앱의 JOYMAX는 배기량·세대·Z+ 트림을 아직 구별하지 않으므로 사용자 등록 차량의 주기를 자동 변경하지 않음. 출처: https://www.sym-global.com/storage/system/products/SCOOTER/11-1-JOYMAXZ-PLUS/JOYMAXZ_PLUS_MANUAL.pdf
 
 KYMCO AK550은 제조사 2021년 공식 발표문에 2016년 최초 소개라고 명시되어, 최소 출시연도를 2016년으로 제한. 시장별 최초 모델연식과 동일함을 단정하지 않음. https://www.kymco.com/news/brand-new-kymco-ak-550-takes-super-touring-concept-to-the-next-level
+
+## 베스파 2022 유럽 공식 모델 카탈로그 검증
+
+[베스파 공식 2022년 11월 카탈로그](https://www.vespa.com/wlassets/vespa/master/brochure/EICMA/EN-DIGITAL-Vespa-Range-11-2022/original/EN-DIGITAL-Vespa%2BRange-11-2022.pdf): Primavera 125 i-get과 Sprint 125 i-get은 공랭·CVT, 앞 타이어 110/70-12, 뒤 120/70-12, 앞 디스크/뒤 드럼 브레이크. GTS300 HPE는 수랭·CVT, 앞 타이어 120/70-12, 뒤 130/70-12, 앞뒤 디스크 브레이크. X-Care+ 유지보수 상품에 등장하는 정비소 방문 주기는 Primavera 125 1,000·5,000·10,000·15,000·20,000·25,000·30,000km, GTS300 1,000·10,000·20,000·30,000km(4년 패키지). **방문 시점만으로 특정 소모품의 교체주기를 추정하지 않음.** 연식 2022 사양만 부품 구성에 사용.
