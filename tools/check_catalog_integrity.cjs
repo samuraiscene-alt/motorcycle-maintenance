@@ -71,8 +71,24 @@ assert.ok(catalog.findVerifiedPartApplicability('HONDA','PCX125',2026)?.unsuppor
   'hide only confirmed absent factory oil filter, retaining user records');
 assert.ok(catalog.findOfficialProfile('HONDA','PCX125',2025),
   '2025 Korean profile preserved');
+// The official lookup remains exact, while the UI may reuse near-year cycles
+// in an explicitly marked, provisional same-generation window.
+assert.equal(catalog.findOfficialProfile('HONDA','CBR650R',2026),null,
+  'exact 2026 CBR650R manual not independently validated');
+const nearby=catalog.findMaintenanceProfile('HONDA','CBR650R',2026);
+assert.equal(nearby?.sourceYear,2024,'2026 CBR650R adopts 2024 reference as estimate');
+assert.equal(nearby?.inheritedServiceCycle,true,'near-year cycle must be identified as inferred');
+assert.equal(nearby?.tasks?.oil?.replaceKm,12000,'same-generation nearby oil schedule');
+assert.equal(catalog.findMaintenanceProfile('HONDA','CBR650R',2024)?.inheritedServiceCycle,undefined,
+  'exact-year official documentation is never tagged inherited');
+assert.equal(catalog.findMaintenanceProfile('HONDA','C125',2025),null,
+  'conflicting 2022 / 2026 model codes cannot be bridged');
+assert.equal(catalog.findMaintenanceProfile('HONDA','PCX125',2010),null,
+  'far-away model year must not pick unrelated modern intervals');
+assert.equal(catalog.findMaintenanceProfile('BMW','R1300GS',2023),null,
+  'must not adopt service schedules before confirmed first model year');
 const vehicleSource = fs.readFileSync(path.join(root,'ui-skeleton/vehicle-data.js'),'utf8');
-assert.ok(vehicleSource.includes("label='2026 혼다 해외형 참고 · 국내형 확인 필요'"),
+assert.ok(vehicleSource.includes("label='제조사 해외형 참고 · 국내형 확인 필요'"),
   '2026 overseas manual must be clearly labeled in maintenance cards');
 const funcStart=vehicleSource.indexOf('function nextServiceDistance(');
 const funcEnd=vehicleSource.indexOf('function actionCycleStatus(',funcStart);
