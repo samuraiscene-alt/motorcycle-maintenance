@@ -92,9 +92,10 @@ function refreshModelChoice(){
 setChoices(brandSelect,[...(catalog?.brands||[]).map(x=>[x.label,x.id]),['기타 제조사 (직접 입력)','OTHER']],'제조사 선택');
 function refreshYears(){
  const previous=yearSelect.value;
- const ninja500=brandSelect.value==='KAWASAKI'&&modelSelect.value==='NINJA500';
  const currentYear=new Date().getFullYear();
- const years=ninja500?[2026,2025,2024].filter(y=>y<=currentYear):Array.from({length:currentYear-1949},(_,i)=>currentYear-i);
+ const key=brandSelect.value+'|'+modelSelect.value;
+ const first=catalog?.knownFirstModelYears?.[key]||1950;
+ const years=Array.from({length:Math.max(0,currentYear-first+1)},(_,i)=>currentYear-i);
  setChoices(yearSelect,years.map(y=>[y+'년',y]),'연식 선택');
  if(years.some(y=>String(y)===previous))yearSelect.value=previous;
 }
