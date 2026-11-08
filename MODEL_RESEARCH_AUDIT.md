@@ -1,6 +1,6 @@
 # 오토바이 정비 — 44기종 제조사 기술자료 및 공식 정비주기 조사표
 
-기준일: 2026-11-08 · 앱 v2.9.167
+기준일: 2026-11-08 · 앱 v2.9.168
 
 **기술자료 연결과 정비주기 확인은 다르다.** '검증'은 각 해당 연식·국가·세부모델에만 해당하며, 공식 정비주기가 일부만 검증된 모델도 있다. 출시·단종 연도는 공식적으로 뒷받침되는 경우에만 표기한다. 트림을 정확히 알 수 없는 기종은 기존 사용자 정비 데이터를 보존하고 자동 숨김을 적용하지 않는다.
 
@@ -50,6 +50,12 @@
 | DNA MOTORS | UHR125 | 2025 | 확인 연식만 | 미검증 | 미확인 | 2022 | 미검증 | [부품 사양](https://www.dnamotors.co.kr/brand/scooter_UHR125) |
 | ZONTES | 125G1 | 2024 | 확인 연식만 | 2024 | 미확인 | 미검증 | 미검증 | [정비표](https://www.zontes.co.kr/home/wp-content/uploads/mangboard/2024/08/28/F20_ZT125-G1%2C%20ZT125-U1%2C%20ZT125-GK%20%EC%82%AC%EC%9A%A9%EC%84%A4%EB%AA%85%EC%84%9C.pdf) / [부품 사양](https://www.zontes.co.kr/home/downloads/?vid=1) |
 | ZONTES | 125D | 2025 | 확인 연식만 | 미검증 | 미확인 | 미검증 | 미검증 | [부품 사양](https://www.zontes.co.kr/home/125d/) |
+
+## 2026-11-08 추가 검증
+
+- YAMAHA MT-07 **태국 2023년판 MTN690**에만 제조사 소모품 정비 프로필 추가: 엔진오일 최초 1,000km, 이후 7,000km부터 6,000km 간격; 오일필터 최초 1,000km, 이후 13,000km부터 12,000km 간격; 에어필터 요소 40,000km 교체; 체인 1,000km 점검·윤활; 밸브 간극 42,000km 점검; 브레이크액 24개월, 냉각수 36개월. [제조사 영문 설명서](https://www.yamaha-motor.co.th/docs/owner-manual/bigbike/en/pbtk2u199e0e_mt07%28eng%29a3e586bc44a1400ba969bf37a7d2160a.pdf?Status=Master&sfvrsn=ac0f3df8_2). 다른 국가와 연식에는 자동 복사하지 않음.
+- SUZUKI 국내 공식 [사용자 설명서 목록](https://www.suzuki.kr/manual1)에 AVENIS125(2023~), GSX-S125(2018~), ADDRESS125(구형 및 2026 신형) 자료가 있음을 확인. 세대·시장별 정비표 원문 검증 전까지 공식 교체·청소 주기 추측 입력 금지.
+- SYM JET14 및 KYMCO AK550/LIKE125/DOWNTOWN은 세부 트림·국가별 엔진·주기 차이 검증 필요. 자료 존재만으로 공식 정비 주기를 자동 확정하지 않음.
 
 ## 검증 요약
 
