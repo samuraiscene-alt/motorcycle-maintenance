@@ -1,4 +1,4 @@
-const CACHE='motorcycle-maintenance-v2.9.174';
+const CACHE='motorcycle-maintenance-v2.9.175';
 const ROOT=new URL('./',self.location.href);
 const SHELL=new URL('./ui-skeleton/index.html',ROOT).href;
 const PRECACHE=[
