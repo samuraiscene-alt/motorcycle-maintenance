@@ -1,6 +1,6 @@
 {
-  "version": "2.9.175",
-  "cache": "motorcycle-maintenance-v2.9.175",
+  "version": "2.9.176",
+  "cache": "motorcycle-maintenance-v2.9.176",
   "released": "2026-11-10",
-  "note": "아이폰 정비기록 날짜 입력창 가로 폭 초과 수정, 날짜 선택 기능 유지"
+  "note": "아이폰 Safari 날짜 입력칸 WebKit 고유 폭/여백 버그 대응: 기본 appearance 해제, 날짜 내부 컨트롤 너비 보정, 정비기록 보존"
 }
