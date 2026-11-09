@@ -41,7 +41,7 @@ const PRECACHE=[
   new URL('./ui-skeleton/backup-restore.js?v=backup-check-105',ROOT).href,
   new URL('./ui-skeleton/i18n.js?v=locale-scaffold-1',ROOT).href,
   new URL('./ui-skeleton/vehicle-management.js?v=parts-audit-164',ROOT).href,
-  new URL('./ui-skeleton/version-check.js?v=update-feedback-174',ROOT).href,
+  new URL('./ui-skeleton/version-check.js?v=update-feedback-175',ROOT).href,
   new URL('./ui-skeleton/wear-library.js?v=shared-materials-1',ROOT).href,
   new URL('./ui-skeleton/bike-aging.js?v=parts-safe-2',ROOT).href,
   new URL('./icon-bike-192.jpg',ROOT).href,
