@@ -1,6 +1,6 @@
 {
-  "version": "2.9.174",
-  "cache": "motorcycle-maintenance-v2.9.174",
-  "released": "2026-11-08",
-  "note": "정비소 오토바이 그림 좌우 스와이프 및 키보드 화살표로 소유 차량 전환; 기존 상단 전환 함수·기록 유지"
+  "version": "2.9.175",
+  "cache": "motorcycle-maintenance-v2.9.175",
+  "released": "2026-11-10",
+  "note": "아이폰 정비기록 날짜 입력창 가로 폭 초과 수정, 날짜 선택 기능 유지"
 }
