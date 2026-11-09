@@ -4,7 +4,7 @@
 
 ## 현재 개발 기준 (2026-11-08)
 
-- 앱 버전: **v2.9.175** (`version.json`).
+- 앱 버전: **v2.9.176** (`version.json`).
 - 등록 후보: **44기종 / 12개 브랜드** (`ui-skeleton/vehicle-catalog.js`).
 - 기술자료·공식 정비주기 조사 현황: [MODEL_RESEARCH_AUDIT.md](./MODEL_RESEARCH_AUDIT.md). 공식 정비주기는 일부 연식·기종·항목만 검증되었으며 **44기종 전체 완료가 아니다**.
 - 실제 실행 화면: `ui-skeleton/index.html`. 저장소 루트의 `index.html`은 이 화면으로 이동시킨다.
