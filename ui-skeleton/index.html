@@ -126,6 +126,9 @@ body.registration-open{overflow:hidden}
 .part .service{cursor:pointer}
 .part .service:focus-visible{outline:3px solid #80cfff;outline-offset:3px}
 #registration-current-km,#record-odometer,#record-interval,#record-date{font:800 19px -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif;width:100%;min-height:47px;background:#eaf2fb;border:2px solid #a6c3de;border-radius:11px;color:#12263c;padding:0 12px}
+/* iPhone Safari date input can retain a native minimum width wider than the modal. */
+.registration-panel,.registration-section{min-width:0;max-width:100%}
+#record-date{display:block;box-sizing:border-box;width:100%;min-width:0;max-width:100%;align-self:stretch}
 #record-history{margin-top:16px;color:#b8cbdf;font-size:12px;line-height:1.5;border-top:1px solid #62758c;padding-top:13px}
 #record-history ul{padding-left:19px;margin:5px 0 0}#record-history li{margin-bottom:5px}
 
