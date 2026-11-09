@@ -151,4 +151,10 @@ assert.ok(vehicleSource.includes('switchOwnedVehicle(delta<0?1:-1)'),
   'garage horizontal swipe should switch in correct direction');
 assert.ok(vehicleSource.includes('if(isLocked())switchOwnedVehicle(1);else change(index+1)'),
   'keyboard arrow should switch registered motorcycles too');
+assert.match(htmlSource,/#record-date\{[\s\S]*?-webkit-appearance:none;appearance:none;/,
+ 'iOS Safari native date minimum-width must be overridden');
+assert.match(htmlSource,/#record-date::-webkit-date-and-time-value\{[^}]*min-width:0/,
+ 'iOS Safari date internal width must be constrained');
+assert.match(htmlSource,/#record-date::-webkit-datetime-edit\{[^}]*max-width:100%/,
+ 'iOS Safari date editor must fit inside record form');
 console.log('PASS: ' + pairs.length + ' models, ' + keys.length + ' exact-year official profiles for ' + modelSet.size + ' models; regional isolation verified');
